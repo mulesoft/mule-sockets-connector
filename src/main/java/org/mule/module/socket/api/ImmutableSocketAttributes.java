@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.socket.api.source;
+package org.mule.module.socket.api;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 

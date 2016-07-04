@@ -4,9 +4,9 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.socket.internal.worker;
+package org.mule.module.socket.api.worker;
 
-import org.mule.module.socket.api.source.SocketAttributes;
+import org.mule.module.socket.api.SocketAttributes;
 import org.mule.runtime.core.api.lifecycle.Disposable;
 import org.mule.runtime.extension.api.runtime.MessageHandler;
 

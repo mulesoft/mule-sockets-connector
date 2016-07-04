@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.socket.api.protocol;
+package org.mule.module.socket.api.connection.tcp.protocol;
 
 import java.io.IOException;
 import java.io.InputStream;

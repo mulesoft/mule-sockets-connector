@@ -5,8 +5,9 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.socket.api.protocol;
+package org.mule.module.socket.api.connection.tcp.protocol;
 
+import org.mule.module.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.core.api.serialization.DefaultObjectSerializer;
 import org.mule.runtime.core.api.serialization.ObjectSerializer;
 import org.mule.runtime.core.util.NumberUtils;

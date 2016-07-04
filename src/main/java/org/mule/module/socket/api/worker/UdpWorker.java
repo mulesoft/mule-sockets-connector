@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.socket.internal.worker;
+package org.mule.module.socket.api.worker;
 
 import static java.lang.String.format;
 import static java.util.Arrays.copyOf;
@@ -12,8 +12,8 @@ import static org.mule.module.socket.internal.SocketUtils.createMuleMessage;
 import static org.mule.module.socket.internal.SocketUtils.createPacket;
 import static org.mule.module.socket.internal.SocketUtils.getUdpAllowedByteArray;
 
-import org.mule.module.socket.api.source.ImmutableSocketAttributes;
-import org.mule.module.socket.api.source.SocketAttributes;
+import org.mule.module.socket.api.ImmutableSocketAttributes;
+import org.mule.module.socket.api.SocketAttributes;
 import org.mule.runtime.api.execution.CompletionHandler;
 import org.mule.runtime.api.execution.ExceptionCallback;
 import org.mule.runtime.api.message.MuleEvent;

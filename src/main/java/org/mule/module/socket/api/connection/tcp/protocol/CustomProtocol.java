@@ -4,9 +4,10 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.socket.api.protocol;
+package org.mule.module.socket.api.connection.tcp.protocol;
 
 import static java.lang.String.format;
+import org.mule.module.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.core.api.lifecycle.Initialisable;
 import org.mule.runtime.core.api.lifecycle.InitialisationException;
 import org.mule.runtime.core.util.ClassUtils;

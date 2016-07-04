@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.socket.internal.metadata;
+package org.mule.module.socket.api.metadata;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -17,7 +17,7 @@ import org.mule.metadata.api.model.MetadataFormat;
 import org.mule.metadata.api.model.MetadataType;
 import org.mule.module.socket.api.SocketOperations;
 import org.mule.module.socket.api.connection.RequesterConnection;
-import org.mule.module.socket.api.source.ImmutableSocketAttributes;
+import org.mule.module.socket.api.ImmutableSocketAttributes;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.message.MuleMessage;
 import org.mule.runtime.api.metadata.MetadataContext;

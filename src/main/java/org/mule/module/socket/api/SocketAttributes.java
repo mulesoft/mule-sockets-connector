@@ -5,7 +5,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.socket.api.source;
+package org.mule.module.socket.api;
 
 import java.io.Serializable;
 import java.security.cert.Certificate;
