@@ -16,7 +16,7 @@ import java.security.cert.Certificate;
  * <p>
  * It contains information such as a the port from which the sending endpoint is writing information, its host name and address.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface SocketAttributes extends Attributes {
 

@@ -25,7 +25,7 @@ import javax.inject.Inject;
 /**
  * Contains behaviour and attributes proper of TCP connections
  *
- * @since 4.0
+ * @since 1.0
  */
 abstract class AbstractTcpConnection extends AbstractSocketConnection implements Initialisable {
 

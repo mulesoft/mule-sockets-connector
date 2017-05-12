@@ -17,7 +17,7 @@ import java.net.ServerSocket;
 /**
  * Default immutable implementation of the {@code TcpServerSocketProperties} interface.
  *
- * @since 4.0
+ * @since 1.0
  */
 @XmlHints(allowTopLevelDefinition = true)
 public class TcpServerSocketProperties extends AbstractTcpSocketProperties {

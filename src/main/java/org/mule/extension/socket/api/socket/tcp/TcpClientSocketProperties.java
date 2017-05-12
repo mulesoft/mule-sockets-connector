@@ -15,7 +15,7 @@ import org.mule.runtime.extension.api.annotation.param.display.Placement;
 /**
  * Default immutable implementation of the {@code TcpClientSocketProperties} interface.
  *
- * @since 4.0
+ * @since 1.0
  */
 @Extensible
 @XmlHints(allowTopLevelDefinition = true)

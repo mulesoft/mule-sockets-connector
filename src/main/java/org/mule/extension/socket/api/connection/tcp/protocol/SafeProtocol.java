@@ -24,7 +24,7 @@ import javax.inject.Inject;
  * This protocol is an application level {@link TcpProtocol} and precedes every message with a cookie. It should probably not be
  * used in production. Should probably change to {@link LengthProtocol}. Both sender and receiver must use the same protocol.
  *
- * @since 4.0
+ * @since 1.0
  */
 @XmlHints(allowTopLevelDefinition = true)
 public class SafeProtocol extends AbstractByteProtocol {

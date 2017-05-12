@@ -27,7 +27,7 @@ import java.net.DatagramSocket;
 /**
  * A {@link ConnectionProvider} which provides instances of {@link UdpListenerConnection} to be used by {@link SocketListener}
  *
- * @since 4.0
+ * @since 1.0
  */
 @Alias("udp-listener")
 public class UdpListenerProvider implements CachedConnectionProvider<UdpListenerConnection> {

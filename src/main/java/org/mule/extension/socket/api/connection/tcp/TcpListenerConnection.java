@@ -35,7 +35,7 @@ import java.net.SocketTimeoutException;
 /**
  * Implementation of {@link ListenerConnection} for receiving TCP connections.
  *
- * @since 4.0
+ * @since 1.0
  */
 public final class TcpListenerConnection extends AbstractTcpConnection implements ListenerConnection {
 

@@ -17,7 +17,7 @@ import java.net.Socket;
 /**
  * Common configuration fields for TCP {@link Socket}
  *
- * @since 4.0
+ * @since 1.0
  */
 public abstract class AbstractTcpSocketProperties extends AbstractSocketProperties implements TcpSocketProperties {
 

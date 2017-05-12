@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * method taking just an array of bytes as a parameter) to inherit from since they will all behave the same, i.e. if the object is
  * serializable, serialize it into an array of bytes and write it.
  *
- * @since 4.0
+ * @since 1.0
  */
 public abstract class AbstractByteProtocol implements TcpProtocol {
 

@@ -5,20 +5,23 @@
 
     <parent>
         <groupId>org.mule.extensions</groupId>
-        <artifactId>mule-extensions</artifactId>
+        <artifactId>mule-core-modules-parent</artifactId>
         <version>4.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.mule.modules</groupId>
-    <artifactId>mule-module-sockets</artifactId>
+    <groupId>org.mule.connectors</groupId>
+    <artifactId>mule-sockets-connector</artifactId>
     <packaging>mule-extension</packaging>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>Mule Sockets Extension</name>
     <description>A Mule extension that provides functionality to manage TCP and UDP connections</description>
 
     <properties>
-        <formatterConfigPath>../../formatter.xml</formatterConfigPath>
+        <formatterConfigPath>formatter.xml</formatterConfigPath>
+        <assertJVersion>3.3.0</assertJVersion>
+        <commonsIoVersion>2.4</commonsIoVersion>
     </properties>
 
     <build>
@@ -39,34 +42,19 @@
         <dependency>
             <groupId>org.mule.runtime</groupId>
             <artifactId>mule-module-spring-config</artifactId>
-            <version>${project.version}</version>
+            <version>${mule.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>${commonsIoVersion}</version>
         </dependency>
-
-        <!--TODO: MULE-10837-->
-        <dependency>
-            <groupId>org.mule.runtime</groupId>
-            <artifactId>mule-module-service</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.services</groupId>
-            <artifactId>mule-service-scheduler</artifactId>
-            <version>${project.version}</version>
-            <classifier>mule-service</classifier>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.3.0</version>
+            <version>${assertJVersion}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

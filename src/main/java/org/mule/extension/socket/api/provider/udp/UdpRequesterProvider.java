@@ -29,7 +29,7 @@ import java.net.DatagramSocket;
  * A {@link ConnectionProvider} which provides instances of {@link UdpRequesterConnection} to be used by the
  * {@link SocketOperations}
  *
- * @since 4.0
+ * @since 1.0
  */
 @Alias("udp-requester")
 public final class UdpRequesterProvider implements PoolingConnectionProvider<UdpRequesterConnection> {

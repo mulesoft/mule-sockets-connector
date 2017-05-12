@@ -25,7 +25,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
  * Writing simply writes the data into the socket.
  * </p>
  *
- * @since 4.0
+ * @since 1.0
  */
 @XmlHints(allowTopLevelDefinition = true)
 public class DirectProtocol extends AbstractByteProtocol {

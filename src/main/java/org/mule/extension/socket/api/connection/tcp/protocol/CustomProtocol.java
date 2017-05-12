@@ -26,7 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @since 4.0
+ * @since 1.0
  */
 @XmlHints(allowTopLevelDefinition = true)
 public class CustomProtocol implements TcpProtocol, Initialisable {

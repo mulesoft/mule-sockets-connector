@@ -18,7 +18,7 @@ import java.io.InputStream;
 /**
  * Interface for common operations that can be done using a socket.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface SocketClient {
 

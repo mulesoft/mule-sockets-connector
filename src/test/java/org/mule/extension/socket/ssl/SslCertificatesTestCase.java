@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * Test {@link Certificate} are present in {@link SocketAttributes} while using SSL.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SslCertificatesTestCase extends SocketExtensionTestCase {
 

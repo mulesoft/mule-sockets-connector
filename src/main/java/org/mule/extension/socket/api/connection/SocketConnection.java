@@ -12,7 +12,7 @@ import org.mule.runtime.api.connection.ConnectionValidationResult;
 /**
  * Represents a connection established with a socket
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface SocketConnection {
 

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Contains common configuration parameters to all the kinds of {@link SocketConnection}
  *
- * @since 4.0
+ * @since 1.0
  */
 public abstract class AbstractSocketConnection implements SocketConnection {
 

@@ -32,7 +32,7 @@ import org.mule.runtime.extension.api.annotation.SubTypeMapping;
 /**
  * An extension for sending and receiving connections through both TCP and UDP protocols.
  *
- * @since 4.0
+ * @since 1.0
  */
 @Extension(name = "Sockets")
 @Configurations({ListenerConfig.class, RequesterConfig.class})

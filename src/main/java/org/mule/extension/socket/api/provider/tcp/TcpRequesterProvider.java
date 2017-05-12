@@ -46,7 +46,7 @@ import javax.net.ssl.SSLSocket;
  * A {@link ConnectionProvider} which provides instances of {@link TcpRequesterConnection} to be used by the
  * {@link SocketOperations}
  *
- * @since 4.0
+ * @since 1.0
  */
 @Alias("tcp-requester")
 public final class TcpRequesterProvider implements PoolingConnectionProvider<TcpRequesterConnection>, Initialisable {

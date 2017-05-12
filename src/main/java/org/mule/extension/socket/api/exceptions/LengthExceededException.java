@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Thrown to indicate that there was an attempt of reading or writing more bytes that the allowed limit.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class LengthExceededException extends IOException {
 

@@ -16,7 +16,7 @@ import org.mule.runtime.extension.api.annotation.connectivity.ConnectionProvider
 /**
  * Implementation of {@link AbstractSocketConfig} for listener sockets
  *
- * @since 4.0
+ * @since 1.0
  */
 @Configuration(name = "listener-config")
 @ConnectionProviders({TcpListenerProvider.class, UdpListenerProvider.class})

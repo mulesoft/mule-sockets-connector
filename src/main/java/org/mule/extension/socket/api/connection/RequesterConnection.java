@@ -18,7 +18,7 @@ import org.mule.runtime.extension.api.annotation.Alias;
  * The {@link SocketClient} enables the {@link SocketOperations#send(RequesterConnection, Object, String, String, Message)}
  * operation.
  *
- * @since 4.0
+ * @since 1.0
  */
 @Alias("request-connection")
 public interface RequesterConnection extends SocketConnection {

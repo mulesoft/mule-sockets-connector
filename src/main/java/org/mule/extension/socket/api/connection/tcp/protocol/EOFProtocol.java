@@ -15,7 +15,7 @@ import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
  * by the client.
  * <p>
  *
- * @since 4.0
+ * @since 1.0
  */
 @Alias("eof-protocol")
 @XmlHints(allowTopLevelDefinition = true)

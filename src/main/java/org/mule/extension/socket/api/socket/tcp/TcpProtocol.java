@@ -15,7 +15,7 @@ import java.io.OutputStream;
 /**
  * This interface enables to plug different application level protocols into the {@link SocketsExtension}.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface TcpProtocol {
 

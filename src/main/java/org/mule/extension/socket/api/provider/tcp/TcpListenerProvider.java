@@ -46,7 +46,7 @@ import javax.net.ssl.SSLServerSocket;
 /**
  * A {@link ConnectionProvider} which provides instances of {@link TcpListenerConnection} to be used by {@link SocketListener}
  *
- * @since 4.0
+ * @since 1.0
  */
 @Alias("tcp-listener")
 public final class TcpListenerProvider implements CachedConnectionProvider<TcpListenerConnection>, Initialisable {

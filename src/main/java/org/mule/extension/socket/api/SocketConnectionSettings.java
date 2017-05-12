@@ -20,7 +20,7 @@ import java.net.InetSocketAddress;
  * This can be used for representing where a socket should bind in order to listen for connections, or which address should the
  * socket connect to as well.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SocketConnectionSettings {
 

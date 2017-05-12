@@ -18,7 +18,7 @@ import javax.net.ssl.SSLSocketFactory;
 /**
  * Concrete implementation for {@link SimpleSocketFactory}. It provides TCP {@link Socket} that use SSL protocol.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SslSocketFactory implements SimpleSocketFactory {
 

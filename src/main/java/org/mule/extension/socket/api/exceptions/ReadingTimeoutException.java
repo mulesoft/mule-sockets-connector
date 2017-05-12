@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Thrown to indicate that a timeout has been reached while awaiting for new data to arrive and be read.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class ReadingTimeoutException extends IOException {
 

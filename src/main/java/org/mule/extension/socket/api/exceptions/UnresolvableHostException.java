@@ -11,7 +11,7 @@ import java.net.InetSocketAddress;
 /**
  * Thrown to indicate an error resolving an {@link InetSocketAddress}
  *
- * @since 4.0
+ * @since 1.0
  */
 public class UnresolvableHostException extends RuntimeException {
 

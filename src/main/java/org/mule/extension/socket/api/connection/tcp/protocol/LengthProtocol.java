@@ -29,7 +29,7 @@ import java.io.OutputStream;
  * Note that use of this protocol must be symmetric - both the sending and receiving connectors must use the same protocol.
  * </p>
  *
- * @since 4.0
+ * @since 1.0
  */
 @XmlHints(allowTopLevelDefinition = true)
 public class LengthProtocol extends DirectProtocol {

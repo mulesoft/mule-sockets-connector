@@ -12,7 +12,7 @@ import java.net.ServerSocket;
 /**
  * Interface for {@link ServerSocket} factories
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface SimpleServerSocketFactory {
 

@@ -21,7 +21,7 @@ import javax.inject.Inject;
 /**
  * Abstract config for {@link SocketsExtension}
  * 
- * @since 4.0
+ * @since 1.0
  */
 public class AbstractSocketConfig {
 

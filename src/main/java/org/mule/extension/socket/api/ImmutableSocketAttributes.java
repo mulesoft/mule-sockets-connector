@@ -7,8 +7,10 @@
 package org.mule.extension.socket.api;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
-
 import org.mule.runtime.core.message.BaseAttributes;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -20,13 +22,10 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Immutable implementation of {@link SocketAttributes}.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class ImmutableSocketAttributes extends BaseAttributes implements SocketAttributes {
 

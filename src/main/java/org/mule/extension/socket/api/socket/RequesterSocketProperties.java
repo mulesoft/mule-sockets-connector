@@ -13,7 +13,7 @@ import org.mule.extension.socket.api.SocketConnectionSettings;
  * <p>
  * {@code null} values can be returned by any of the methods, meaning that there is no value defined for the property.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface RequesterSocketProperties {
 

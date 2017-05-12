@@ -20,7 +20,7 @@ import java.util.concurrent.Executor;
  * This kind of {@link SocketConnection} enables the {@link SocketListener} to await for new incoming connections and wraps each
  * one of those into a {@link SocketWorker} so they can run independently in their own thread.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface ListenerConnection extends SocketConnection {
 

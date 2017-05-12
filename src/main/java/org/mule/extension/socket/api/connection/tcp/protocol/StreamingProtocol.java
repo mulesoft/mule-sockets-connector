@@ -27,7 +27,7 @@ import java.io.OutputStream;
  * allows the {@link SocketOperations#send(RequesterConnection, RequesterConfig, Object, String, String, Message)} to return a
  * {@link Message} with the original {@link InputStream} as payload.
  *
- * @since 4.0
+ * @since 1.0
  */
 @XmlHints(allowTopLevelDefinition = true)
 public class StreamingProtocol extends EOFProtocol {

@@ -23,7 +23,7 @@ import java.net.Socket;
 /**
  * Implementation of {@link RequesterConnection} for establishing TCP connections.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class TcpRequesterConnection extends AbstractTcpConnection implements RequesterConnection {
 

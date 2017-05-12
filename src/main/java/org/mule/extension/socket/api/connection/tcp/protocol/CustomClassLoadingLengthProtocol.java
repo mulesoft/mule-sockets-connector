@@ -18,7 +18,7 @@ import org.apache.commons.io.input.ClassLoaderObjectInputStream;
 /**
  * A length protocol that uses a specific class loader to load objects from streams
  *
- * @since 4.0
+ * @since 1.0
  */
 @XmlHints(allowTopLevelDefinition = true)
 public class CustomClassLoadingLengthProtocol extends LengthProtocol {

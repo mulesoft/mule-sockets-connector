@@ -10,7 +10,7 @@ package org.mule.extension.socket.api.socket;
 /**
  * Interface for objects that provide common configuration for generic sockets.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface SocketProperties {
 

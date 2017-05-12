@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * Whenever a new connection is received, this {@link Source} will schedule a a {@link SocketWorker} that will handle the
  * communication for that particular connection.
  *
- * @since 4.0
+ * @since 1.0
  */
 @EmitsResponse
 public final class SocketListener extends Source<InputStream, SocketAttributes> implements FlowConstructAware {

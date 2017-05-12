@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * {@link TcpListenerConnection#listen(SourceCallback)}, This class is responsible for reading from that connection
  * is closed by the sender, or {@link Source} is stopped.
  *
- * @since 4.0
+ * @since 1.0
  */
 public final class TcpWorker extends SocketWorker {
 

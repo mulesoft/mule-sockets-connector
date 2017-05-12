@@ -15,7 +15,7 @@ import org.mule.runtime.extension.api.annotation.param.display.Summary;
 /**
  * Configuration fields common to all socket implementations
  *
- * @since 4.0
+ * @since 1.0
  */
 public abstract class AbstractSocketProperties implements SocketProperties {
 

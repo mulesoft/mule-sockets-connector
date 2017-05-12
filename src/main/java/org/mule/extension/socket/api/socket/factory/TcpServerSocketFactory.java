@@ -12,7 +12,7 @@ import java.net.ServerSocket;
 /**
  * Concrete implementation for {@link SimpleServerSocketFactory}. It provides TCP {@link ServerSocket}.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class TcpServerSocketFactory implements SimpleServerSocketFactory {
 
