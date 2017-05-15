@@ -160,7 +160,7 @@ public final class SocketUtils {
         socket.setSoTimeout(socketProperties.getClientTimeout());
       }
 
-      if (socketProperties.getKeepAlive() != null) {
+      if (socketProperties.getKeepAlive()) {
         socket.setKeepAlive(socketProperties.getKeepAlive());
       }
 

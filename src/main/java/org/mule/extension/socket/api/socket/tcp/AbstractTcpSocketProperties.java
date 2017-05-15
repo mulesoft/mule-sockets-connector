@@ -31,7 +31,7 @@ public abstract class AbstractTcpSocketProperties extends AbstractSocketProperti
   @Optional(defaultValue = "true")
   @Summary("Indicates whether the transmitted data should not be collected together for greater efficiency, and sent immediately")
   @DisplayName("Send TCP With No Delay")
-  protected boolean sendTcpNoDelay = true;
+  protected boolean sendTcpNoDelay;
 
 
   /**
@@ -55,7 +55,7 @@ public abstract class AbstractTcpSocketProperties extends AbstractSocketProperti
   @Optional(defaultValue = "false")
   @Summary("Indicates whether the open socket connections unused for a long period and with an unavailable connection "
       + "should be closed")
-  protected boolean keepAlive = false;
+  protected boolean keepAlive;
 
 
   /**
@@ -65,7 +65,7 @@ public abstract class AbstractTcpSocketProperties extends AbstractSocketProperti
   @Parameter
   @Optional(defaultValue = "true")
   @Summary("Whether the socket should fail during its creation if the host set on the endpoint cannot be resolved")
-  protected boolean failOnUnresolvedHost = true;
+  protected boolean failOnUnresolvedHost;
 
   /**
    * {@inheritDoc}
@@ -79,7 +79,7 @@ public abstract class AbstractTcpSocketProperties extends AbstractSocketProperti
    * {@inheritDoc}
    */
   @Override
-  public Boolean getKeepAlive() {
+  public boolean getKeepAlive() {
     return keepAlive;
   }
 
