@@ -63,7 +63,7 @@ public abstract class AbstractSocketProperties implements SocketProperties {
   @Parameter
   @Optional(defaultValue = "true")
   @Summary("Indicates whether if the configured socket could be reused or fail at when trying to bind it")
-  private boolean reuseAddress = true;
+  private boolean reuseAddress;
 
   public String getName() {
     return name;

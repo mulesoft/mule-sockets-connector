@@ -44,7 +44,7 @@ public interface TcpSocketProperties extends SocketProperties {
    * This is a property on the socket itself and is used by a server socket to control whether connections to the server are kept
    * alive before they are recycled.
    */
-  Boolean getKeepAlive();
+  boolean getKeepAlive();
 
 
   /**
