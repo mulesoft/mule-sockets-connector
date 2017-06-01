@@ -57,7 +57,7 @@ public class CustomProtocol implements TcpProtocol, Initialisable {
   @Override
   public void initialise() throws InitialisationException {
     try {
-      delegate = (TcpProtocol) ClassUtils.instanciateClass(clazz);
+      delegate = (TcpProtocol) ClassUtils.instantiateClass(clazz);
     } catch (Exception e) {
       throw new RuntimeException(format("Could not load class '%s'", clazz));
     }
