@@ -7,7 +7,7 @@
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
 import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
-import static org.mule.runtime.core.util.IOUtils.copyLarge;
+import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 
 import org.mule.extension.socket.api.SocketOperations;
 import org.mule.extension.socket.api.config.RequesterConfig;

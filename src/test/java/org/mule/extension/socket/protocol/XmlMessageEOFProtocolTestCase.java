@@ -9,7 +9,7 @@ package org.mule.extension.socket.protocol;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.mule.extension.socket.api.connection.tcp.protocol.XmlMessageEOFProtocol;
-import org.mule.runtime.core.util.IOUtils;
+import org.mule.runtime.core.api.util.IOUtils;
 
 import java.io.InputStream;
 
