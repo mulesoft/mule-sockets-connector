@@ -10,9 +10,8 @@ package org.mule.extension.socket.api.connection.tcp.protocol;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.core.api.serialization.DefaultObjectSerializer;
 import org.mule.runtime.core.api.serialization.ObjectSerializer;
-import org.mule.runtime.core.util.NumberUtils;
-import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.Optional;
+import org.mule.runtime.extension.api.annotation.param.Parameter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,8 +37,8 @@ public abstract class AbstractByteProtocol implements TcpProtocol {
   private static final Logger LOGGER = LoggerFactory.getLogger(DirectProtocol.class);
 
   private static final long PAUSE_PERIOD = 100;
-  protected static final int EOF = NumberUtils.INTEGER_MINUS_ONE;
-  protected static final int NO_MAX_LENGTH = NumberUtils.INTEGER_MINUS_ONE;
+  protected static final int EOF = -1;
+  protected static final int NO_MAX_LENGTH = -1;
   public static final boolean STREAM_OK = true;
   protected final boolean streamOk;
   public static final boolean NO_STREAM = false;

@@ -11,7 +11,7 @@ import static java.lang.String.format;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.api.lifecycle.Initialisable;
 import org.mule.runtime.api.lifecycle.InitialisationException;
-import org.mule.runtime.core.util.ClassUtils;
+import org.mule.runtime.core.api.util.ClassUtils;
 import org.mule.runtime.extension.api.annotation.Alias;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
@@ -57,7 +57,7 @@ public class CustomProtocol implements TcpProtocol, Initialisable {
   @Override
   public void initialise() throws InitialisationException {
     try {
-      delegate = (TcpProtocol) ClassUtils.instanciateClass(clazz);
+      delegate = (TcpProtocol) ClassUtils.instantiateClass(clazz);
     } catch (Exception e) {
       throw new RuntimeException(format("Could not load class '%s'", clazz));
     }
