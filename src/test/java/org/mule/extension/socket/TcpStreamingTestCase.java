@@ -8,12 +8,10 @@ package org.mule.extension.socket;
 
 import static java.lang.String.format;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.mule.functional.functional.FunctionalStreamingTestComponent.getFromFlow;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import org.mule.functional.functional.EventCallback;
 import org.mule.functional.functional.FunctionalStreamingTestComponent;
 
 import java.io.ByteArrayInputStream;
@@ -57,7 +55,8 @@ public class TcpStreamingTestCase extends SocketExtensionTestCase {
     final AtomicReference<String> message = new AtomicReference<>();
     final AtomicInteger loopCount = new AtomicInteger(0);
 
-    EventCallback callback = (context, component, muleContext) -> {
+    // this works only if singleton set in descriptor
+    getFromFlow(muleContext, "tcp-listen").setEventCallback((event, component, muleContext) -> {
       try {
         LOGGER.info(format("called %d times", loopCount.incrementAndGet()));
         FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component;
@@ -70,14 +69,7 @@ public class TcpStreamingTestCase extends SocketExtensionTestCase {
       } catch (Exception e) {
         LOGGER.error(e.getMessage(), e);
       }
-    };
-
-    // this works only if singleton set in descriptor
-    Object functionalTestComponent = getComponent("tcp-listen");
-    assertThat(functionalTestComponent, is(instanceOf(FunctionalStreamingTestComponent.class)));
-    assertThat(functionalTestComponent, is(notNullValue()));
-
-    ((FunctionalStreamingTestComponent) functionalTestComponent).setEventCallback(callback, TEST_MESSAGE.length());
+    }, TEST_MESSAGE.length());
 
     flowRunner("tcp-send").withPayload(payload).run().getMessage().getPayload().getValue();
 

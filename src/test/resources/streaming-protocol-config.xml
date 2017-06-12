@@ -30,9 +30,8 @@
         <sockets:socket-listener config-ref="tcp-listener">
             <non-repeatable-stream />
         </sockets:socket-listener>
-        <component>
-            <!-- This component knows how to look for EOF -->
-            <singleton-object class="org.mule.extension.socket.EOFStreamingTestComponent" />
-        </component>
+
+        <!-- This component knows how to look for EOF -->
+        <custom-processor class="org.mule.extension.socket.EOFStreamingTestComponent" />
     </flow>
 </mule>
