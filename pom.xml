@@ -15,7 +15,7 @@
     <packaging>mule-extension</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
-    <name>Mule Sockets Extension</name>
+    <name>Sockets Connector</name>
     <description>A Mule extension that provides functionality to manage TCP and UDP connections</description>
 
     <properties>
