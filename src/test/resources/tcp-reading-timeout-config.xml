@@ -30,7 +30,7 @@
     <flow name="tcp-listen">
         <sockets:socket-listener config-ref="tcp-listener"/>
         <set-payload value="Consumed"/>
-        <test:component waitTime="200"/>
+        <test:processor waitTime="200"/>
     </flow>
 
     <sub-flow name="onIncomingConnection">
