@@ -39,10 +39,10 @@
         <sockets:socket-listener config-ref="ssl-listener-global-tls"/>
         <object-to-string-transformer mimeType="text/plain"/>
 
-        <test:component appendString=" Received">
+        <test:processor appendString=" Received">
             <test:callback
                     class="org.mule.transport.ssl.SaveCertificatesCallback"/>
-        </test:component>
+        </test:processor>
     </flow>
 
 </mule>
