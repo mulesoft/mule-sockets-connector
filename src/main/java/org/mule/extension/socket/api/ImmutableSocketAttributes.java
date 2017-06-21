@@ -7,7 +7,7 @@
 package org.mule.extension.socket.api;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import org.mule.runtime.core.message.BaseAttributes;
+import org.mule.runtime.core.api.message.BaseAttributes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
