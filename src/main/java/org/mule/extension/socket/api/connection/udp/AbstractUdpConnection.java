@@ -12,8 +12,8 @@ import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
-import org.mule.runtime.core.api.serialization.DefaultObjectSerializer;
-import org.mule.runtime.core.api.serialization.ObjectSerializer;
+import org.mule.runtime.api.serialization.DefaultObjectSerializer;
+import org.mule.runtime.api.serialization.ObjectSerializer;
 
 import javax.inject.Inject;
 import java.net.DatagramSocket;
