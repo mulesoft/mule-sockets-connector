@@ -14,7 +14,7 @@ import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 import org.mule.extension.socket.api.exceptions.ReadingTimeoutException;
 import org.mule.extension.socket.api.SocketAttributes;
-import org.mule.runtime.core.api.serialization.ObjectSerializer;
+import org.mule.runtime.api.serialization.ObjectSerializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

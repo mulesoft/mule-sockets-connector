@@ -8,8 +8,8 @@
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
-import org.mule.runtime.core.api.serialization.DefaultObjectSerializer;
-import org.mule.runtime.core.api.serialization.ObjectSerializer;
+import org.mule.runtime.api.serialization.DefaultObjectSerializer;
+import org.mule.runtime.api.serialization.ObjectSerializer;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 
