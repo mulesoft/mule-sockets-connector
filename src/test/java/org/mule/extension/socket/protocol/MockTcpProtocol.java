@@ -6,17 +6,13 @@
  */
 package org.mule.extension.socket.protocol;
 
-import org.mule.extension.socket.api.connection.tcp.protocol.AbstractByteProtocol;
+import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class MockTcpProtocol extends AbstractByteProtocol {
-
-  public MockTcpProtocol() {
-    super(false);
-  }
+public class MockTcpProtocol implements TcpProtocol {
 
   @Override
   public InputStream read(InputStream is) throws IOException {

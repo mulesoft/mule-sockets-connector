@@ -22,6 +22,7 @@
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <assertJVersion>3.3.0</assertJVersion>
         <commonsIoVersion>2.4</commonsIoVersion>
+        <guavaVersion>18.0</guavaVersion>
         <muleSpringModuleVersion>1.0.0-SNAPSHOT</muleSpringModuleVersion>
     </properties>
 
@@ -43,6 +44,11 @@
             <artifactId>assertj-core</artifactId>
             <version>${assertJVersion}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guavaVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.tests.plugin</groupId>

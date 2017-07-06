@@ -143,7 +143,10 @@ public final class TcpListenerConnection extends AbstractTcpConnection implement
       }
 
       // socket was not intentionally closed by the connection provider
-      LOGGER.debug("TCP listener socket has been gracefully closed");
+
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug("TCP listener socket has been gracefully closed");
+      }
 
       throw e;
     }

@@ -16,8 +16,6 @@ import org.mule.runtime.extension.api.annotation.param.DefaultEncoding;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 
-import javax.inject.Inject;
-
 /**
  * Abstract config for {@link SocketsExtension}
  * 
@@ -35,9 +33,9 @@ public class AbstractSocketConfig {
   @Parameter
   @Optional
   @DefaultEncoding
-  private String defaultEncoding;
+  private String encoding;
 
-  public String getDefaultEncoding() {
-    return defaultEncoding;
+  public String getEncoding() {
+    return encoding;
   }
 }
