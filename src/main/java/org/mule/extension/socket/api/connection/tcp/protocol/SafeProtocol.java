@@ -6,19 +6,20 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
+import static org.mule.runtime.api.serialization.ObjectSerializer.DEFAULT_OBJECT_SERIALIZER_NAME;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
-import org.mule.runtime.api.serialization.DefaultObjectSerializer;
 import org.mule.runtime.api.serialization.ObjectSerializer;
 import org.mule.runtime.core.api.util.IOUtils;
-import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 import org.mule.runtime.extension.api.annotation.param.Optional;
+import org.mule.runtime.extension.api.annotation.param.Parameter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * This protocol is an application level {@link TcpProtocol} and precedes every message with a cookie. It should probably not be
@@ -123,7 +124,7 @@ public class SafeProtocol extends AbstractByteProtocol {
   }
 
   @Inject
-  @DefaultObjectSerializer
+  @Named(DEFAULT_OBJECT_SERIALIZER_NAME)
   public void setObjectSerializer(ObjectSerializer objectSerializer) {
     propagateObjectSerializerIfNecessary(delegate, objectSerializer);
     propagateObjectSerializerIfNecessary(cookieProtocol, objectSerializer);
