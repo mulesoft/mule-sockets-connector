@@ -22,6 +22,7 @@
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <assertJVersion>3.3.0</assertJVersion>
         <commonsIoVersion>2.4</commonsIoVersion>
+        <muleSpringModuleVersion>1.0.0-SNAPSHOT</muleSpringModuleVersion>
     </properties>
 
     <dependencies>
@@ -47,6 +48,13 @@
             <groupId>org.mule.tests.plugin</groupId>
             <artifactId>mule-tests-component-plugin</artifactId>
             <version>${mule.version}</version>
+            <classifier>mule-plugin</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-spring-module</artifactId>
+            <version>${muleSpringModuleVersion}</version>
             <classifier>mule-plugin</classifier>
             <scope>test</scope>
         </dependency>

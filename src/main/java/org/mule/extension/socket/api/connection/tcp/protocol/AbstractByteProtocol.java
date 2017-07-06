@@ -7,11 +7,14 @@
 
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
+import static org.mule.runtime.api.serialization.ObjectSerializer.DEFAULT_OBJECT_SERIALIZER_NAME;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
-import org.mule.runtime.api.serialization.DefaultObjectSerializer;
 import org.mule.runtime.api.serialization.ObjectSerializer;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,9 +24,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.inject.Named;
 
 /**
  * This Abstract class has been introduced so as to have the byte protocols (i.e. the protocols that had only a single write
@@ -43,8 +44,8 @@ public abstract class AbstractByteProtocol implements TcpProtocol {
   protected final boolean streamOk;
   public static final boolean NO_STREAM = false;
 
-  @DefaultObjectSerializer
   @Inject
+  @Named(DEFAULT_OBJECT_SERIALIZER_NAME)
   protected ObjectSerializer objectSerializer;
 
   /**
