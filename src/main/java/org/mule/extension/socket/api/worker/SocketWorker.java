@@ -51,7 +51,7 @@ public abstract class SocketWorker implements Disposable, Runnable {
     callback.handle(createResult(content, attributes), ctx);
   }
 
-  public abstract void onComplete(Object result);
+  public abstract void onComplete(InputStream result);
 
   public abstract void onError(Throwable e);
 }

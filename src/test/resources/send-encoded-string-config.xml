@@ -21,7 +21,7 @@
     </sockets:listener-config>
 
     <flow name="tcp-send">
-        <sockets:send config-ref="tcp-requester" encoding="#[encoding]"/>
+        <sockets:send config-ref="tcp-requester"/>
         <object-to-string-transformer />
     </flow>
 

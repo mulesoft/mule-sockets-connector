@@ -20,7 +20,7 @@ public class MockTcpProtocol implements TcpProtocol {
   }
 
   @Override
-  public void write(OutputStream os, Object data, String encoding) throws IOException {
+  public void write(OutputStream os, InputStream data) throws IOException {
     throw new UnsupportedOperationException("write");
   }
 }

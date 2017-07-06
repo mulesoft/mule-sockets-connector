@@ -6,20 +6,16 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
-import static org.mule.runtime.api.serialization.ObjectSerializer.DEFAULT_OBJECT_SERIALIZER_NAME;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
-import org.mule.runtime.api.serialization.ObjectSerializer;
 import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * This protocol is an application level {@link TcpProtocol} and precedes every message with a cookie. It should probably not be
@@ -71,9 +67,9 @@ public class SafeProtocol extends AbstractByteProtocol {
    * {@inheritDoc}
    */
   @Override
-  public void write(OutputStream os, Object data, String encoding) throws IOException {
-    assureSibling(os, encoding);
-    delegate.write(os, data, encoding);
+  public void write(OutputStream os, InputStream data) throws IOException {
+    assureSibling(os);
+    delegate.write(os, data);
   }
 
   /**
@@ -82,8 +78,8 @@ public class SafeProtocol extends AbstractByteProtocol {
    * @param outputStream
    * @throws IOException
    */
-  private void assureSibling(OutputStream outputStream, String encoding) throws IOException {
-    cookieProtocol.write(outputStream, COOKIE, encoding);
+  private void assureSibling(OutputStream outputStream) throws IOException {
+    cookieProtocol.write(outputStream, new ByteArrayInputStream(COOKIE.getBytes()));
   }
 
   /**
@@ -122,18 +118,4 @@ public class SafeProtocol extends AbstractByteProtocol {
         + "Please read the documentation for the TCP transport, " + "paying particular attention to the protocol parameter.")
             .initCause(e);
   }
-
-  @Inject
-  @Named(DEFAULT_OBJECT_SERIALIZER_NAME)
-  public void setObjectSerializer(ObjectSerializer objectSerializer) {
-    propagateObjectSerializerIfNecessary(delegate, objectSerializer);
-    propagateObjectSerializerIfNecessary(cookieProtocol, objectSerializer);
-  }
-
-  private void propagateObjectSerializerIfNecessary(TcpProtocol protocol, ObjectSerializer objectSerializer) {
-    if (protocol instanceof AbstractByteProtocol) {
-      ((AbstractByteProtocol) protocol).setObjectSerializer(objectSerializer);
-    }
-  }
-
 }

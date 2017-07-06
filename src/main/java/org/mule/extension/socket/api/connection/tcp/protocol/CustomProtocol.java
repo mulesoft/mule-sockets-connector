@@ -39,7 +39,8 @@ public class CustomProtocol implements TcpProtocol, Initialisable {
   @Alias("class")
   @Summary("Full qualifier class name that must implement 'TcpProtocol' that will be used as a custom protocol")
   @DisplayName("Protocol Class Name")
-  public String clazz;
+  private String clazz;
+
   private TcpProtocol delegate;
 
   public CustomProtocol() {}
@@ -50,8 +51,8 @@ public class CustomProtocol implements TcpProtocol, Initialisable {
   }
 
   @Override
-  public void write(OutputStream os, Object data, String encoding) throws IOException {
-    delegate.write(os, data, encoding);
+  public void write(OutputStream os, InputStream data) throws IOException {
+    delegate.write(os, data);
   }
 
   @Override

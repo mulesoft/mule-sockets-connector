@@ -50,19 +50,14 @@ public class StreamingProtocol extends EOFProtocol {
 
 
   @Override
-  public void write(OutputStream os, Object data, String encoding) throws IOException {
+  public void write(OutputStream os, InputStream data) throws IOException {
     if (data instanceof CursorStreamProvider) {
       data = ((CursorStreamProvider) data).openCursor();
     }
 
     try {
-      if (data instanceof InputStream) {
-        InputStream is = (InputStream) data;
-        copyLarge(is, os);
-        is.close();
-      } else {
-        this.writeByteArray(os, getByteArray(data, true, encoding, objectSerializer));
-      }
+      copyLarge(data, os);
+      data.close();
     } finally {
       os.flush();
       os.close();

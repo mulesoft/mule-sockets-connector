@@ -116,8 +116,8 @@ public class XmlMessageProtocol extends AbstractByteProtocol {
   }
 
   @Override
-  public void write(OutputStream os, Object data, String encoding) throws IOException {
-    this.writeByteArray(os, getByteArray(data, streamOk, encoding, objectSerializer));
+  public void write(OutputStream os, InputStream data) throws IOException {
+    this.writeByteArray(os, getByteArray(data));
   }
 
   /**
