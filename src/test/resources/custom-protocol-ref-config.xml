@@ -2,12 +2,10 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
-      xmlns:spring="http://www.mulesoft.org/schema/mule/spring"
       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-       http://www.mulesoft.org/schema/mule/spring http://www.mulesoft.org/schema/mule/spring/current/mule-spring.xsd
        http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd">
 
-    <spring:config name="springConfig" files="custom-protocol-ref-config-beans.xml"/>
+    <object name="myProtocolRef" class="org.mule.extension.socket.protocol.MockTcpProtocol"/>
 
     <sockets:request-config name="tcp-requester">
         <sockets:tcp-requester-connection host="localhost" port="${port}" protocol="myProtocolRef" failOnUnresolvedHost="true" sendTcpNoDelay="true">
