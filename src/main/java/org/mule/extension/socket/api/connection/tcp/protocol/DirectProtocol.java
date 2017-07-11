@@ -6,7 +6,7 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
-import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.commons.io.output.ByteArrayOutputStream;
+import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
 
 /**
  * This protocol is an application level {@link TcpProtocol} that does nothing. The socket reads until no more bytes are
@@ -97,6 +97,15 @@ public class DirectProtocol extends AbstractByteProtocol {
 
   @Override
   public void write(OutputStream os, InputStream data) throws IOException {
-    this.writeByteArray(os, getByteArray(data));
+    sendStream(data, os, bufferSize);
   }
+
+  protected void sendStream(InputStream inputStream, OutputStream outputStream, int bufferSize) throws IOException {
+    byte[] buffer = new byte[bufferSize];
+    int chunkLen = 0;
+    while ((chunkLen = safeRead(inputStream, buffer)) != -1) {
+      outputStream.write(buffer, 0, chunkLen);
+    }
+  }
+
 }

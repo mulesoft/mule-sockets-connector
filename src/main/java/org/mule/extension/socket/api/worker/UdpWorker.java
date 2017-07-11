@@ -6,13 +6,11 @@
  */
 package org.mule.extension.socket.api.worker;
 
-import static java.lang.String.format;
-import static java.util.Arrays.copyOf;
-import static org.mule.extension.socket.internal.SocketUtils.createPacket;
-import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.runtime.extension.api.runtime.source.SourceCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -20,8 +18,9 @@ import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.lang.String.format;
+import static java.util.Arrays.copyOf;
+import static org.mule.extension.socket.internal.SocketUtils.*;
 
 /**
  * One worker is created per received package. If the other end of the connection is awaiting for a response, one will be sent but
@@ -51,10 +50,7 @@ public final class UdpWorker extends SocketWorker {
   @Override
   public void onComplete(InputStream result) {
     try {
-      byte[] byteArray = getByteArray(result);
-      DatagramPacket sendPacket = createPacket(byteArray);
-      sendPacket.setSocketAddress(packet.getSocketAddress());
-      socket.send(sendPacket);
+      sendUdpPackages(result, socket.getReceiveBufferSize(), packet.getSocketAddress(), socket);
     } catch (IOException e) {
       callback.onSourceException(new IOException(format("An error occurred while sending UDP packet to address '%s'",
                                                         packet.getSocketAddress().toString()),

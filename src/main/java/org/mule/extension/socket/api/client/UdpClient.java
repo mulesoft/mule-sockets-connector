@@ -6,9 +6,6 @@
  */
 package org.mule.extension.socket.api.client;
 
-import static java.util.Arrays.copyOf;
-import static org.mule.extension.socket.internal.SocketUtils.createPacket;
-import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.SocketConnectionSettings;
@@ -22,6 +19,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
+
+import static java.util.Arrays.copyOf;
+import static org.mule.extension.socket.internal.SocketUtils.createPacket;
+import static org.mule.extension.socket.internal.SocketUtils.sendUdpPackages;
 
 /**
  * This {@link SocketClient} implementation allows the reading and writing to and from a specific UDP {@link DatagramSocket}.
@@ -43,10 +44,7 @@ public final class UdpClient implements SocketClient {
    */
   @Override
   public void write(InputStream data) throws IOException {
-    byte[] byteArray = getByteArray(data);
-    DatagramPacket sendPacket = createPacket(byteArray);
-    sendPacket.setSocketAddress(socketAddress);
-    socket.send(sendPacket);
+    sendUdpPackages(data, socket.getReceiveBufferSize(), socketAddress, socket);
   }
 
   /**

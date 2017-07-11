@@ -6,8 +6,6 @@
  */
 package org.mule.extension.socket.internal;
 
-import static java.lang.String.format;
-import static org.mule.runtime.api.util.Preconditions.checkArgument;
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.exceptions.UnresolvableHostException;
@@ -15,16 +13,15 @@ import org.mule.extension.socket.api.socket.tcp.TcpSocketProperties;
 import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
-import org.mule.runtime.api.streaming.bytes.CursorStreamProvider;
 import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.runtime.operation.Result;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.Socket;
-import java.net.SocketException;
+import java.net.*;
+
+import static java.lang.String.format;
+import static org.mule.runtime.api.util.Preconditions.checkArgument;
 
 public final class SocketUtils {
 
@@ -37,11 +34,6 @@ public final class SocketUtils {
 
   public static byte[] getByteArray(InputStream data)
       throws IOException {
-
-    if (data instanceof CursorStreamProvider) {
-      data = ((CursorStreamProvider) data).openCursor();
-    }
-
     return IOUtils.toByteArray(data);
   }
 
@@ -66,6 +58,18 @@ public final class SocketUtils {
    */
   public static DatagramPacket createPacket(byte[] content) throws UnresolvableHostException {
     return new DatagramPacket(content, content.length);
+  }
+
+  /**
+   * Creates a {@link DatagramPacket} with with the content {@link byte[]} but with the {@code dataLength} size, addressed to the port and address of the client.
+   *
+   * @param content that is going to be sent inside the packet
+   * @param dataLength size of the content to be send. It may differ from {@code content.size}
+   * @return a packet ready to be sent
+   * @throws UnresolvableHostException
+   */
+  public static DatagramPacket createPacket(byte[] content, int dataLength) throws UnresolvableHostException {
+    return new DatagramPacket(content, dataLength);
   }
 
   /**
@@ -145,6 +149,55 @@ public final class SocketUtils {
       socket.setTcpNoDelay(socketProperties.getSendTcpNoDelay());
     } catch (SocketException e) {
       // MULE-2800 - Bug in Solaris
+    }
+  }
+
+  /**
+   * Manage non-blocking reads and handle errors
+   *
+   * @param is The input stream to read from
+   * @param buffer The buffer to read into
+   * @param size The amount of data (upper bound) to read
+   * @return The amount of data read (always non-zero, -1 on EOF or socket exception)
+   * @throws IOException if {@link InputStream#read()} fails.
+   */
+  public static int safeRead(InputStream is, byte[] buffer, int size) throws IOException {
+    int len;
+    try {
+      do {
+        len = is.read(buffer, 0, size);
+        if (0 == len) {
+          // wait for non-blocking input stream
+          // use new lock since not expecting notification
+          try {
+            Thread.sleep(100);
+          } catch (InterruptedException e) {
+            // no-op
+          }
+        }
+      } while (0 == len);
+      return len;
+    } catch (IOException e) {
+      throw e;
+    }
+  }
+
+  /**
+   *
+   * @param inputStream data that's going to be sent through the {@link DatagramSocket}
+   * @param bufferSize size of the buffer used for reading the {@code inputStream}
+   * @param address {@link SocketAddress} to which the data is going to be send towards. 
+   * @param socket used for sending the data
+   * @throws IOException if {@link InputStream#read()} or {@link DatagramSocket#send(DatagramPacket)} fails.
+   */
+  public static void sendUdpPackages(InputStream inputStream, int bufferSize, SocketAddress address, DatagramSocket socket)
+      throws IOException {
+    byte[] buffer = new byte[bufferSize];
+    int chunkLen = 0;
+    while ((chunkLen = safeRead(inputStream, buffer, buffer.length)) != -1) {
+      DatagramPacket sendPacket = createPacket(buffer, chunkLen);
+      sendPacket.setSocketAddress(address);
+      socket.send(sendPacket);
     }
   }
 }

@@ -6,19 +6,16 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
-import static java.lang.String.format;
 import org.mule.extension.socket.api.exceptions.LengthExceededException;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
-import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 import org.mule.runtime.extension.api.annotation.param.Optional;
+import org.mule.runtime.extension.api.annotation.param.Parameter;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+
+import static java.lang.String.format;
+import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
 
 /**
  * This protocol is an application level {@link TcpProtocol} that can be used to transfer large amounts of data without risking
@@ -116,6 +113,11 @@ public class LengthProtocol extends DirectProtocol {
     if (dataOutputStream.size() != data.length + SIZE_INT) {
       dataOutputStream.flush();
     }
+  }
+
+  @Override
+  public void write(OutputStream os, InputStream data) throws IOException {
+    this.writeByteArray(os, getByteArray(data));
   }
 
   /**
