@@ -33,19 +33,15 @@ public class SocketOperations {
    * operation will return a {@code null} payload.
    *
    * @param content        data that will be serialized and sent through the socket.
-   * @param outputEncoding encoding that will be used to serialize the {@code data} if its type is {@link String}.
    * @throws ConnectionException if the connection couldn't be established, if the remote host was unavailable.
    */
   public Result<InputStream, SocketAttributes> sendAndReceive(@Connection RequesterConnection connection,
                                                               @Config RequesterConfig config,
-                                                              @Content Object content,
-                                                              @Optional @Summary("Encoding to use when the data to serialize is of String type") String outputEncoding)
+                                                              @Content Object content)
       throws ConnectionException, IOException {
     SocketClient client = connection.getClient();
 
-    outputEncoding = override(outputEncoding, config.getDefaultEncoding());
-
-    client.write(content, outputEncoding);
+    client.write(content, config.getDefaultEncoding());
 
     return Result.<InputStream, SocketAttributes>builder()
         .output(client.read())
