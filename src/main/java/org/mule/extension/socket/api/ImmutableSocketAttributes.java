@@ -103,7 +103,7 @@ public class ImmutableSocketAttributes implements SocketAttributes, Serializable
   public String toString() {
     return ReflectionToStringBuilder.toString(this, SHORT_PREFIX_STYLE);
   }
-  
+
   /**
    * {@inheritDoc}
    */
