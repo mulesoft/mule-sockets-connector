@@ -15,7 +15,7 @@ import org.mule.runtime.extension.api.annotation.param.Parameter;
 import java.io.*;
 
 import static java.lang.String.format;
-import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
+import static org.mule.runtime.core.api.util.IOUtils.toByteArray;
 
 /**
  * This protocol is an application level {@link TcpProtocol} that can be used to transfer large amounts of data without risking
@@ -95,29 +95,27 @@ public class LengthProtocol extends DirectProtocol {
   /**
    * It first writes the an int representing the length of the data to be written, and then writes the actual data.
    *
-   * @param outputStream in which the {@code data} will be written
-   * @param data to be written
+   * @param os in which the {@code data} will be written
+   * @param inputStream to be written
    * @throws LengthExceededException if the length of the message to be written exceeds the {@code maxMessageLength} set
    */
   @Override
-  protected void writeByteArray(OutputStream outputStream, byte[] data) throws IOException {
+  public void write(OutputStream os, InputStream inputStream) throws IOException {
+    byte[] data = toByteArray(inputStream);
+    inputStream.close();
+
     if (maxMessageLength > 0 && data.length > maxMessageLength) {
       throw new LengthExceededException(format("Message length is '%d' and exceeds the limit '%d", data.length,
                                                maxMessageLength));
     }
 
-    DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+    DataOutputStream dataOutputStream = new DataOutputStream(os);
     dataOutputStream.writeInt(data.length);
     dataOutputStream.write(data);
 
     if (dataOutputStream.size() != data.length + SIZE_INT) {
       dataOutputStream.flush();
     }
-  }
-
-  @Override
-  public void write(OutputStream os, InputStream data) throws IOException {
-    this.writeByteArray(os, getByteArray(data));
   }
 
   /**

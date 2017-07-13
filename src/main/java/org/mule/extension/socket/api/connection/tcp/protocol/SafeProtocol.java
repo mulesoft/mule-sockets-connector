@@ -9,6 +9,7 @@ package org.mule.extension.socket.api.connection.tcp.protocol;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
+import org.mule.runtime.extension.api.annotation.param.DefaultEncoding;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 
@@ -37,6 +38,13 @@ public class SafeProtocol extends AbstractByteProtocol {
   @Parameter
   @Optional(defaultValue = "-1")
   private int maxMessageLeght = NO_MAX_LENGTH;
+
+  /**
+   * Indicates the encoding used for serializing the cookie
+   */
+  @Parameter
+  @DefaultEncoding
+  private String encoding;
 
   public SafeProtocol() {
     super(false);
@@ -79,7 +87,7 @@ public class SafeProtocol extends AbstractByteProtocol {
    * @throws IOException
    */
   private void assureSibling(OutputStream outputStream) throws IOException {
-    cookieProtocol.write(outputStream, new ByteArrayInputStream(COOKIE.getBytes()));
+    cookieProtocol.write(outputStream, new ByteArrayInputStream(COOKIE.getBytes(encoding)));
   }
 
   /**
@@ -97,7 +105,7 @@ public class SafeProtocol extends AbstractByteProtocol {
       helpUser(e);
     }
     if (null != cookie) {
-      String parsedCookie = IOUtils.toString((InputStream) cookie);
+      String parsedCookie = IOUtils.toString((InputStream) cookie, encoding);
       if (parsedCookie.length() != COOKIE.length() || !COOKIE.equals(parsedCookie)) {
         helpUser();
       } else {

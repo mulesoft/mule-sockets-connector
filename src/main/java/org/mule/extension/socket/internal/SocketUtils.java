@@ -13,7 +13,6 @@ import org.mule.extension.socket.api.socket.tcp.TcpSocketProperties;
 import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
-import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.runtime.operation.Result;
 
 import java.io.IOException;
@@ -31,11 +30,6 @@ public final class SocketUtils {
 
   private static final String SOCKET_COULD_NOT_BE_CREATED = "%s Socket could not be created correctly";
   public static final String WORK = "work";
-
-  public static byte[] getByteArray(InputStream data)
-      throws IOException {
-    return IOUtils.toByteArray(data);
-  }
 
   /**
    * @param connection delegates connectin's validation on {@link AbstractSocketConnection#validate()}
@@ -153,36 +147,6 @@ public final class SocketUtils {
   }
 
   /**
-   * Manage non-blocking reads and handle errors
-   *
-   * @param is The input stream to read from
-   * @param buffer The buffer to read into
-   * @param size The amount of data (upper bound) to read
-   * @return The amount of data read (always non-zero, -1 on EOF or socket exception)
-   * @throws IOException if {@link InputStream#read()} fails.
-   */
-  public static int safeRead(InputStream is, byte[] buffer, int size) throws IOException {
-    int len;
-    try {
-      do {
-        len = is.read(buffer, 0, size);
-        if (0 == len) {
-          // wait for non-blocking input stream
-          // use new lock since not expecting notification
-          try {
-            Thread.sleep(100);
-          } catch (InterruptedException e) {
-            // no-op
-          }
-        }
-      } while (0 == len);
-      return len;
-    } catch (IOException e) {
-      throw e;
-    }
-  }
-
-  /**
    *
    * @param inputStream data that's going to be sent through the {@link DatagramSocket}
    * @param bufferSize size of the buffer used for reading the {@code inputStream}
@@ -194,7 +158,7 @@ public final class SocketUtils {
       throws IOException {
     byte[] buffer = new byte[bufferSize];
     int chunkLen = 0;
-    while ((chunkLen = safeRead(inputStream, buffer, buffer.length)) != -1) {
+    while ((chunkLen = inputStream.read(buffer, 0, buffer.length)) != -1) {
       DatagramPacket sendPacket = createPacket(buffer, chunkLen);
       sendPacket.setSocketAddress(address);
       socket.send(sendPacket);

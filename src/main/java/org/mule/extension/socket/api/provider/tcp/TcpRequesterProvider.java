@@ -6,11 +6,6 @@
  */
 package org.mule.extension.socket.api.provider.tcp;
 
-import static org.mule.extension.socket.api.SocketsExtension.TLS;
-import static org.mule.extension.socket.api.SocketsExtension.TLS_CONFIGURATION;
-import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
-import static org.mule.runtime.extension.api.annotation.param.ParameterGroup.CONNECTION;
-import static org.mule.runtime.extension.api.annotation.param.display.Placement.CONNECTION_TAB;
 import org.mule.extension.socket.api.SocketConnectionSettings;
 import org.mule.extension.socket.api.SocketOperations;
 import org.mule.extension.socket.api.connection.tcp.TcpRequesterConnection;
@@ -31,6 +26,7 @@ import org.mule.runtime.api.lifecycle.Initialisable;
 import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.api.tls.TlsContextFactory;
 import org.mule.runtime.extension.api.annotation.Alias;
+import org.mule.runtime.extension.api.annotation.param.NullSafe;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.ParameterGroup;
@@ -38,9 +34,14 @@ import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
 
+import javax.net.ssl.SSLSocket;
 import java.net.Socket;
 
-import javax.net.ssl.SSLSocket;
+import static org.mule.extension.socket.api.SocketsExtension.TLS;
+import static org.mule.extension.socket.api.SocketsExtension.TLS_CONFIGURATION;
+import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
+import static org.mule.runtime.extension.api.annotation.param.ParameterGroup.CONNECTION;
+import static org.mule.runtime.extension.api.annotation.param.display.Placement.CONNECTION_TAB;
 
 /**
  * A {@link ConnectionProvider} which provides instances of {@link TcpRequesterConnection} to be used by the
@@ -90,7 +91,8 @@ public final class TcpRequesterProvider implements PoolingConnectionProvider<Tcp
   @Optional
   @Summary("TCP Protocol to use when doing requests")
   @Placement(tab = CONNECTION_TAB, order = 3)
-  private TcpProtocol protocol = new SafeProtocol();
+  @NullSafe(defaultImplementingType = SafeProtocol.class)
+  private TcpProtocol protocol;
 
   /**
    * {@inheritDoc}

@@ -7,12 +7,10 @@
 package org.mule.extension.socket.api;
 
 import org.mule.extension.socket.api.client.SocketClient;
-import org.mule.extension.socket.api.config.RequesterConfig;
 import org.mule.extension.socket.api.connection.RequesterConnection;
 import org.mule.extension.socket.api.exceptions.SocketsErrorTypeProvider;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.extension.api.annotation.error.Throws;
-import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Content;
 import org.mule.runtime.extension.api.runtime.operation.Result;

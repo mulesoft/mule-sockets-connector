@@ -19,15 +19,10 @@ import java.util.function.Consumer;
 public abstract class SocketWorker implements Disposable, Runnable {
 
   protected final SourceCallback<InputStream, SocketAttributes> callback;
-  protected String encoding;
   private Consumer<Exception> errorHandler;
 
   protected SocketWorker(SourceCallback<InputStream, SocketAttributes> callback) {
     this.callback = callback;
-  }
-
-  public void setEncoding(String encoding) {
-    this.encoding = encoding;
   }
 
   public void onError(Consumer<Exception> handler) {

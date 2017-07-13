@@ -14,13 +14,13 @@ import org.mule.runtime.extension.api.annotation.Operations;
 import org.mule.runtime.extension.api.annotation.connectivity.ConnectionProviders;
 
 /**
- * Implementation of {@link AbstractSocketConfig} for requester sockets
+ * Config for requester sockets
  *
  * @since 1.0
  */
 @Configuration(name = "request-config")
 @Operations({SocketOperations.class})
 @ConnectionProviders({TcpRequesterProvider.class, UdpRequesterProvider.class})
-public class RequesterConfig extends AbstractSocketConfig {
+public class RequesterConfig {
 
 }

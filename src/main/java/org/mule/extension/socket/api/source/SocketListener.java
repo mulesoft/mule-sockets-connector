@@ -135,7 +135,6 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
 
       try {
         SocketWorker worker = connection.listen(sourceCallback);
-        worker.setEncoding(config.getEncoding());
         worker.onError(e -> {
           Throwable t = e;
           if (t.getCause() != null) {

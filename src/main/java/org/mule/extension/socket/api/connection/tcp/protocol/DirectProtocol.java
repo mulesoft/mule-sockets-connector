@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
+import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
+
 
 /**
  * This protocol is an application level {@link TcpProtocol} that does nothing. The socket reads until no more bytes are
@@ -96,16 +97,11 @@ public class DirectProtocol extends AbstractByteProtocol {
   }
 
   @Override
-  public void write(OutputStream os, InputStream data) throws IOException {
-    sendStream(data, os, bufferSize);
-  }
-
-  protected void sendStream(InputStream inputStream, OutputStream outputStream, int bufferSize) throws IOException {
-    byte[] buffer = new byte[bufferSize];
-    int chunkLen = 0;
-    while ((chunkLen = safeRead(inputStream, buffer)) != -1) {
-      outputStream.write(buffer, 0, chunkLen);
+  public void write(OutputStream outputStream, InputStream data) throws IOException {
+    try {
+      copyLarge(data, outputStream, bufferSize);
+    } finally {
+      outputStream.flush();
     }
   }
-
 }

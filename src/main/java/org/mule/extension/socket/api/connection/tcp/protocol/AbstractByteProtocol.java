@@ -10,6 +10,8 @@ package org.mule.extension.socket.api.connection.tcp.protocol;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,9 +19,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This Abstract class has been introduced so as to have the byte protocols (i.e. the protocols that had only a single write
@@ -47,10 +46,6 @@ public abstract class AbstractByteProtocol implements TcpProtocol {
 
   public AbstractByteProtocol(boolean streamOk) {
     this.streamOk = streamOk;
-  }
-
-  protected void writeByteArray(OutputStream os, byte[] data) throws IOException {
-    os.write(data);
   }
 
   protected int safeRead(InputStream is, byte[] buffer) throws IOException {
