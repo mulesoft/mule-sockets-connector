@@ -22,6 +22,7 @@ import java.io.InputStream;
 public interface SocketClient {
 
   /**
+   * This method closes the received {@link InputStream} after its consumption.
    * @param data to be written into the socket
    *
    * @throws IOException

@@ -6,6 +6,8 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
+import static org.mule.runtime.core.api.util.IOUtils.closeQuietly;
+import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 
 import java.io.IOException;
@@ -14,8 +16,6 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 
 /**
  * <p>
@@ -117,11 +117,7 @@ public class XmlMessageProtocol extends AbstractByteProtocol {
 
   @Override
   public void write(OutputStream outputStream, InputStream data) throws IOException {
-    try {
-      copyLarge(data, outputStream);
-    } finally {
-      outputStream.flush();
-    }
+    copyLarge(data, outputStream);
   }
 
   /**

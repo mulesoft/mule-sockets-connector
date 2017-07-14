@@ -102,7 +102,6 @@ public class LengthProtocol extends DirectProtocol {
   @Override
   public void write(OutputStream os, InputStream inputStream) throws IOException {
     byte[] data = toByteArray(inputStream);
-    inputStream.close();
 
     if (maxMessageLength > 0 && data.length > maxMessageLength) {
       throw new LengthExceededException(format("Message length is '%d' and exceeds the limit '%d", data.length,

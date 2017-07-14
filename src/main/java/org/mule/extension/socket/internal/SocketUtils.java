@@ -6,6 +6,8 @@
  */
 package org.mule.extension.socket.internal;
 
+import static java.lang.String.format;
+import static org.mule.runtime.api.util.Preconditions.checkArgument;
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.exceptions.UnresolvableHostException;
@@ -17,10 +19,11 @@ import org.mule.runtime.extension.api.runtime.operation.Result;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.*;
-
-import static java.lang.String.format;
-import static org.mule.runtime.api.util.Preconditions.checkArgument;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketException;
 
 public final class SocketUtils {
 

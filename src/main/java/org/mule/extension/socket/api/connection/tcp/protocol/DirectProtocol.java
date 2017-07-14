@@ -6,7 +6,7 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
-import org.apache.commons.io.output.ByteArrayOutputStream;
+import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 
 
 /**
@@ -56,20 +56,16 @@ public class DirectProtocol extends AbstractByteProtocol {
   protected byte[] consume(InputStream is, int limit) throws IOException {
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(bufferSize);
 
-    try {
-      byte[] buffer = new byte[bufferSize];
-      int len;
-      int remain = remaining(limit, limit, 0);
-      boolean repeat;
-      do {
-        len = copy(is, buffer, byteArrayOutputStream, remain);
-        remain = remaining(limit, remain, len);
-        repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
-      } while (repeat);
-    } finally {
-      byteArrayOutputStream.flush();
-      byteArrayOutputStream.close();
-    }
+    byte[] buffer = new byte[bufferSize];
+    int len;
+    int remain = remaining(limit, limit, 0);
+    boolean repeat;
+    do {
+      len = copy(is, buffer, byteArrayOutputStream, remain);
+      remain = remaining(limit, remain, len);
+      repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
+    } while (repeat);
+    byteArrayOutputStream.flush();
 
     return byteArrayOutputStream.toByteArray();
   }
@@ -98,10 +94,6 @@ public class DirectProtocol extends AbstractByteProtocol {
 
   @Override
   public void write(OutputStream outputStream, InputStream data) throws IOException {
-    try {
-      copyLarge(data, outputStream, bufferSize);
-    } finally {
-      outputStream.flush();
-    }
+    copyLarge(data, outputStream, bufferSize);
   }
 }
