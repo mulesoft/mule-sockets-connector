@@ -7,18 +7,13 @@
 package org.mule.extension.socket.api.connection.udp;
 
 import static java.lang.String.format;
-import static org.mule.runtime.api.serialization.ObjectSerializer.DEFAULT_OBJECT_SERIALIZER_NAME;
 import org.mule.extension.socket.api.SocketConnectionSettings;
 import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
-import org.mule.runtime.api.serialization.ObjectSerializer;
 
 import java.net.DatagramSocket;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Provides fields and behaviour common to UDP connections
@@ -27,10 +22,6 @@ public abstract class AbstractUdpConnection extends AbstractSocketConnection {
 
   protected final UdpSocketProperties socketProperties;
   protected DatagramSocket socket;
-
-  @Inject
-  @Named(DEFAULT_OBJECT_SERIALIZER_NAME)
-  protected ObjectSerializer objectSerializer;
 
   public AbstractUdpConnection(SocketConnectionSettings connectionSettings, UdpSocketProperties socketProperties)
       throws ConnectionException {

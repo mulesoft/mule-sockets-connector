@@ -8,7 +8,6 @@ package org.mule.extension.socket.internal;
 
 import static java.lang.String.format;
 import static org.mule.runtime.api.util.Preconditions.checkArgument;
-import static org.mule.runtime.core.api.util.IOUtils.closeQuietly;
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.exceptions.UnresolvableHostException;
@@ -16,17 +15,14 @@ import org.mule.extension.socket.api.socket.tcp.TcpSocketProperties;
 import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
-import org.mule.runtime.api.message.Message;
-import org.mule.runtime.api.serialization.ObjectSerializer;
-import org.mule.runtime.api.streaming.bytes.CursorStreamProvider;
 import org.mule.runtime.extension.api.runtime.operation.Result;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 
 public final class SocketUtils {
@@ -37,43 +33,6 @@ public final class SocketUtils {
 
   private static final String SOCKET_COULD_NOT_BE_CREATED = "%s Socket could not be created correctly";
   public static final String WORK = "work";
-
-  /**
-   * UDP doesn't allow streaming and it always sends payload when dealing with a {@link Message}
-   */
-  public static byte[] getUdpAllowedByteArray(Object data, String encoding, ObjectSerializer objectSerializer)
-      throws IOException {
-    return getByteArray(data, false, encoding, objectSerializer);
-  }
-
-  public static byte[] getByteArray(Object data, boolean streamingIsAllowed, String encoding,
-                                    ObjectSerializer objectSerializer)
-      throws IOException {
-
-    if (data instanceof CursorStreamProvider) {
-      if (!streamingIsAllowed) {
-        throw streamingNotAllowedException();
-      }
-      data = ((CursorStreamProvider) data).openCursor();
-    }
-
-    if (data instanceof InputStream && !streamingIsAllowed) {
-      closeQuietly((InputStream) data);
-      throw streamingNotAllowedException();
-    } else if (data instanceof byte[]) {
-      return (byte[]) data;
-    } else if (data instanceof String) {
-      return ((String) data).getBytes(encoding);
-    } else if (data instanceof Serializable) {
-      return objectSerializer.getExternalProtocol().serialize(data);
-    }
-
-    throw new IllegalArgumentException(format("Cannot serialize data: '%s'", data));
-  }
-
-  private static IOException streamingNotAllowedException() {
-    return new IOException("Streaming is not allowed with this configuration");
-  }
 
   /**
    * @param connection delegates connectin's validation on {@link AbstractSocketConnection#validate()}
@@ -96,6 +55,18 @@ public final class SocketUtils {
    */
   public static DatagramPacket createPacket(byte[] content) throws UnresolvableHostException {
     return new DatagramPacket(content, content.length);
+  }
+
+  /**
+   * Creates a {@link DatagramPacket} with with the content {@link byte[]} but with the {@code dataLength} size, addressed to the port and address of the client.
+   *
+   * @param content that is going to be sent inside the packet
+   * @param dataLength size of the content to be send. It may differ from {@code content.size}
+   * @return a packet ready to be sent
+   * @throws UnresolvableHostException
+   */
+  public static DatagramPacket createPacket(byte[] content, int dataLength) throws UnresolvableHostException {
+    return new DatagramPacket(content, dataLength);
   }
 
   /**
@@ -175,6 +146,25 @@ public final class SocketUtils {
       socket.setTcpNoDelay(socketProperties.getSendTcpNoDelay());
     } catch (SocketException e) {
       // MULE-2800 - Bug in Solaris
+    }
+  }
+
+  /**
+   *
+   * @param inputStream data that's going to be sent through the {@link DatagramSocket}
+   * @param bufferSize size of the buffer used for reading the {@code inputStream}
+   * @param address {@link SocketAddress} to which the data is going to be send towards. 
+   * @param socket used for sending the data
+   * @throws IOException if {@link InputStream#read()} or {@link DatagramSocket#send(DatagramPacket)} fails.
+   */
+  public static void sendUdpPackages(InputStream inputStream, int bufferSize, SocketAddress address, DatagramSocket socket)
+      throws IOException {
+    byte[] buffer = new byte[bufferSize];
+    int chunkLen = 0;
+    while ((chunkLen = inputStream.read(buffer, 0, buffer.length)) != -1) {
+      DatagramPacket sendPacket = createPacket(buffer, chunkLen);
+      sendPacket.setSocketAddress(address);
+      socket.send(sendPacket);
     }
   }
 }

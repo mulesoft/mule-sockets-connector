@@ -31,6 +31,7 @@ import org.mule.runtime.api.lifecycle.Initialisable;
 import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.core.api.config.i18n.CoreMessages;
 import org.mule.runtime.extension.api.annotation.Alias;
+import org.mule.runtime.extension.api.annotation.param.NullSafe;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.ParameterGroup;
 import org.mule.runtime.extension.api.annotation.param.Optional;
@@ -80,7 +81,8 @@ public final class TcpListenerProvider implements CachedConnectionProvider<TcpLi
   @Parameter
   @Optional
   @Summary("TCP Protocol to use to receive external request")
-  private TcpProtocol protocol = new SafeProtocol();
+  @NullSafe(defaultImplementingType = SafeProtocol.class)
+  private TcpProtocol protocol;
 
   @Override
   public TcpListenerConnection connect() throws ConnectionException {

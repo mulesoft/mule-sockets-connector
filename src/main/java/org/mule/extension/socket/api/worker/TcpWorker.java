@@ -14,11 +14,6 @@ import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.extension.socket.internal.TcpInputStream;
 import org.mule.runtime.extension.api.runtime.source.Source;
 import org.mule.runtime.extension.api.runtime.source.SourceCallback;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -27,6 +22,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Only one worker will be created per each new TCP connection accepted by the
@@ -141,9 +139,13 @@ public final class TcpWorker extends SocketWorker {
   }
 
   @Override
-  public void onComplete(Object result) {
+  public void onComplete(InputStream result) {
+    if (result == null) {
+      return;
+    }
+
     try {
-      protocol.write(dataOut, result, encoding);
+      protocol.write(dataOut, result);
       dataOut.flush();
     } catch (IOException e) {
       callback.onSourceException(new IOException(format("An error occurred while sending TCP response to address '%s'",

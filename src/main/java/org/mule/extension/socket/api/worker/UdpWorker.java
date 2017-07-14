@@ -6,13 +6,8 @@
  */
 package org.mule.extension.socket.api.worker;
 
-import static java.lang.String.format;
-import static java.util.Arrays.copyOf;
-import static org.mule.extension.socket.internal.SocketUtils.createPacket;
-import static org.mule.extension.socket.internal.SocketUtils.getUdpAllowedByteArray;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.SocketAttributes;
-import org.mule.runtime.api.serialization.ObjectSerializer;
 import org.mule.runtime.extension.api.runtime.source.SourceCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+
+import static java.lang.String.format;
+import static java.util.Arrays.copyOf;
+import static org.mule.extension.socket.internal.SocketUtils.*;
 
 /**
  * One worker is created per received package. If the other end of the connection is awaiting for a response, one will be sent but
@@ -33,16 +32,13 @@ public final class UdpWorker extends SocketWorker {
   private static final Logger LOGGER = LoggerFactory.getLogger(UdpWorker.class);
   private final DatagramSocket socket;
   private final DatagramPacket packet;
-  private final ObjectSerializer objectSerializer;
 
   public UdpWorker(DatagramSocket socket,
                    DatagramPacket packet,
-                   ObjectSerializer objectSerializer,
                    SourceCallback<InputStream, SocketAttributes> callback) {
     super(callback);
     this.socket = socket;
     this.packet = packet;
-    this.objectSerializer = objectSerializer;
   }
 
   @Override
@@ -52,12 +48,9 @@ public final class UdpWorker extends SocketWorker {
   }
 
   @Override
-  public void onComplete(Object result) {
+  public void onComplete(InputStream result) {
     try {
-      byte[] byteArray = getUdpAllowedByteArray(result, encoding, objectSerializer);
-      DatagramPacket sendPacket = createPacket(byteArray);
-      sendPacket.setSocketAddress(packet.getSocketAddress());
-      socket.send(sendPacket);
+      sendUdpPackages(result, socket.getReceiveBufferSize(), packet.getSocketAddress(), socket);
     } catch (IOException e) {
       callback.onSourceException(new IOException(format("An error occurred while sending UDP packet to address '%s'",
                                                         packet.getSocketAddress().toString()),

@@ -14,13 +14,13 @@ import org.mule.runtime.extension.api.annotation.Sources;
 import org.mule.runtime.extension.api.annotation.connectivity.ConnectionProviders;
 
 /**
- * Implementation of {@link AbstractSocketConfig} for listener sockets
+ * Config for listener sockets
  *
  * @since 1.0
  */
 @Configuration(name = "listener-config")
 @ConnectionProviders({TcpListenerProvider.class, UdpListenerProvider.class})
 @Sources({SocketListener.class})
-public class ListenerConfig extends AbstractSocketConfig {
+public class ListenerConfig {
 
 }

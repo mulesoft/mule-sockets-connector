@@ -7,10 +7,9 @@
 
 package org.mule.extension.socket.api.client;
 
-import org.mule.extension.socket.api.config.AbstractSocketConfig;
+import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.exceptions.ReadingTimeoutException;
 import org.mule.extension.socket.api.socket.SocketProperties;
-import org.mule.extension.socket.api.SocketAttributes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,14 +22,12 @@ import java.io.InputStream;
 public interface SocketClient {
 
   /**
+   * This method closes the received {@link InputStream} after its consumption.
    * @param data to be written into the socket
-   * @param outputEncoding to be used when writing contents of type {@link String}. If not specified, it defaults to the encoding
-   *        specified in the config {@link AbstractSocketConfig}. If no default is specified {@link AbstractSocketConfig} either,
-   *        mule's default encoding is used.
    *
    * @throws IOException
    */
-  void write(Object data, String outputEncoding) throws IOException;
+  void write(InputStream data) throws IOException;
 
   /**
    * This methods blocks until new data is available or {@link SocketProperties#getClientTimeout()} is reached, in which case a

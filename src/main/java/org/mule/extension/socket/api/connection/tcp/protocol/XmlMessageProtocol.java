@@ -6,8 +6,8 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
-import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
-
+import static org.mule.runtime.core.api.util.IOUtils.closeQuietly;
+import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 
 import java.io.IOException;
@@ -116,8 +116,8 @@ public class XmlMessageProtocol extends AbstractByteProtocol {
   }
 
   @Override
-  public void write(OutputStream os, Object data, String encoding) throws IOException {
-    this.writeByteArray(os, getByteArray(data, streamOk, encoding, objectSerializer));
+  public void write(OutputStream outputStream, InputStream data) throws IOException {
+    copyLarge(data, outputStream);
   }
 
   /**

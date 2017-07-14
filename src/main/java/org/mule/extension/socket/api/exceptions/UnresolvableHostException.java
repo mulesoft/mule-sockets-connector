@@ -6,6 +6,9 @@
  */
 package org.mule.extension.socket.api.exceptions;
 
+import static org.mule.extension.socket.api.exceptions.SocketError.UNKNOWN_HOST;
+import org.mule.runtime.extension.api.exception.ModuleException;
+
 import java.net.InetSocketAddress;
 
 /**
@@ -13,9 +16,9 @@ import java.net.InetSocketAddress;
  *
  * @since 1.0
  */
-public class UnresolvableHostException extends RuntimeException {
+public class UnresolvableHostException extends ModuleException {
 
   public UnresolvableHostException(String message) {
-    super(message);
+    super(message, UNKNOWN_HOST);
   }
 }

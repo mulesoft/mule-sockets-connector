@@ -6,16 +6,17 @@
  */
 package org.mule.extension.socket.api.exceptions;
 
-import java.io.IOException;
+import static org.mule.extension.socket.api.exceptions.SocketError.CONNECTION_TIMEOUT;
+import org.mule.runtime.extension.api.exception.ModuleException;
 
 /**
  * Thrown to indicate that a timeout has been reached while awaiting for new data to arrive and be read.
  *
  * @since 1.0
  */
-public class ReadingTimeoutException extends IOException {
+public class ReadingTimeoutException extends ModuleException {
 
   public ReadingTimeoutException(String message, Throwable cause) {
-    super(message, cause);
+    super(message, CONNECTION_TIMEOUT, cause);
   }
 }

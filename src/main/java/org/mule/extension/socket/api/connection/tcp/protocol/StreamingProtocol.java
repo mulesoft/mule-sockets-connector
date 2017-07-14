@@ -6,16 +6,12 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
-import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
 import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
-
 import org.mule.extension.socket.api.SocketOperations;
-import org.mule.extension.socket.api.config.RequesterConfig;
 import org.mule.extension.socket.api.connection.RequesterConnection;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.extension.socket.internal.TcpInputStream;
 import org.mule.runtime.api.message.Message;
-import org.mule.runtime.api.streaming.bytes.CursorStreamProvider;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 
 import java.io.IOException;
@@ -24,7 +20,7 @@ import java.io.OutputStream;
 
 /**
  * This protocol is an application level {@link TcpProtocol} that wraps an {@link InputStream} and does not consume it. This
- * allows the {@link SocketOperations#send(RequesterConnection, RequesterConfig, Object, String, String, Message)} to return a
+ * allows the {@link SocketOperations#send(RequesterConnection, InputStream)} to return a
  * {@link Message} with the original {@link InputStream} as payload.
  *
  * @since 1.0
@@ -50,23 +46,8 @@ public class StreamingProtocol extends EOFProtocol {
 
 
   @Override
-  public void write(OutputStream os, Object data, String encoding) throws IOException {
-    if (data instanceof CursorStreamProvider) {
-      data = ((CursorStreamProvider) data).openCursor();
-    }
-
-    try {
-      if (data instanceof InputStream) {
-        InputStream is = (InputStream) data;
-        copyLarge(is, os);
-        is.close();
-      } else {
-        this.writeByteArray(os, getByteArray(data, true, encoding, objectSerializer));
-      }
-    } finally {
-      os.flush();
-      os.close();
-    }
+  public void write(OutputStream os, InputStream data) throws IOException {
+    copyLarge(data, os);
   }
 }
 

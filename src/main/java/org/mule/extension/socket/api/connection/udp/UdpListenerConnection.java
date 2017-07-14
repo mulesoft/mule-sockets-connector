@@ -73,6 +73,6 @@ public class UdpListenerConnection extends AbstractUdpConnection implements List
 
     DatagramSocket newConnection = new DatagramSocket();
     configureConnection(newConnection, socketProperties);
-    return new UdpWorker(newConnection, packet, objectSerializer, sourceCallback);
+    return new UdpWorker(newConnection, packet, sourceCallback);
   }
 }

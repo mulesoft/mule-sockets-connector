@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 @Alias("udp-request-connection")
 public class UdpRequesterConnection extends AbstractUdpConnection implements RequesterConnection {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(UdpRequesterConnection.class);
   private final SocketConnectionSettings localAddressSettings;
 
   public UdpRequesterConnection(SocketConnectionSettings connectionSettings, SocketConnectionSettings localAddressSettings,
@@ -57,7 +56,7 @@ public class UdpRequesterConnection extends AbstractUdpConnection implements Req
    */
   @Override
   public SocketClient getClient() {
-    return new UdpClient(socket, connectionSettings, socketProperties, objectSerializer);
+    return new UdpClient(socket, connectionSettings, socketProperties);
   }
 
 }

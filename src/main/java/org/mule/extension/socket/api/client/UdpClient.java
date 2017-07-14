@@ -8,13 +8,12 @@ package org.mule.extension.socket.api.client;
 
 import static java.util.Arrays.copyOf;
 import static org.mule.extension.socket.internal.SocketUtils.createPacket;
-import static org.mule.extension.socket.internal.SocketUtils.getUdpAllowedByteArray;
-import org.mule.extension.socket.api.SocketConnectionSettings;
+import static org.mule.extension.socket.internal.SocketUtils.sendUdpPackages;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
-import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
-import org.mule.extension.socket.api.exceptions.ReadingTimeoutException;
 import org.mule.extension.socket.api.SocketAttributes;
-import org.mule.runtime.api.serialization.ObjectSerializer;
+import org.mule.extension.socket.api.SocketConnectionSettings;
+import org.mule.extension.socket.api.exceptions.ReadingTimeoutException;
+import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,13 +29,10 @@ import java.net.SocketTimeoutException;
 public final class UdpClient implements SocketClient {
 
   private final UdpSocketProperties socketProperties;
-  private final ObjectSerializer objectSerializer;
   private final DatagramSocket socket;
   private final SocketAddress socketAddress;
 
-  public UdpClient(DatagramSocket socket, SocketConnectionSettings connectionSettings, UdpSocketProperties socketProperties,
-                   ObjectSerializer objectSerializer) {
-    this.objectSerializer = objectSerializer;
+  public UdpClient(DatagramSocket socket, SocketConnectionSettings connectionSettings, UdpSocketProperties socketProperties) {
     this.socketProperties = socketProperties;
     this.socket = socket;
     this.socketAddress = connectionSettings.getInetSocketAddress();
@@ -46,11 +42,12 @@ public final class UdpClient implements SocketClient {
    * {@inheritDoc}
    */
   @Override
-  public void write(Object data, String outputEncoding) throws IOException {
-    byte[] byteArray = getUdpAllowedByteArray(data, outputEncoding, objectSerializer);
-    DatagramPacket sendPacket = createPacket(byteArray);
-    sendPacket.setSocketAddress(socketAddress);
-    socket.send(sendPacket);
+  public void write(InputStream data) throws IOException {
+    try {
+      sendUdpPackages(data, socket.getReceiveBufferSize(), socketAddress, socket);
+    } finally {
+      data.close();
+    }
   }
 
   /**

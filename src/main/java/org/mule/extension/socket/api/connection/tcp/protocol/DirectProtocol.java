@@ -6,7 +6,7 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
-import static org.mule.extension.socket.internal.SocketUtils.getByteArray;
+import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 
@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
+
 
 /**
  * This protocol is an application level {@link TcpProtocol} that does nothing. The socket reads until no more bytes are
@@ -55,20 +56,16 @@ public class DirectProtocol extends AbstractByteProtocol {
   protected byte[] consume(InputStream is, int limit) throws IOException {
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(bufferSize);
 
-    try {
-      byte[] buffer = new byte[bufferSize];
-      int len;
-      int remain = remaining(limit, limit, 0);
-      boolean repeat;
-      do {
-        len = copy(is, buffer, byteArrayOutputStream, remain);
-        remain = remaining(limit, remain, len);
-        repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
-      } while (repeat);
-    } finally {
-      byteArrayOutputStream.flush();
-      byteArrayOutputStream.close();
-    }
+    byte[] buffer = new byte[bufferSize];
+    int len;
+    int remain = remaining(limit, limit, 0);
+    boolean repeat;
+    do {
+      len = copy(is, buffer, byteArrayOutputStream, remain);
+      remain = remaining(limit, remain, len);
+      repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
+    } while (repeat);
+    byteArrayOutputStream.flush();
 
     return byteArrayOutputStream.toByteArray();
   }
@@ -96,7 +93,7 @@ public class DirectProtocol extends AbstractByteProtocol {
   }
 
   @Override
-  public void write(OutputStream os, Object data, String encoding) throws IOException {
-    this.writeByteArray(os, getByteArray(data, streamOk, encoding, objectSerializer));
+  public void write(OutputStream outputStream, InputStream data) throws IOException {
+    copyLarge(data, outputStream, bufferSize);
   }
 }

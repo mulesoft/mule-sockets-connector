@@ -6,19 +6,16 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
-import static java.lang.String.format;
 import org.mule.extension.socket.api.exceptions.LengthExceededException;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
-import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 import org.mule.runtime.extension.api.annotation.param.Optional;
+import org.mule.runtime.extension.api.annotation.param.Parameter;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+
+import static java.lang.String.format;
+import static org.mule.runtime.core.api.util.IOUtils.toByteArray;
 
 /**
  * This protocol is an application level {@link TcpProtocol} that can be used to transfer large amounts of data without risking
@@ -98,18 +95,20 @@ public class LengthProtocol extends DirectProtocol {
   /**
    * It first writes the an int representing the length of the data to be written, and then writes the actual data.
    *
-   * @param outputStream in which the {@code data} will be written
-   * @param data to be written
+   * @param os in which the {@code data} will be written
+   * @param inputStream to be written
    * @throws LengthExceededException if the length of the message to be written exceeds the {@code maxMessageLength} set
    */
   @Override
-  protected void writeByteArray(OutputStream outputStream, byte[] data) throws IOException {
+  public void write(OutputStream os, InputStream inputStream) throws IOException {
+    byte[] data = toByteArray(inputStream);
+
     if (maxMessageLength > 0 && data.length > maxMessageLength) {
       throw new LengthExceededException(format("Message length is '%d' and exceeds the limit '%d", data.length,
                                                maxMessageLength));
     }
 
-    DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+    DataOutputStream dataOutputStream = new DataOutputStream(os);
     dataOutputStream.writeInt(data.length);
     dataOutputStream.write(data);
 

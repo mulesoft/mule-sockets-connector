@@ -6,19 +6,18 @@
  */
 package org.mule.extension.socket;
 
-import static org.assertj.core.api.ThrowableAssert.catchThrowable;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.core.Is.is;
-import org.mule.runtime.core.api.exception.MessagingException;
+import static org.mule.extension.socket.api.exceptions.SocketError.CONNECTIVITY;
+import static org.mule.functional.junit4.rules.ExpectedError.none;
+import org.mule.functional.junit4.rules.ExpectedError;
+import org.mule.runtime.api.connection.ConnectionException;
 
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-
+import org.junit.Rule;
 import org.junit.Test;
 
 public class TcpConnectionTimeoutTestCase extends SocketExtensionTestCase {
+
+  @Rule
+  public ExpectedError expectedError = none();
 
   @Override
   protected String getConfigFile() {
@@ -27,10 +26,7 @@ public class TcpConnectionTimeoutTestCase extends SocketExtensionTestCase {
 
   @Test
   public void socketConnectionTimeout() throws Exception {
-    final Throwable throwable = catchThrowable(() -> flowRunner("tcp-connection-timeout").withPayload(TEST_STRING).run());
-    assertThat(throwable, is(instanceOf(MessagingException.class)));
-    assertThat(((MessagingException) throwable).getRootCause(), is(anyOf(
-                                                                         instanceOf(SocketTimeoutException.class),
-                                                                         instanceOf(ConnectException.class))));
+    expectedError.expectError("SOCKETS", CONNECTIVITY, ConnectionException.class, "Could not connect TCP requester socket");
+    flowRunner("tcp-connection-timeout").withPayload(TEST_STRING).run();
   }
 }

@@ -91,7 +91,7 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
   }
 
   @OnSuccess
-  public void onSuccess(@Optional(defaultValue = "#[mel:payload]") @XmlHints(allowReferences = false) Object responseValue,
+  public void onSuccess(@Optional(defaultValue = "#[payload]") @XmlHints(allowReferences = false) InputStream responseValue,
                         SourceCallbackContext context) {
     context.<SocketWorker>getVariable(WORK)
         .ifPresent(worker -> worker.onComplete(responseValue));
@@ -135,7 +135,6 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
 
       try {
         SocketWorker worker = connection.listen(sourceCallback);
-        worker.setEncoding(config.getDefaultEncoding());
         worker.onError(e -> {
           Throwable t = e;
           if (t.getCause() != null) {

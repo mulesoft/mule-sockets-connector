@@ -20,6 +20,7 @@ import org.mule.extension.socket.api.connection.tcp.protocol.XmlMessageEOFProtoc
 import org.mule.extension.socket.api.connection.tcp.protocol.XmlMessageProtocol;
 import org.mule.extension.socket.api.exceptions.LengthExceededException;
 import org.mule.extension.socket.api.exceptions.ReadingTimeoutException;
+import org.mule.extension.socket.api.exceptions.SocketError;
 import org.mule.extension.socket.api.socket.tcp.TcpClientSocketProperties;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.extension.socket.api.socket.tcp.TcpServerSocketProperties;
@@ -28,6 +29,7 @@ import org.mule.runtime.extension.api.annotation.Configurations;
 import org.mule.runtime.extension.api.annotation.Export;
 import org.mule.runtime.extension.api.annotation.Extension;
 import org.mule.runtime.extension.api.annotation.SubTypeMapping;
+import org.mule.runtime.extension.api.annotation.error.ErrorTypes;
 
 /**
  * An extension for sending and receiving connections through both TCP and UDP protocols.
@@ -41,6 +43,7 @@ import org.mule.runtime.extension.api.annotation.SubTypeMapping;
     CustomClassLoadingLengthProtocol.class})
 @Export(classes = {TcpClientSocketProperties.class, TcpServerSocketProperties.class, UdpSocketProperties.class,
     ReadingTimeoutException.class, LengthExceededException.class, LengthProtocol.class, AbstractByteProtocol.class})
+@ErrorTypes(SocketError.class)
 public class SocketsExtension {
 
   public static final String TLS_CONFIGURATION = "TLS Configuration";
