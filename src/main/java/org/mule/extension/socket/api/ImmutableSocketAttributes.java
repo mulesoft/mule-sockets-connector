@@ -7,11 +7,9 @@
 package org.mule.extension.socket.api;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import org.mule.runtime.core.api.message.BaseAttributes;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -22,12 +20,16 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Immutable implementation of {@link SocketAttributes}.
  *
  * @since 1.0
  */
-public class ImmutableSocketAttributes extends BaseAttributes implements SocketAttributes {
+public class ImmutableSocketAttributes implements SocketAttributes, Serializable {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ImmutableSocketAttributes.class);
   private int port;
@@ -97,6 +99,10 @@ public class ImmutableSocketAttributes extends BaseAttributes implements SocketA
     this.hostName = remoteHostName;
   }
 
+  @Override
+  public String toString() {
+    return ReflectionToStringBuilder.toString(this, SHORT_PREFIX_STYLE);
+  }
 
   /**
    * {@inheritDoc}

@@ -7,8 +7,7 @@
 
 package org.mule.extension.socket.api;
 
-import org.mule.runtime.api.message.Attributes;
-
+import java.io.Serializable;
 import java.security.cert.Certificate;
 
 /**
@@ -18,7 +17,7 @@ import java.security.cert.Certificate;
  *
  * @since 1.0
  */
-public interface SocketAttributes extends Attributes {
+public interface SocketAttributes extends Serializable {
 
   /**
    * @return the port number from which the sender is bounded.
