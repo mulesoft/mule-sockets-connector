@@ -7,7 +7,7 @@
 package org.mule.extension.socket.api.socket;
 
 import org.mule.runtime.extension.api.annotation.param.Parameter;
-import org.mule.runtime.extension.api.annotation.param.ConfigName;
+import org.mule.runtime.extension.api.annotation.param.RefName;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
@@ -25,7 +25,7 @@ public abstract class AbstractSocketProperties implements SocketProperties {
   /**
    * The name of this config object, so that it can be referenced by config elements.
    */
-  @ConfigName
+  @RefName
   protected String name;
 
   /**

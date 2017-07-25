@@ -97,6 +97,7 @@ public final class TcpListenerProvider implements CachedConnectionProvider<TcpLi
     TcpListenerConnection connection =
         new TcpListenerConnection(connectionSettings, protocol, tcpServerSocketProperties, serverSocketFactory);
     connection.connect();
+
     return connection;
   }
 
