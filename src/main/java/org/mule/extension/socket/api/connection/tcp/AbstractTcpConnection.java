@@ -7,30 +7,20 @@
 package org.mule.extension.socket.api.connection.tcp;
 
 import static java.lang.String.format;
-import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
-import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.SocketConnectionSettings;
+import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.exceptions.UnresolvableHostException;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.api.connection.ConnectionException;
-import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.api.lifecycle.Initialisable;
-import org.mule.runtime.api.lifecycle.InitialisationException;
-import org.mule.runtime.api.serialization.ObjectSerializer;
 
 import java.net.InetSocketAddress;
-
-import javax.inject.Inject;
 
 /**
  * Contains behaviour and attributes proper of TCP connections
  *
  * @since 1.0
  */
-abstract class AbstractTcpConnection extends AbstractSocketConnection implements Initialisable {
-
-  @Inject
-  private MuleContext muleContext;
+abstract class AbstractTcpConnection extends AbstractSocketConnection {
 
   /**
    * {@link TcpProtocol}
@@ -41,15 +31,6 @@ abstract class AbstractTcpConnection extends AbstractSocketConnection implements
     super(connectionSettings);
     this.protocol = protocol;
   }
-
-  /**
-   * Injection of the {@link ObjectSerializer} is needed for {@link TcpProtocol}
-   */
-  @Override
-  public void initialise() throws InitialisationException {
-    initialiseIfNeeded(protocol, true, muleContext);
-  }
-
 
   /**
    * Creates an {@link InetSocketAddress} with the host and port information.
