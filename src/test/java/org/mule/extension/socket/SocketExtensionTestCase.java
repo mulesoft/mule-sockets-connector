@@ -95,8 +95,8 @@ public abstract class SocketExtensionTestCase extends MuleArtifactFunctionalTest
 
     @SuppressWarnings("unused")
     public Object onCall(MessageContext messageContext) throws Exception {
-      Message message = Message.builder().payload(messageContext.getPayload())
-          .mediaType(messageContext.getDataType().getMediaType()).attributes(messageContext.getAttributes()).build();
+      Message message = Message.builder().value(messageContext.getPayload())
+          .mediaType(messageContext.getDataType().getMediaType()).attributesValue(messageContext.getAttributes()).build();
       receivedMessages.add(message);
 
       return messageContext;
