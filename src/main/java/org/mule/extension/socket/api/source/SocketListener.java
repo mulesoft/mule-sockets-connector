@@ -63,7 +63,7 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
 
   @Connection
   private ConnectionProvider<ListenerConnection> connectionProvider;
-  
+
   private ListenerConnection connection;
 
   @Config
