@@ -6,7 +6,7 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
-import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
+import org.mule.runtime.extension.api.annotation.dsl.xml.TypeXmlHints;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 
@@ -20,7 +20,7 @@ import org.apache.commons.io.input.ClassLoaderObjectInputStream;
  *
  * @since 1.0
  */
-@XmlHints(allowTopLevelDefinition = true)
+@TypeXmlHints(allowTopLevelDefinition = true)
 public class CustomClassLoadingLengthProtocol extends LengthProtocol {
 
   @Parameter

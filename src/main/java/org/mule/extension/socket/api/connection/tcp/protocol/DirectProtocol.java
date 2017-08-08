@@ -8,7 +8,7 @@ package org.mule.extension.socket.api.connection.tcp.protocol;
 
 import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
-import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
+import org.mule.runtime.extension.api.annotation.dsl.xml.TypeXmlHints;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +28,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
  *
  * @since 1.0
  */
-@XmlHints(allowTopLevelDefinition = true)
+@TypeXmlHints(allowTopLevelDefinition = true)
 public class DirectProtocol extends AbstractByteProtocol {
 
   protected static final int UNLIMITED = -1;

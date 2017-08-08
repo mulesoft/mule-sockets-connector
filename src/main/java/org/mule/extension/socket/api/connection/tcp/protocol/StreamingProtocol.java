@@ -12,7 +12,7 @@ import org.mule.extension.socket.api.connection.RequesterConnection;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.extension.socket.internal.TcpInputStream;
 import org.mule.runtime.api.message.Message;
-import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
+import org.mule.runtime.extension.api.annotation.dsl.xml.TypeXmlHints;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ import java.io.OutputStream;
  *
  * @since 1.0
  */
-@XmlHints(allowTopLevelDefinition = true)
+@TypeXmlHints(allowTopLevelDefinition = true)
 public class StreamingProtocol extends EOFProtocol {
 
   public StreamingProtocol() {

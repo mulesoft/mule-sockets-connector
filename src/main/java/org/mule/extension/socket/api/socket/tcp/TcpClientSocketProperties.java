@@ -7,8 +7,9 @@
 package org.mule.extension.socket.api.socket.tcp;
 
 import org.mule.runtime.extension.api.annotation.Extensible;
+import org.mule.runtime.extension.api.annotation.dsl.xml.TypeXmlHints;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
-import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
+
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 
@@ -18,7 +19,7 @@ import org.mule.runtime.extension.api.annotation.param.display.Placement;
  * @since 1.0
  */
 @Extensible
-@XmlHints(allowTopLevelDefinition = true)
+@TypeXmlHints(allowTopLevelDefinition = true)
 public class TcpClientSocketProperties extends AbstractTcpSocketProperties {
 
   /**
