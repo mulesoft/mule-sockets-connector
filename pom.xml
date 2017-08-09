@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.extensions</groupId>
         <artifactId>mule-core-modules-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0-rc.cyborg-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,7 +23,7 @@
         <assertJVersion>3.3.0</assertJVersion>
         <commonsIoVersion>2.4</commonsIoVersion>
         <guavaVersion>18.0</guavaVersion>
-        <muleSpringModuleVersion>1.0.0-SNAPSHOT</muleSpringModuleVersion>
+        <muleSpringModuleVersion>0.9.0-rc.cyborg-SNAPSHOT</muleSpringModuleVersion>
     </properties>
 
     <dependencies>
