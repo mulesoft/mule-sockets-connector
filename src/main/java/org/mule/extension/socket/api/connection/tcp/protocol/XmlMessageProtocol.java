@@ -7,7 +7,7 @@
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
 import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
-import org.mule.runtime.extension.api.annotation.dsl.xml.TypeXmlHints;
+import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentMap;
  * insure that unread characters remain on the stream so that all data may be read later.
  * </p>
  */
-@TypeXmlHints(allowTopLevelDefinition = true)
+@TypeDsl(allowTopLevelDefinition = true)
 public class XmlMessageProtocol extends AbstractByteProtocol {
 
   private static final String XML_PATTERN = "<?xml";
