@@ -11,7 +11,7 @@ import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.api.util.LazyValue;
 import org.mule.runtime.core.api.util.ClassUtils;
 import org.mule.runtime.extension.api.annotation.Alias;
-import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
+import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
@@ -23,7 +23,7 @@ import java.io.OutputStream;
 /**
  * @since 1.0
  */
-@XmlHints(allowTopLevelDefinition = true)
+@TypeDsl(allowTopLevelDefinition = true)
 public class CustomProtocol implements TcpProtocol {
 
   /**

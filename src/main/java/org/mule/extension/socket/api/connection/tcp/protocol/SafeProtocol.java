@@ -8,7 +8,7 @@ package org.mule.extension.socket.api.connection.tcp.protocol;
 
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.core.api.util.IOUtils;
-import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
+import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.mule.runtime.extension.api.annotation.param.DefaultEncoding;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
@@ -24,7 +24,7 @@ import java.io.OutputStream;
  *
  * @since 1.0
  */
-@XmlHints(allowTopLevelDefinition = true)
+@TypeDsl(allowTopLevelDefinition = true)
 public class SafeProtocol extends AbstractByteProtocol {
 
   public static final String COOKIE = "You are using SafeProtocol";

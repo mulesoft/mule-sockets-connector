@@ -22,7 +22,7 @@ import org.mule.runtime.api.scheduler.Scheduler;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.exception.MessagingException;
 import org.mule.runtime.core.api.scheduler.SchedulerService;
-import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
+import org.mule.runtime.extension.api.annotation.dsl.xml.ParameterDsl;
 import org.mule.runtime.extension.api.annotation.execution.OnError;
 import org.mule.runtime.extension.api.annotation.execution.OnSuccess;
 import org.mule.runtime.extension.api.annotation.param.Config;
@@ -94,7 +94,7 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
   }
 
   @OnSuccess
-  public void onSuccess(@Optional(defaultValue = "#[payload]") @XmlHints(allowReferences = false) InputStream responseValue,
+  public void onSuccess(@Optional(defaultValue = "#[payload]") @ParameterDsl(allowReferences = false) InputStream responseValue,
                         SourceCallbackContext context) {
     context.<SocketWorker>getVariable(WORK)
         .ifPresent(worker -> worker.onComplete(responseValue));
