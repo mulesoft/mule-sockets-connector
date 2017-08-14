@@ -9,6 +9,8 @@ package org.mule.extension.socket.api.source;
 import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
 import static org.mule.extension.socket.internal.SocketUtils.WORK;
+import static org.mule.runtime.core.api.util.ExceptionUtils.extractConnectionException;
+import static org.mule.runtime.core.api.util.ExceptionUtils.getRootCauseException;
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.config.ListenerConfig;
 import org.mule.extension.socket.api.connection.ListenerConnection;
@@ -20,7 +22,6 @@ import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.message.Error;
 import org.mule.runtime.api.scheduler.Scheduler;
 import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.core.api.exception.MessagingException;
 import org.mule.runtime.core.api.scheduler.SchedulerService;
 import org.mule.runtime.extension.api.annotation.dsl.xml.ParameterDsl;
 import org.mule.runtime.extension.api.annotation.execution.OnError;
@@ -143,23 +144,18 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
       try {
         SocketWorker worker = connection.listen(sourceCallback);
         worker.onError(e -> {
-          Throwable t = e;
-          if (t.getCause() != null) {
-            t = t.getCause();
-          }
+          Throwable t = getRootCauseException(e);
 
           if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(format("Got exception '%s'. Work being executed was: %s", t.getClass().getName(), worker.toString()));
           }
 
-          if (t instanceof MessagingException || t instanceof ConnectionException) {
-            sourceCallback.onSourceException(t);
-          }
+          extractConnectionException(e).ifPresent(sourceCallback::onConnectionException);
         });
         workManager.execute(worker);
       } catch (ConnectionException e) {
         if (!isRequestedToStop()) {
-          sourceCallback.onSourceException(e);
+          sourceCallback.onConnectionException(e);
         }
       } catch (Exception e) {
         if (isRequestedToStop()) {

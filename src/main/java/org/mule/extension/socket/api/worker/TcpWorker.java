@@ -7,6 +7,7 @@
 package org.mule.extension.socket.api.worker;
 
 import static java.lang.String.format;
+import static org.slf4j.LoggerFactory.getLogger;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.connection.tcp.TcpListenerConnection;
@@ -24,7 +25,6 @@ import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Only one worker will be created per each new TCP connection accepted by the
@@ -35,7 +35,8 @@ import org.slf4j.LoggerFactory;
  */
 public final class TcpWorker extends SocketWorker {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(TcpWorker.class);
+  private static final Logger LOGGER = getLogger(TcpWorker.class);
+
   private final Socket socket;
   private final TcpInputStream dataIn;
   private final OutputStream dataOut;
@@ -148,9 +149,9 @@ public final class TcpWorker extends SocketWorker {
       protocol.write(dataOut, result);
       dataOut.flush();
     } catch (IOException e) {
-      callback.onSourceException(new IOException(format("An error occurred while sending TCP response to address '%s'",
-                                                        socket.getRemoteSocketAddress().toString()),
-                                                 e));
+      LOGGER.error(format("An error occurred while sending TCP response to address '%s'",
+                          socket.getRemoteSocketAddress().toString()),
+                   e);
     }
   }
 

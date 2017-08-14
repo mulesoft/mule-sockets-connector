@@ -12,9 +12,7 @@
                                           port="${port}"
                                           protocol="${protocol}"
                                           failOnUnresolvedHost="true"
-                                          sendTcpNoDelay="true">
-            <reconnect blocking="false" />
-        </sockets:tcp-requester-connection>
+                                          sendTcpNoDelay="true" />
     </sockets:request-config>
 
     <sockets:listener-config name="tcp-listener">

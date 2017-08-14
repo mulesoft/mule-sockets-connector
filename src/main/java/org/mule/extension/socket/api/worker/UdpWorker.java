@@ -6,11 +6,13 @@
  */
 package org.mule.extension.socket.api.worker;
 
+import static java.lang.String.format;
+import static java.util.Arrays.copyOf;
+import static org.mule.extension.socket.internal.SocketUtils.sendUdpPackages;
+import static org.slf4j.LoggerFactory.getLogger;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.runtime.extension.api.runtime.source.SourceCallback;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -18,9 +20,7 @@ import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-import static java.lang.String.format;
-import static java.util.Arrays.copyOf;
-import static org.mule.extension.socket.internal.SocketUtils.*;
+import org.slf4j.Logger;
 
 /**
  * One worker is created per received package. If the other end of the connection is awaiting for a response, one will be sent but
@@ -29,7 +29,8 @@ import static org.mule.extension.socket.internal.SocketUtils.*;
  */
 public final class UdpWorker extends SocketWorker {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(UdpWorker.class);
+  private static final Logger LOGGER = getLogger(UdpWorker.class);
+
   private final DatagramSocket socket;
   private final DatagramPacket packet;
 
@@ -52,9 +53,9 @@ public final class UdpWorker extends SocketWorker {
     try {
       sendUdpPackages(result, socket.getReceiveBufferSize(), packet.getSocketAddress(), socket);
     } catch (IOException e) {
-      callback.onSourceException(new IOException(format("An error occurred while sending UDP packet to address '%s'",
-                                                        packet.getSocketAddress().toString()),
-                                                 e));
+      LOGGER.error(format("An error occurred while sending UDP packet to address '%s'",
+                          packet.getSocketAddress().toString()),
+                   e);
     }
   }
 

@@ -8,9 +8,7 @@
     <import file="protocols.xml"/>
 
     <sockets:request-config name="tcp-requester">
-        <sockets:tcp-requester-connection host="localhost" port="${port}" protocol="${protocol}">
-            <reconnect blocking="false" />
-        </sockets:tcp-requester-connection>
+        <sockets:tcp-requester-connection host="localhost" port="${port}" protocol="${protocol}" />
     </sockets:request-config>
 
     <sockets:listener-config name="tcp-listener">
