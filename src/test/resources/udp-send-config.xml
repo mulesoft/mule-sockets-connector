@@ -8,9 +8,7 @@
     <sockets:request-config name="udp-requester">
         <sockets:udp-requester-connection host="localhost"
                                           port="${port}"
-                                          broadcast="false">
-            <reconnect blocking="false" />
-        </sockets:udp-requester-connection>
+                                          broadcast="false" />
     </sockets:request-config>
 
     <sockets:listener-config name="udp-listener">

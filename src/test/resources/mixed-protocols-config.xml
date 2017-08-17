@@ -7,7 +7,6 @@
 
     <sockets:request-config name="tcp-requester">
         <sockets:tcp-requester-connection host="localhost" port="${port}">
-            <reconnect blocking="false" />
             <sockets:protocol>
                 <sockets:streaming-protocol/>
             </sockets:protocol>

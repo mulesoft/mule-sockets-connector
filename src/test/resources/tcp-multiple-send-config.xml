@@ -13,7 +13,6 @@
                                           protocol="${protocol}"
                                           failOnUnresolvedHost="true"
                                           sendTcpNoDelay="true">
-            <reconnect blocking="false" />
         </sockets:tcp-requester-connection>
     </sockets:request-config>
 
