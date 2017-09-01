@@ -10,7 +10,6 @@ import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
 import static org.mule.extension.socket.internal.SocketUtils.WORK;
 import static org.mule.runtime.core.api.util.ExceptionUtils.extractConnectionException;
-import static org.mule.runtime.core.api.util.ExceptionUtils.getRootCauseException;
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.config.ListenerConfig;
 import org.mule.extension.socket.api.connection.ListenerConnection;
@@ -144,10 +143,8 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
       try {
         SocketWorker worker = connection.listen(sourceCallback);
         worker.onError(e -> {
-          Throwable t = getRootCauseException(e);
-
           if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(format("Got exception '%s'. Work being executed was: %s", t.getClass().getName(), worker.toString()));
+            LOGGER.debug(format("Got exception '%s'. Work being executed was: %s", e.getClass().getName(), worker.toString()));
           }
 
           extractConnectionException(e).ifPresent(sourceCallback::onConnectionException);
