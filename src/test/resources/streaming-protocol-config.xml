@@ -26,9 +26,9 @@
     </flow>
 
     <flow name="tcp-listen">
-        <sockets:socket-listener config-ref="tcp-listener">
+        <sockets:listener config-ref="tcp-listener">
             <non-repeatable-stream />
-        </sockets:socket-listener>
+        </sockets:listener>
 
         <!-- This component knows how to look for EOF -->
         <custom-processor class="org.mule.extension.socket.EOFStreamingTestComponent" />

@@ -36,7 +36,7 @@
 
     <flow name="ssl-receive">
 
-        <sockets:socket-listener config-ref="ssl-listener-global-tls"/>
+        <sockets:listener config-ref="ssl-listener-global-tls"/>
         <object-to-string-transformer mimeType="text/plain"/>
 
         <test:processor appendString=" Received">

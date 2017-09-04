@@ -37,7 +37,7 @@
     </flow>
 
     <flow name="ssl-listen">
-        <sockets:socket-listener config-ref="ssl-listener"/>
+        <sockets:listener config-ref="ssl-listener"/>
         <flow-ref name="respond"/>
     </flow>
 

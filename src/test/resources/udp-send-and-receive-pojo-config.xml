@@ -19,7 +19,7 @@
     </flow>
 
     <flow name="udp-listen-and-modify-pojo">
-        <sockets:socket-listener config-ref="udp-listener"/>
+        <sockets:listener config-ref="udp-listener"/>
         <byte-array-to-object-transformer returnClass="org.mule.extension.socket.TestPojo"/>
         <expression-component>mel:
             payload.setAge(7)
