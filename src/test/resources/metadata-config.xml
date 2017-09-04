@@ -30,7 +30,7 @@
     </flow>
 
     <flow name="tcp-listen">
-        <sockets:socket-listener config-ref="tcp-listener"/>
+        <sockets:listener config-ref="tcp-listener"/>
         <logger/>
     </flow>
 </mule>

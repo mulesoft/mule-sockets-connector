@@ -21,7 +21,7 @@
     </flow>
 
     <flow name="tcp-listen-and-modify-string">
-        <sockets:socket-listener config-ref="tcp-listener"/>
+        <sockets:listener config-ref="tcp-listener"/>
         <object-to-string-transformer mimeType="text/plain"/>
         <set-payload value="#[mel:payload]_modified"/>
     </flow>

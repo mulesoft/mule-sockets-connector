@@ -20,7 +20,7 @@
     </flow>
 
     <flow name="udp-listen">
-        <sockets:socket-listener config-ref="udp-listener"/>
+        <sockets:listener config-ref="udp-listener"/>
         <set-payload value="Consumed"/>
         <test:processor waitTime="200"/>
     </flow>

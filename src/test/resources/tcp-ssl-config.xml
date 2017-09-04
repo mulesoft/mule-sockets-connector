@@ -67,12 +67,12 @@
     </flow>
 
     <flow name="ssl-listen-global-tls">
-        <sockets:socket-listener config-ref="ssl-listener-global-tls"/>
+        <sockets:listener config-ref="ssl-listener-global-tls"/>
         <flow-ref name="respond"/>
     </flow>
 
     <flow name="ssl-listen">
-        <sockets:socket-listener config-ref="ssl-listener"/>
+        <sockets:listener config-ref="ssl-listener"/>
         <flow-ref name="respond"/>
     </flow>
 

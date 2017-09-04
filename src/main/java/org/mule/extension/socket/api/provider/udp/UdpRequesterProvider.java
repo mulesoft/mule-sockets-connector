@@ -6,7 +6,6 @@
  */
 package org.mule.extension.socket.api.provider.udp;
 
-import static org.mule.runtime.extension.api.annotation.param.ParameterGroup.CONNECTION;
 import org.mule.extension.socket.api.SocketConnectionSettings;
 import org.mule.extension.socket.api.SocketOperations;
 import org.mule.extension.socket.api.connection.udp.UdpRequesterConnection;
@@ -19,11 +18,14 @@ import org.mule.runtime.api.connection.ConnectionProvider;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.api.connection.PoolingConnectionProvider;
 import org.mule.runtime.extension.api.annotation.Alias;
+import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.ParameterGroup;
-import org.mule.runtime.extension.api.annotation.param.Optional;
+import org.mule.runtime.extension.api.annotation.param.display.Placement;
 
 import java.net.DatagramSocket;
+
+import static org.mule.runtime.extension.api.annotation.param.ParameterGroup.CONNECTION;
 
 /**
  * A {@link ConnectionProvider} which provides instances of {@link UdpRequesterConnection} to be used by the
@@ -51,6 +53,7 @@ public final class UdpRequesterProvider implements PoolingConnectionProvider<Udp
    */
   @Parameter
   @Optional
+  @Placement(tab = "Local Address Settings")
   private SocketConnectionSettings localAddressSettings = new SocketConnectionSettings();
 
   @Override
