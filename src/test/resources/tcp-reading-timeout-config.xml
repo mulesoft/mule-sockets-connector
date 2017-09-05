@@ -33,7 +33,6 @@
     </flow>
 
     <sub-flow name="onIncomingConnection">
-        <expression-component>mel:new org.mule.extension.socket.SocketExtensionTestCase$OnIncomingConnection().onCall(message)
-        </expression-component>
+        <test:processor class="org.mule.extension.socket.SocketExtensionTestCase$TestProcessor"/>
     </sub-flow>
 </mule>
