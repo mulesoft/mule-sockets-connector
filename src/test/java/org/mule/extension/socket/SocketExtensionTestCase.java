@@ -13,9 +13,11 @@ import static org.junit.Assert.fail;
 import static org.junit.rules.ExpectedException.none;
 import org.mule.extension.socket.api.SocketsExtension;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
+import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.util.Reference;
-import org.mule.runtime.core.el.context.MessageContext;
+import org.mule.runtime.core.api.InternalEvent;
+import org.mule.runtime.core.api.processor.Processor;
 import org.mule.tck.junit4.rule.DynamicPort;
 import org.mule.tck.probe.JUnitLambdaProbe;
 import org.mule.tck.probe.PollingProber;
@@ -39,7 +41,7 @@ public abstract class SocketExtensionTestCase extends MuleArtifactFunctionalTest
   protected static final int TIMEOUT_MILLIS = 5000;
   protected static final int POLL_DELAY_MILLIS = 100;
   public static final String TEST_STRING = "This is a test string";
-  public static final String RESPONSE_TEST_STRING = TEST_STRING + "_modified";
+  protected static final String RESPONSE_TEST_STRING = TEST_STRING + "_modified";
 
   /**
    * For tests with multiple sends
@@ -49,8 +51,8 @@ public abstract class SocketExtensionTestCase extends MuleArtifactFunctionalTest
   protected static List<Message> receivedMessages;
 
 
-  protected static final String NAME = "Messi";
-  protected static final int AGE = 10;
+  private static final String NAME = "Messi";
+  private static final int AGE = 10;
   protected TestPojo testPojo;
   protected byte[] testByteArray;
 
@@ -91,15 +93,12 @@ public abstract class SocketExtensionTestCase extends MuleArtifactFunctionalTest
     receivedMessages = null;
   }
 
-  public static class OnIncomingConnection {
+  public static class TestProcessor implements Processor {
 
-    @SuppressWarnings("unused")
-    public Object onCall(MessageContext messageContext) throws Exception {
-      Message message = Message.builder().value(messageContext.getPayload())
-          .mediaType(messageContext.getDataType().getMediaType()).attributesValue(messageContext.getAttributes()).build();
-      receivedMessages.add(message);
-
-      return messageContext;
+    @Override
+    public InternalEvent process(InternalEvent event) throws MuleException {
+      receivedMessages.add(event.getMessage());
+      return event;
     }
   }
 
