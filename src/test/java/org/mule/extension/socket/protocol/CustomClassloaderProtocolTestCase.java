@@ -11,12 +11,31 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import org.mule.extension.socket.SocketExtensionTestCase;
 import org.mule.extension.socket.api.connection.tcp.protocol.CustomClassLoadingLengthProtocol;
+import org.mule.runtime.api.artifact.Registry;
 
 import org.junit.Test;
 
+import javax.inject.Inject;
+
 public class CustomClassloaderProtocolTestCase extends SocketExtensionTestCase {
+
+  // @Inject
+  // @Named("classLoader")
+  // private FakeClassLoader classLoader;
+  @Inject
+  private Registry registry;
+
+  // @Inject
+  // @Named("customClassLoaderProtocol")
+  // private TcpProtocol protocol;
+
+  @Override
+  protected boolean doTestClassInjection() {
+    return true;
+  }
 
   @Override
   protected String getConfigFile() {
@@ -26,9 +45,10 @@ public class CustomClassloaderProtocolTestCase extends SocketExtensionTestCase {
   @Test
   public void testClassLoader() throws Exception {
 
-    CustomClassLoadingLengthProtocol protocol = muleContext.getRegistry().lookupObject("customClassLoaderProtocol");
+    CustomClassLoadingLengthProtocol protocol =
+        registry.<CustomClassLoadingLengthProtocol>lookupByName("customClassLoaderProtocol").get();
     assertThat(protocol, is(not((nullValue()))));
-    assertThat(protocol.getClassLoader(), sameInstance(muleContext.getRegistry().get("classLoader")));
+    assertThat(protocol.getClassLoader(), sameInstance(registry.lookupByName("classLoader").get()));
   }
 
   public static class FakeClassLoader extends ClassLoader {

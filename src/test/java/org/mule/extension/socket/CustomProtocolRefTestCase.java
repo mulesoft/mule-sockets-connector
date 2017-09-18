@@ -10,11 +10,24 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 
 import org.junit.Test;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class CustomProtocolRefTestCase extends SocketExtensionTestCase {
+
+  @Inject
+  @Named("myProtocolRef")
+  private TcpProtocol protocol;
+
+  @Override
+  protected boolean doTestClassInjection() {
+    return true;
+  }
 
   @Override
   protected String getConfigFile() {
@@ -23,10 +36,8 @@ public class CustomProtocolRefTestCase extends SocketExtensionTestCase {
 
   @Test
   public void useCustomProtocolClass() throws Exception {
-
     expectedException.expect(UnsupportedOperationException.class);
 
-    TcpProtocol protocol = muleContext.getRegistry().get("myProtocolRef");
     assertThat(protocol, is(not(nullValue())));
 
     // throws UnsupportedOperationException

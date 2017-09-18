@@ -14,9 +14,21 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+
+import javax.inject.Inject;
+
 public class SocketListenerTestCase extends ParameterizedProtocolTestCase {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SocketListenerTestCase.class);
+
+  @Inject
+  private Collection<Flow> flows;
+
+  @Override
+  protected boolean doTestClassInjection() {
+    return true;
+  }
 
   @Override
   protected String getConfigFile() {
@@ -25,7 +37,7 @@ public class SocketListenerTestCase extends ParameterizedProtocolTestCase {
 
   @Test
   public void stopAndRestart() throws Exception {
-    muleContext.getRegistry().lookupObjects(Flow.class).forEach(flow -> {
+    flows.forEach(flow -> {
       try {
         flow.stop();
         PollingProber prober = new PollingProber(100, 5000);
