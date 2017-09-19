@@ -51,6 +51,14 @@ public class SafeProtocol extends AbstractByteProtocol {
     delegate = new LengthProtocol();
   }
 
+  public int getMaxMessageLeght() {
+    return maxMessageLeght;
+  }
+
+  public String getEncoding() {
+    return encoding;
+  }
+
   /**
    * Reads the actual data only after assuring that the cookie was preceding the message.
    *

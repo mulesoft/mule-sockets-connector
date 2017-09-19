@@ -6,16 +6,20 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
+import static java.lang.String.format;
+import static org.mule.runtime.core.api.util.IOUtils.toByteArray;
 import org.mule.extension.socket.api.exceptions.LengthExceededException;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 
-import java.io.*;
-
-import static java.lang.String.format;
-import static org.mule.runtime.core.api.util.IOUtils.toByteArray;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * This protocol is an application level {@link TcpProtocol} that can be used to transfer large amounts of data without risking
@@ -33,6 +37,7 @@ public class LengthProtocol extends DirectProtocol {
 
   public static final String LENGTH_EXCEEDED = "Message length is '%d' and exceeds the limit '%d";
   private static final int SIZE_INT = Integer.BYTES;
+
   /**
    * Indicates the maximum length of the message
    */
@@ -47,6 +52,10 @@ public class LengthProtocol extends DirectProtocol {
   public LengthProtocol(int maxMessageLength) {
     super(NO_STREAM, SIZE_INT);
     this.maxMessageLength = maxMessageLength;
+  }
+
+  public int getMaxMessageLength() {
+    return maxMessageLength;
   }
 
   /**

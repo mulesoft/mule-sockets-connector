@@ -39,6 +39,10 @@ public class CustomProtocol implements TcpProtocol {
 
   public CustomProtocol() {}
 
+  public String getClazz() {
+    return clazz;
+  }
+
   @Override
   public InputStream read(InputStream is) throws IOException {
     return delegate.get().read(is);
