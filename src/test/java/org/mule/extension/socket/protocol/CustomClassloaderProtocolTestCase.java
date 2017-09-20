@@ -11,6 +11,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import org.mule.extension.socket.SocketExtensionTestCase;
 import org.mule.extension.socket.api.connection.tcp.protocol.CustomClassLoadingLengthProtocol;
 
@@ -26,9 +27,10 @@ public class CustomClassloaderProtocolTestCase extends SocketExtensionTestCase {
   @Test
   public void testClassLoader() throws Exception {
 
-    CustomClassLoadingLengthProtocol protocol = muleContext.getRegistry().lookupObject("customClassLoaderProtocol");
+    CustomClassLoadingLengthProtocol protocol =
+        registry.<CustomClassLoadingLengthProtocol>lookupByName("customClassLoaderProtocol").get();
     assertThat(protocol, is(not((nullValue()))));
-    assertThat(protocol.getClassLoader(), sameInstance(muleContext.getRegistry().get("classLoader")));
+    assertThat(protocol.getClassLoader(), sameInstance(registry.lookupByName("classLoader").get()));
   }
 
   public static class FakeClassLoader extends ClassLoader {
