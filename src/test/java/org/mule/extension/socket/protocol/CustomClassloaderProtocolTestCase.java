@@ -14,28 +14,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.mule.extension.socket.SocketExtensionTestCase;
 import org.mule.extension.socket.api.connection.tcp.protocol.CustomClassLoadingLengthProtocol;
-import org.mule.runtime.api.artifact.Registry;
 
 import org.junit.Test;
 
-import javax.inject.Inject;
-
 public class CustomClassloaderProtocolTestCase extends SocketExtensionTestCase {
-
-  // @Inject
-  // @Named("classLoader")
-  // private FakeClassLoader classLoader;
-  @Inject
-  private Registry registry;
-
-  // @Inject
-  // @Named("customClassLoaderProtocol")
-  // private TcpProtocol protocol;
-
-  @Override
-  protected boolean doTestClassInjection() {
-    return true;
-  }
 
   @Override
   protected String getConfigFile() {

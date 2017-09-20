@@ -25,11 +25,6 @@ public class CustomProtocolRefTestCase extends SocketExtensionTestCase {
   private TcpProtocol protocol;
 
   @Override
-  protected boolean doTestClassInjection() {
-    return true;
-  }
-
-  @Override
   protected String getConfigFile() {
     return "custom-protocol-ref-config.xml";
   }

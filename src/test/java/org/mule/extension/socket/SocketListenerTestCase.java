@@ -26,11 +26,6 @@ public class SocketListenerTestCase extends ParameterizedProtocolTestCase {
   private Collection<Flow> flows;
 
   @Override
-  protected boolean doTestClassInjection() {
-    return true;
-  }
-
-  @Override
   protected String getConfigFile() {
     return "tcp-send-config.xml";
   }
