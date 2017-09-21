@@ -14,14 +14,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import org.mule.functional.functional.FunctionalStreamingTestComponent;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.junit.Test;
-import org.slf4j.Logger;
 
 public class TcpStreamingTestCase extends SocketExtensionTestCase {
 
@@ -56,7 +56,7 @@ public class TcpStreamingTestCase extends SocketExtensionTestCase {
     final AtomicInteger loopCount = new AtomicInteger(0);
 
     // this works only if singleton set in descriptor
-    getFromFlow(muleContext, "tcp-listen").setEventCallback((event, component, muleContext) -> {
+    getFromFlow(locator, "tcp-listen").setEventCallback((event, component, muleContext) -> {
       try {
         LOGGER.info(format("called %d times", loopCount.incrementAndGet()));
         FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component;
