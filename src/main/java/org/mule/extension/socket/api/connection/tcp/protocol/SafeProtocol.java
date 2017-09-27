@@ -32,23 +32,29 @@ public class SafeProtocol extends AbstractByteProtocol {
   private final TcpProtocol cookieProtocol = new LengthProtocol(COOKIE.length());
   private TcpProtocol delegate;
 
+  @DefaultEncoding
+  private String muleEncoding;
+
   /**
    * Indicates the maximum length of the message
    */
   @Parameter
   @Optional(defaultValue = "-1")
   private int maxMessageLeght = NO_MAX_LENGTH;
-
   /**
    * Indicates the encoding used for serializing the cookie
    */
   @Parameter
-  @DefaultEncoding
+  @Optional
   private String encoding;
 
   public SafeProtocol() {
     super(false);
     delegate = new LengthProtocol();
+  }
+
+  public String getEncoding() {
+    return encoding == null ? muleEncoding : encoding;
   }
 
   /**
@@ -87,7 +93,7 @@ public class SafeProtocol extends AbstractByteProtocol {
    * @throws IOException
    */
   private void assureSibling(OutputStream outputStream) throws IOException {
-    cookieProtocol.write(outputStream, new ByteArrayInputStream(COOKIE.getBytes(encoding)));
+    cookieProtocol.write(outputStream, new ByteArrayInputStream(COOKIE.getBytes(getEncoding())));
   }
 
   /**
@@ -105,7 +111,7 @@ public class SafeProtocol extends AbstractByteProtocol {
       helpUser(e);
     }
     if (null != cookie) {
-      String parsedCookie = IOUtils.toString((InputStream) cookie, encoding);
+      String parsedCookie = IOUtils.toString((InputStream) cookie, getEncoding());
       if (parsedCookie.length() != COOKIE.length() || !COOKIE.equals(parsedCookie)) {
         helpUser();
       } else {
