@@ -6,6 +6,7 @@
  */
 package org.mule.extension.socket.api;
 
+import static org.mule.runtime.extension.api.annotation.param.MediaType.ANY;
 import org.mule.extension.socket.api.client.SocketClient;
 import org.mule.extension.socket.api.connection.RequesterConnection;
 import org.mule.extension.socket.api.exceptions.SocketsErrorTypeProvider;
@@ -13,6 +14,7 @@ import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.extension.api.annotation.error.Throws;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Content;
+import org.mule.runtime.extension.api.annotation.param.MediaType;
 import org.mule.runtime.extension.api.runtime.operation.Result;
 
 import java.io.IOException;
@@ -34,6 +36,7 @@ public class SocketOperations {
    * @param content        data that will be serialized and sent through the socket.
    * @throws ConnectionException if the connection couldn't be established, if the remote host was unavailable.
    */
+  @MediaType(value = ANY, strict = false)
   public Result<InputStream, SocketAttributes> sendAndReceive(@Connection RequesterConnection connection,
                                                               @Content InputStream content)
       throws ConnectionException, IOException {
