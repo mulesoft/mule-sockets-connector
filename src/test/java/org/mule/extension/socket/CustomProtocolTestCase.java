@@ -7,7 +7,6 @@
 package org.mule.extension.socket;
 
 import static org.hamcrest.Matchers.instanceOf;
-import org.mule.runtime.core.api.exception.MessagingException;
 
 import org.junit.Test;
 
@@ -20,7 +19,6 @@ public class CustomProtocolTestCase extends SocketExtensionTestCase {
 
   @Test
   public void useCustomProtocolClass() throws Exception {
-    expectedException.expect(MessagingException.class);
     expectedException.expectCause(instanceOf(UnsupportedOperationException.class));
     flowRunner("tcp-send").withPayload(TEST_STRING).run();
   }
