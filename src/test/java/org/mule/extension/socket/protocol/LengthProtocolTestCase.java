@@ -9,7 +9,6 @@ package org.mule.extension.socket.protocol;
 import static org.hamcrest.Matchers.instanceOf;
 import org.mule.extension.socket.SocketExtensionTestCase;
 import org.mule.extension.socket.api.exceptions.LengthExceededException;
-import org.mule.runtime.core.api.exception.MessagingException;
 
 import org.junit.Test;
 
@@ -25,7 +24,6 @@ public class LengthProtocolTestCase extends SocketExtensionTestCase {
 
   @Test
   public void sendLongerMsg() throws Exception {
-    expectedException.expect(MessagingException.class);
     expectedException.expectCause(instanceOf(LengthExceededException.class));
     flowRunner("tcp-send").withPayload(LONG_TEST_STRING).run();
   }

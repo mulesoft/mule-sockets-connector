@@ -8,7 +8,6 @@ package org.mule.extension.socket;
 
 import static org.hamcrest.Matchers.instanceOf;
 import org.mule.extension.socket.api.exceptions.ReadingTimeoutException;
-import org.mule.runtime.core.api.exception.MessagingException;
 
 import org.junit.Test;
 
@@ -21,7 +20,6 @@ public class UdpTimeoutTestCase extends SocketExtensionTestCase {
 
   @Test
   public void socketThrowsTimeout() throws Exception {
-    expectedException.expect(MessagingException.class);
     expectedException.expectCause(instanceOf(ReadingTimeoutException.class));
 
     flowRunner("udp-send-with-timeout").withPayload(TEST_STRING).run();

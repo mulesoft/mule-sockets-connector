@@ -7,7 +7,6 @@
 package org.mule.extension.socket;
 
 import static org.hamcrest.Matchers.instanceOf;
-import org.mule.runtime.core.api.exception.MessagingException;
 
 import java.net.SocketTimeoutException;
 
@@ -22,7 +21,6 @@ public class TcpReadingTimeoutTestCase extends SocketExtensionTestCase {
 
   @Test
   public void socketThrowsTimeout() throws Exception {
-    expectedException.expect(MessagingException.class);
     expectedException.expectCause(instanceOf(SocketTimeoutException.class));
 
     flowRunner("tcp-reading-timeout").withPayload(TEST_STRING).run();
