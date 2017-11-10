@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ImmutableSocketAttributes implements SocketAttributes, Serializable {
 
+  private static final long serialVersionUID = 1991548360970880784L;
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ImmutableSocketAttributes.class);
   private int port;
   private String hostAddress;
