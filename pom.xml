@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.extensions</groupId>
         <artifactId>mule-core-modules-parent</artifactId>
-        <version>1.1.0</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,7 +23,7 @@
         <assertJVersion>3.3.0</assertJVersion>
         <commonsIoVersion>2.4</commonsIoVersion>
         <guavaVersion>23.5-jre</guavaVersion>
-        <muleSpringModuleVersion>1.1.1-SNAPSHOT</muleSpringModuleVersion>
+        <muleSpringModuleVersion>1.0.0</muleSpringModuleVersion>
     </properties>
 
     <dependencies>
