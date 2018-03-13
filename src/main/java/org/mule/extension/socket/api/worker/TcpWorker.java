@@ -46,7 +46,7 @@ public final class TcpWorker extends SocketWorker {
   private boolean dataInWorkFinished = false;
   private AtomicBoolean moreMessages = new AtomicBoolean(true); // can be set on completion's callback
 
-  public TcpWorker(Socket socket, TcpProtocol protocol, SourceCallback<InputStream, SocketAttributes> callback)
+  public TcpWorker(Socket socket, TcpProtocol protocol, SourceCallback<InputStream, ImmutableSocketAttributes> callback)
       throws IOException {
     super(callback);
     this.socket = socket;

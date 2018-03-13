@@ -8,7 +8,7 @@ package org.mule.extension.socket.api.worker;
 
 import static org.mule.extension.socket.internal.SocketUtils.WORK;
 import static org.mule.extension.socket.internal.SocketUtils.createResult;
-import org.mule.extension.socket.api.SocketAttributes;
+import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.runtime.api.lifecycle.Disposable;
 import org.mule.runtime.extension.api.runtime.source.SourceCallback;
 import org.mule.runtime.extension.api.runtime.source.SourceCallbackContext;
@@ -18,10 +18,10 @@ import java.util.function.Consumer;
 
 public abstract class SocketWorker implements Disposable, Runnable {
 
-  protected final SourceCallback<InputStream, SocketAttributes> callback;
+  protected final SourceCallback<InputStream, ImmutableSocketAttributes> callback;
   private Consumer<Exception> errorHandler;
 
-  protected SocketWorker(SourceCallback<InputStream, SocketAttributes> callback) {
+  protected SocketWorker(SourceCallback<InputStream, ImmutableSocketAttributes> callback) {
     this.callback = callback;
   }
 
@@ -40,7 +40,7 @@ public abstract class SocketWorker implements Disposable, Runnable {
 
   protected abstract void doRun() throws Exception;
 
-  protected void handle(InputStream content, SocketAttributes attributes) {
+  protected void handle(InputStream content, ImmutableSocketAttributes attributes) {
     SourceCallbackContext ctx = callback.createContext();
     ctx.addVariable(WORK, this);
     callback.handle(createResult(content, attributes), ctx);

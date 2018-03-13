@@ -8,8 +8,8 @@ package org.mule.extension.socket.api.connection.tcp;
 
 import static java.lang.String.format;
 import static org.mule.extension.socket.internal.SocketUtils.configureConnection;
+import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.SocketConnectionSettings;
-import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.connection.ListenerConnection;
 import org.mule.extension.socket.api.connection.udp.UdpListenerConnection;
 import org.mule.extension.socket.api.socket.factory.SimpleServerSocketFactory;
@@ -62,7 +62,7 @@ public final class TcpListenerConnection extends AbstractTcpConnection implement
    * @throws IOException if the socket was close while blocked on {@link DatagramSocket#receive(DatagramPacket)} method.
    */
   @Override
-  public SocketWorker listen(SourceCallback<InputStream, SocketAttributes> callback)
+  public SocketWorker listen(SourceCallback<InputStream, ImmutableSocketAttributes> callback)
       throws IOException, ConnectionException {
     Socket newConnection = acceptConnection();
     configureConnection(newConnection, socketProperties);
