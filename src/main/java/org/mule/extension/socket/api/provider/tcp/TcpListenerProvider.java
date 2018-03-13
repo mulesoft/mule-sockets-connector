@@ -60,6 +60,7 @@ public final class TcpListenerProvider implements CachedConnectionProvider<TcpLi
   @Optional
   @DisplayName(TLS_CONFIGURATION)
   @Placement(tab = TLS)
+  @Summary("Its presence will imply the use of SSLServerSocket instead of plain TCP")
   private TlsContextFactory tlsContext;
 
   /**

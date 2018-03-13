@@ -11,7 +11,7 @@ import static java.lang.Thread.currentThread;
 import static org.mule.extension.socket.internal.SocketUtils.WORK;
 import static org.mule.runtime.core.api.util.ExceptionUtils.extractConnectionException;
 import static org.mule.runtime.extension.api.annotation.param.MediaType.ANY;
-import org.mule.extension.socket.api.SocketAttributes;
+import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.config.ListenerConfig;
 import org.mule.extension.socket.api.connection.ListenerConnection;
 import org.mule.extension.socket.api.worker.SocketWorker;
@@ -21,8 +21,8 @@ import org.mule.runtime.api.connection.ConnectionProvider;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.message.Error;
 import org.mule.runtime.api.scheduler.Scheduler;
-import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.api.scheduler.SchedulerService;
+import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.extension.api.annotation.Alias;
 import org.mule.runtime.extension.api.annotation.dsl.xml.ParameterDsl;
 import org.mule.runtime.extension.api.annotation.execution.OnError;
@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
 @EmitsResponse
 @Alias("listener")
 @MediaType(value = ANY, strict = false)
-public final class SocketListener extends Source<InputStream, SocketAttributes> {
+public final class SocketListener extends Source<InputStream, ImmutableSocketAttributes> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SocketListener.class);
 
@@ -86,7 +86,7 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
    * {@inheritDoc}
    */
   @Override
-  public void onStart(SourceCallback<InputStream, SocketAttributes> sourceCallback) throws MuleException {
+  public void onStart(SourceCallback<InputStream, ImmutableSocketAttributes> sourceCallback) throws MuleException {
     connection = connectionProvider.connect();
     workManager = schedulerService
         .ioScheduler(muleContext.getSchedulerBaseConfig().withName(format("%s.socket.worker", location.getRootContainerName())));
@@ -139,7 +139,7 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
     return stopRequested.get() || currentThread().isInterrupted();
   }
 
-  private void listen(SourceCallback<InputStream, SocketAttributes> sourceCallback) {
+  private void listen(SourceCallback<InputStream, ImmutableSocketAttributes> sourceCallback) {
     for (;;) {
       if (isRequestedToStop()) {
         return;

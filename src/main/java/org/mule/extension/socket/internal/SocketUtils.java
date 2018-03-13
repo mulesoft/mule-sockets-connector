@@ -8,7 +8,7 @@ package org.mule.extension.socket.internal;
 
 import static java.lang.String.format;
 import static org.mule.runtime.api.util.Preconditions.checkArgument;
-import org.mule.extension.socket.api.SocketAttributes;
+import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.exceptions.UnresolvableHostException;
 import org.mule.extension.socket.api.socket.tcp.TcpSocketProperties;
@@ -42,8 +42,9 @@ public final class SocketUtils {
     return connection.validate();
   }
 
-  public static Result<InputStream, SocketAttributes> createResult(InputStream content, SocketAttributes attributes) {
-    return Result.<InputStream, SocketAttributes>builder().output(content).attributes(attributes).build();
+  public static Result<InputStream, ImmutableSocketAttributes> createResult(InputStream content,
+                                                                            ImmutableSocketAttributes attributes) {
+    return Result.<InputStream, ImmutableSocketAttributes>builder().output(content).attributes(attributes).build();
   }
 
   /**
