@@ -8,8 +8,8 @@ package org.mule.extension.socket.api.connection.udp;
 
 import static org.mule.extension.socket.internal.SocketUtils.configureConnection;
 import static org.mule.extension.socket.internal.SocketUtils.createPacket;
+import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.SocketConnectionSettings;
-import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.connection.ListenerConnection;
 import org.mule.extension.socket.api.exceptions.ReadingTimeoutException;
 import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
@@ -52,7 +52,7 @@ public class UdpListenerConnection extends AbstractUdpConnection implements List
    * @throws IOException if the socket was close while blocked on {@link DatagramSocket#receive(DatagramPacket)} method.
    */
   @Override
-  public SocketWorker listen(SourceCallback<InputStream, SocketAttributes> sourceCallback)
+  public SocketWorker listen(SourceCallback<InputStream, ImmutableSocketAttributes> sourceCallback)
       throws IOException, ConnectionException {
     DatagramPacket packet = createPacket(socketProperties.getReceiveBufferSize());
 

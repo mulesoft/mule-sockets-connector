@@ -6,7 +6,7 @@
  */
 package org.mule.extension.socket.api.connection;
 
-import org.mule.extension.socket.api.SocketAttributes;
+import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.source.SocketListener;
 import org.mule.extension.socket.api.worker.SocketWorker;
 import org.mule.runtime.api.connection.ConnectionException;
@@ -34,5 +34,6 @@ public interface ListenerConnection extends SocketConnection {
    * @throws ConnectionException if the connection was closed and the cause was the invocation of
    *         {@link SocketConnection#disconnect()}
    */
-  SocketWorker listen(SourceCallback<InputStream, SocketAttributes> sourceCallback) throws IOException, ConnectionException;
+  SocketWorker listen(SourceCallback<InputStream, ImmutableSocketAttributes> sourceCallback)
+      throws IOException, ConnectionException;
 }

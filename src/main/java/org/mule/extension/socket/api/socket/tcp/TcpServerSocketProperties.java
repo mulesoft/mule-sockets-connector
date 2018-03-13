@@ -11,6 +11,7 @@ import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
+import org.mule.runtime.extension.api.annotation.param.display.Summary;
 
 import java.net.ServerSocket;
 
@@ -29,6 +30,7 @@ public class TcpServerSocketProperties extends AbstractTcpSocketProperties {
   @Parameter
   @Optional
   @Placement(tab = TIMEOUT_CONFIGURATION)
+  @Summary("Sets the 'SO_TIMEOUT' value when the socket is used as a server")
   private Integer serverTimeout;
 
   /**
@@ -37,6 +39,7 @@ public class TcpServerSocketProperties extends AbstractTcpSocketProperties {
   @Parameter
   @Optional(defaultValue = "50")
   @Placement(tab = ADVANCED_TAB)
+  @Summary("The maximum queue length for incoming connections")
   private int receiveBacklog = 50;
 
   /**

@@ -34,6 +34,7 @@ public abstract class AbstractSocketProperties implements SocketProperties {
   @Parameter
   @Optional
   @Placement(tab = BUFFER_CONFIGURATION)
+  @Summary("The size of the buffer (in bytes) used when sending data")
   protected Integer sendBufferSize;
 
   /**
@@ -42,6 +43,7 @@ public abstract class AbstractSocketProperties implements SocketProperties {
   @Parameter
   @Optional
   @Placement(tab = BUFFER_CONFIGURATION)
+  @Summary("The size of the buffer (in bytes) used when receiving data")
   protected Integer receiveBufferSize;
 
   /**
