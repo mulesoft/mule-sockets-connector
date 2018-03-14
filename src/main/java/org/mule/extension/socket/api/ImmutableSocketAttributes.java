@@ -6,8 +6,9 @@
  */
 package org.mule.extension.socket.api;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+import org.mule.runtime.extension.api.annotation.param.Optional;
+import org.mule.runtime.extension.api.annotation.param.Parameter;
 
 import java.io.Serializable;
 import java.net.DatagramPacket;
@@ -32,12 +33,29 @@ import org.slf4j.LoggerFactory;
 public class ImmutableSocketAttributes implements SocketAttributes, Serializable {
 
   private static final long serialVersionUID = 1991548360970880784L;
-
   private static final Logger LOGGER = LoggerFactory.getLogger(ImmutableSocketAttributes.class);
+
+  @Parameter
   private int port;
+
+  @Parameter
   private String hostAddress;
+
+  @Parameter
   private String hostName;
+
+  /**
+   *  The SSL local certificates. If the Socket is not an SSL Sockets, this will be null.
+   */
+  @Parameter
+  @Optional
   private Certificate[] localCertificates;
+
+  /**
+   *  The SSL peer certificates. If the Socket is not an SSL Sockets, this will be null.
+   */
+  @Parameter
+  @Optional
   private Certificate[] peerCertificates;
 
   /**
@@ -64,7 +82,6 @@ public class ImmutableSocketAttributes implements SocketAttributes, Serializable
 
   }
 
-
   /**
    * Creates a new instance
    *
@@ -86,19 +103,24 @@ public class ImmutableSocketAttributes implements SocketAttributes, Serializable
   private void fromInetAddress(int port, InetAddress address) {
     this.port = port;
 
-    if (address == null) {
-      this.hostName = EMPTY;
-      this.hostAddress = EMPTY;
-    } else {
+    if (address != null) {
       this.hostName = address.getHostName();
       this.hostAddress = address.getHostAddress();
+    }
+
+    if (hostName == null) {
+      hostName = "";
+    }
+
+    if (hostAddress == null) {
+      hostName = "";
     }
   }
 
   public ImmutableSocketAttributes(int remotePort, String remoteHostAddress, String remoteHostName) {
     this.port = remotePort;
-    this.hostAddress = remoteHostAddress;
-    this.hostName = remoteHostName;
+    this.hostAddress = remoteHostAddress == null ? "" : remoteHostAddress;
+    this.hostName = remoteHostName == null ? "" : remoteHostName;
   }
 
   @Override

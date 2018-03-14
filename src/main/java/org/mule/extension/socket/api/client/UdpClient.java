@@ -79,6 +79,5 @@ public final class UdpClient implements SocketClient {
   @Override
   public SocketAttributes getAttributes() {
     return new ImmutableSocketAttributes(socket);
-
   }
 }

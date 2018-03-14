@@ -8,10 +8,10 @@ package org.mule.extension.socket.api.socket.tcp;
 
 import org.mule.runtime.extension.api.annotation.Extensible;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
-import org.mule.runtime.extension.api.annotation.param.Parameter;
-
 import org.mule.runtime.extension.api.annotation.param.Optional;
+import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
+import org.mule.runtime.extension.api.annotation.param.display.Summary;
 
 /**
  * Default immutable implementation of the {@code TcpClientSocketProperties} interface.
@@ -29,6 +29,7 @@ public class TcpClientSocketProperties extends AbstractTcpSocketProperties {
   @Parameter
   @Optional(defaultValue = "30000")
   @Placement(tab = TIMEOUT_CONFIGURATION)
+  @Summary("Time to wait during a connection to a remote server before failing with a timeout")
   private int connectionTimeout = 30000;
 
   /**

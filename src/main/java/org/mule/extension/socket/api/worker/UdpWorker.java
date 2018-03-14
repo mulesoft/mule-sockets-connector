@@ -11,7 +11,6 @@ import static java.util.Arrays.copyOf;
 import static org.mule.extension.socket.internal.SocketUtils.sendUdpPackages;
 import static org.slf4j.LoggerFactory.getLogger;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
-import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.runtime.extension.api.runtime.source.SourceCallback;
 
 import java.io.ByteArrayInputStream;
@@ -36,7 +35,7 @@ public final class UdpWorker extends SocketWorker {
 
   public UdpWorker(DatagramSocket socket,
                    DatagramPacket packet,
-                   SourceCallback<InputStream, SocketAttributes> callback) {
+                   SourceCallback<InputStream, ImmutableSocketAttributes> callback) {
     super(callback);
     this.socket = socket;
     this.packet = packet;

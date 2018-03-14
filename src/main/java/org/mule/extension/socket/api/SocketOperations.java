@@ -37,15 +37,15 @@ public class SocketOperations {
    * @throws ConnectionException if the connection couldn't be established, if the remote host was unavailable.
    */
   @MediaType(value = ANY, strict = false)
-  public Result<InputStream, SocketAttributes> sendAndReceive(@Connection RequesterConnection connection,
-                                                              @Content InputStream content)
+  public Result<InputStream, ImmutableSocketAttributes> sendAndReceive(@Connection RequesterConnection connection,
+                                                                       @Content InputStream content)
       throws ConnectionException, IOException {
     SocketClient client = connection.getClient();
     client.write(content);
 
-    return Result.<InputStream, SocketAttributes>builder()
+    return Result.<InputStream, ImmutableSocketAttributes>builder()
         .output(client.read())
-        .attributes(client.getAttributes())
+        .attributes((ImmutableSocketAttributes) client.getAttributes())
         .build();
   }
 
