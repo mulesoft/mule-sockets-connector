@@ -10,19 +10,19 @@ import static org.mule.extension.socket.api.exceptions.SocketError.CONNECTION_TI
 import static org.mule.extension.socket.api.exceptions.SocketError.LENGTH_EXCEEDED;
 import static org.mule.extension.socket.api.exceptions.SocketError.UNKNOWN_HOST;
 import org.mule.extension.socket.api.SocketOperations;
-import org.mule.extension.socket.api.config.RequesterConfig;
 import org.mule.extension.socket.api.connection.RequesterConnection;
 import org.mule.runtime.extension.api.annotation.error.ErrorTypeProvider;
 import org.mule.runtime.extension.api.error.ErrorTypeDefinition;
 
-import com.google.common.collect.ImmutableSet;
-
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Errors that can be thrown both in
- * {@link SocketOperations#send(RequesterConnection, RequesterConfig, Object, String)}  or
- * {@link SocketOperations#sendAndReceive(RequesterConnection, RequesterConfig, Object, String)}  operation.
+ * {@link SocketOperations#send(RequesterConnection, java.io.InputStream)}  or
+ * {@link SocketOperations#sendAndReceive(RequesterConnection, java.io.InputStream)}  operation.
  *
  * @since 1.0
  */
@@ -30,11 +30,7 @@ public class SocketsErrorTypeProvider implements ErrorTypeProvider {
 
   @Override
   public Set<ErrorTypeDefinition> getErrorTypes() {
-    return ImmutableSet.<ErrorTypeDefinition>builder()
-        .add(LENGTH_EXCEEDED)
-        .add(CONNECTION_TIMEOUT)
-        .add(UNKNOWN_HOST)
-        .build();
+    return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(LENGTH_EXCEEDED, CONNECTION_TIMEOUT, UNKNOWN_HOST)));
   }
 }
 
