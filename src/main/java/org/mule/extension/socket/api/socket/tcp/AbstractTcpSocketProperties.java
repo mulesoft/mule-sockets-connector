@@ -13,6 +13,7 @@ import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
 
 import java.net.Socket;
+import java.util.Objects;
 
 /**
  * Common configuration fields for TCP {@link Socket}
@@ -98,5 +99,35 @@ public abstract class AbstractTcpSocketProperties extends AbstractSocketProperti
   public boolean getFailOnUnresolvedHost() {
     return failOnUnresolvedHost;
 
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    if (!super.equals(o))
+      return false;
+
+    AbstractTcpSocketProperties that = (AbstractTcpSocketProperties) o;
+
+    if (sendTcpNoDelay != that.sendTcpNoDelay)
+      return false;
+    if (keepAlive != that.keepAlive)
+      return false;
+    if (failOnUnresolvedHost != that.failOnUnresolvedHost)
+      return false;
+    return Objects.equals(linger, that.linger);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (sendTcpNoDelay ? 1 : 0);
+    result = 31 * result + Objects.hashCode(linger);
+    result = 31 * result + (keepAlive ? 1 : 0);
+    result = 31 * result + (failOnUnresolvedHost ? 1 : 0);
+    return result;
   }
 }

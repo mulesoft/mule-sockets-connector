@@ -45,4 +45,24 @@ public class UdpSocketProperties extends AbstractSocketProperties {
     return receiveBufferSize == null ? DEFAULT_UDP_RECEIVE_BUFFER_SIZE : receiveBufferSize;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    if (!super.equals(o))
+      return false;
+
+    UdpSocketProperties that = (UdpSocketProperties) o;
+
+    return broadcast == that.broadcast;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (broadcast ? 1 : 0);
+    return result;
+  }
 }

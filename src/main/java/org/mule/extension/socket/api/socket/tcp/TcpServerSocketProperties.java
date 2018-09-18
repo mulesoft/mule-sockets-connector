@@ -14,6 +14,7 @@ import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
 
 import java.net.ServerSocket;
+import java.util.Objects;
 
 /**
  * Default immutable implementation of the {@code TcpServerSocketProperties} interface.
@@ -56,5 +57,29 @@ public class TcpServerSocketProperties extends AbstractTcpSocketProperties {
    */
   public Integer getServerTimeout() {
     return serverTimeout;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    if (!super.equals(o))
+      return false;
+
+    TcpServerSocketProperties that = (TcpServerSocketProperties) o;
+
+    if (receiveBacklog != that.receiveBacklog)
+      return false;
+    return Objects.equals(serverTimeout, that.serverTimeout);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (serverTimeout != null ? serverTimeout.hashCode() : 0);
+    result = 31 * result + receiveBacklog;
+    return result;
   }
 }
