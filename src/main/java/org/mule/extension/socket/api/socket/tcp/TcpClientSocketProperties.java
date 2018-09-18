@@ -39,4 +39,25 @@ public class TcpClientSocketProperties extends AbstractTcpSocketProperties {
   public int getConnectionTimeout() {
     return connectionTimeout;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    if (!super.equals(o))
+      return false;
+
+    TcpClientSocketProperties that = (TcpClientSocketProperties) o;
+
+    return connectionTimeout == that.connectionTimeout;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + connectionTimeout;
+    return result;
+  }
 }
