@@ -12,6 +12,8 @@ import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
 
+import java.util.Objects;
+
 /**
  * Configuration fields common to all socket implementations
  *
@@ -105,5 +107,35 @@ public abstract class AbstractSocketProperties implements SocketProperties {
   @Override
   public boolean getReuseAddress() {
     return reuseAddress;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+
+    AbstractSocketProperties that = (AbstractSocketProperties) o;
+
+    if (reuseAddress != that.reuseAddress)
+      return false;
+    if (!Objects.equals(name, that.name))
+      return false;
+    if (!Objects.equals(sendBufferSize, that.sendBufferSize))
+      return false;
+    if (!Objects.equals(receiveBufferSize, that.receiveBufferSize))
+      return false;
+    return Objects.equals(clientTimeout, that.clientTimeout);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = name != null ? name.hashCode() : 0;
+    result = 31 * result + (sendBufferSize != null ? sendBufferSize.hashCode() : 0);
+    result = 31 * result + (receiveBufferSize != null ? receiveBufferSize.hashCode() : 0);
+    result = 31 * result + (clientTimeout != null ? clientTimeout.hashCode() : 0);
+    result = 31 * result + (reuseAddress ? 1 : 0);
+    return result;
   }
 }

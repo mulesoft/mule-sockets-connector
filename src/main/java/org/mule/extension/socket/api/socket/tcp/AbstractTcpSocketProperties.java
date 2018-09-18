@@ -99,4 +99,34 @@ public abstract class AbstractTcpSocketProperties extends AbstractSocketProperti
     return failOnUnresolvedHost;
 
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    if (!super.equals(o))
+      return false;
+
+    AbstractTcpSocketProperties that = (AbstractTcpSocketProperties) o;
+
+    if (sendTcpNoDelay != that.sendTcpNoDelay)
+      return false;
+    if (keepAlive != that.keepAlive)
+      return false;
+    if (failOnUnresolvedHost != that.failOnUnresolvedHost)
+      return false;
+    return linger != null ? linger.equals(that.linger) : that.linger == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (sendTcpNoDelay ? 1 : 0);
+    result = 31 * result + (linger != null ? linger.hashCode() : 0);
+    result = 31 * result + (keepAlive ? 1 : 0);
+    result = 31 * result + (failOnUnresolvedHost ? 1 : 0);
+    return result;
+  }
 }
