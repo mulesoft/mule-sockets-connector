@@ -132,9 +132,9 @@ public abstract class AbstractSocketProperties implements SocketProperties {
   @Override
   public int hashCode() {
     int result = name != null ? name.hashCode() : 0;
-    result = 31 * result + (sendBufferSize != null ? sendBufferSize.hashCode() : 0);
-    result = 31 * result + (receiveBufferSize != null ? receiveBufferSize.hashCode() : 0);
-    result = 31 * result + (clientTimeout != null ? clientTimeout.hashCode() : 0);
+    result = 31 * result + Objects.hashCode(sendBufferSize);
+    result = 31 * result + Objects.hashCode(receiveBufferSize);
+    result = 31 * result + Objects.hashCode(clientTimeout);
     result = 31 * result + (reuseAddress ? 1 : 0);
     return result;
   }
