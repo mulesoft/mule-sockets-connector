@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 /**
  * This protocol is an application level {@link TcpProtocol} and precedes every message with a cookie. It should probably not be
@@ -131,5 +132,26 @@ public class SafeProtocol extends AbstractByteProtocol {
         + "You may not be using a consistent protocol on your TCP transport. "
         + "Please read the documentation for the TCP transport, " + "paying particular attention to the protocol parameter.")
             .initCause(e);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    if (!super.equals(o))
+      return false;
+    SafeProtocol that = (SafeProtocol) o;
+    return maxMessageLeght == that.maxMessageLeght &&
+        Objects.equals(cookieProtocol, that.cookieProtocol) &&
+        Objects.equals(delegate, that.delegate) &&
+        Objects.equals(muleEncoding, that.muleEncoding) &&
+        Objects.equals(encoding, that.encoding);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), cookieProtocol, delegate, muleEncoding, maxMessageLeght, encoding);
   }
 }

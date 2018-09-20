@@ -13,6 +13,7 @@ import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
@@ -95,5 +96,22 @@ public class DirectProtocol extends AbstractByteProtocol {
   @Override
   public void write(OutputStream outputStream, InputStream data) throws IOException {
     copyLarge(data, outputStream, bufferSize);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    if (!super.equals(o))
+      return false;
+    DirectProtocol that = (DirectProtocol) o;
+    return bufferSize == that.bufferSize;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), bufferSize);
   }
 }
