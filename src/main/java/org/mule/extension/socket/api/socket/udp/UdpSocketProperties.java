@@ -8,8 +8,8 @@ package org.mule.extension.socket.api.socket.udp;
 
 import org.mule.extension.socket.api.socket.AbstractSocketProperties;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
-import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.Optional;
+import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
 
 import java.net.DatagramSocket;
