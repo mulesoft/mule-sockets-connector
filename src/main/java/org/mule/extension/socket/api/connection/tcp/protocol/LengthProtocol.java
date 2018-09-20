@@ -6,16 +6,22 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
+import static java.lang.String.format;
+import static org.mule.runtime.core.api.util.IOUtils.toByteArray;
+
 import org.mule.extension.socket.api.exceptions.LengthExceededException;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 
-import java.io.*;
-
-import static java.lang.String.format;
-import static org.mule.runtime.core.api.util.IOUtils.toByteArray;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Objects;
 
 /**
  * This protocol is an application level {@link TcpProtocol} that can be used to transfer large amounts of data without risking
@@ -127,5 +133,22 @@ public class LengthProtocol extends DirectProtocol {
   @Override
   protected boolean isRepeat(int len, int available) {
     return true;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    if (!super.equals(o))
+      return false;
+    LengthProtocol that = (LengthProtocol) o;
+    return maxMessageLength == that.maxMessageLength;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), maxMessageLength);
   }
 }

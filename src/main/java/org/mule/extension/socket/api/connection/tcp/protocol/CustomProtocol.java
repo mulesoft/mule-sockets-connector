@@ -19,6 +19,7 @@ import org.mule.runtime.extension.api.annotation.param.display.Summary;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 /**
  * @since 1.0
@@ -55,5 +56,21 @@ public class CustomProtocol implements TcpProtocol {
     } catch (Exception e) {
       throw new RuntimeException(format("Could not load class '%s'", clazz));
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    CustomProtocol that = (CustomProtocol) o;
+    return Objects.equals(clazz, that.clazz) &&
+        Objects.equals(delegate, that.delegate);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(clazz, delegate);
   }
 }
