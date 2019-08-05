@@ -6,12 +6,14 @@
  */
 package org.mule.extension.socket.api.socket.tcp;
 
+import org.mule.extension.socket.api.stereotype.TcpClientSocketStereotype;
 import org.mule.runtime.extension.api.annotation.Extensible;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
+import org.mule.runtime.extension.api.annotation.param.stereotype.Stereotype;
 
 /**
  * Default immutable implementation of the {@code TcpClientSocketProperties} interface.
@@ -20,6 +22,7 @@ import org.mule.runtime.extension.api.annotation.param.display.Summary;
  */
 @Extensible
 @TypeDsl(allowTopLevelDefinition = true)
+@Stereotype(TcpClientSocketStereotype.class)
 public class TcpClientSocketProperties extends AbstractTcpSocketProperties {
 
   /**

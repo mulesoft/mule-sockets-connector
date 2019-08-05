@@ -7,10 +7,12 @@
 package org.mule.extension.socket.api.socket.udp;
 
 import org.mule.extension.socket.api.socket.AbstractSocketProperties;
+import org.mule.extension.socket.api.stereotype.UdpSocketStereotype;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
+import org.mule.runtime.extension.api.annotation.param.stereotype.Stereotype;
 
 import java.net.DatagramSocket;
 
@@ -20,6 +22,7 @@ import java.net.DatagramSocket;
  * @since 1.0
  */
 @TypeDsl(allowTopLevelDefinition = true)
+@Stereotype(UdpSocketStereotype.class)
 public class UdpSocketProperties extends AbstractSocketProperties {
 
   // TODO UDP needs to specify a default value for the receiving buffer size but TCP doesn't

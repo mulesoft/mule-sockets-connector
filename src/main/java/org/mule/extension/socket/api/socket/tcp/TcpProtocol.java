@@ -7,6 +7,8 @@
 package org.mule.extension.socket.api.socket.tcp;
 
 import org.mule.extension.socket.api.SocketsExtension;
+import org.mule.extension.socket.api.stereotype.TcpProtocolStereotype;
+import org.mule.runtime.extension.api.annotation.param.stereotype.Stereotype;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +19,7 @@ import java.io.OutputStream;
  *
  * @since 1.0
  */
+@Stereotype(TcpProtocolStereotype.class)
 public interface TcpProtocol {
 
   /**

@@ -7,12 +7,14 @@
 package org.mule.extension.socket.api.provider.udp;
 
 import static org.mule.runtime.extension.api.annotation.param.ParameterGroup.CONNECTION;
+
 import org.mule.extension.socket.api.SocketConnectionSettings;
 import org.mule.extension.socket.api.connection.udp.UdpListenerConnection;
 import org.mule.extension.socket.api.exceptions.UnresolvableHostException;
 import org.mule.extension.socket.api.socket.SocketProperties;
 import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 import org.mule.extension.socket.api.source.SocketListener;
+import org.mule.extension.socket.api.stereotype.UdpSocketStereotype;
 import org.mule.extension.socket.internal.SocketUtils;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
 import org.mule.runtime.api.connection.ConnectionException;
@@ -20,6 +22,7 @@ import org.mule.runtime.api.connection.ConnectionProvider;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.extension.api.annotation.Alias;
 import org.mule.runtime.extension.api.annotation.param.ParameterGroup;
+import org.mule.runtime.extension.api.annotation.param.stereotype.AllowedStereotypes;
 
 import java.net.DatagramSocket;
 
@@ -42,6 +45,7 @@ public class UdpListenerProvider implements CachedConnectionProvider<UdpListener
    * {@link DatagramSocket} configuration properties
    */
   @ParameterGroup(name = SocketProperties.GROUP_NAME)
+  @AllowedStereotypes(UdpSocketStereotype.class)
   private UdpSocketProperties udpSocketProperties;
 
   @Override

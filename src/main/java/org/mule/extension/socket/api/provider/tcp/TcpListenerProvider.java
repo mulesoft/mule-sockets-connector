@@ -11,6 +11,7 @@ import static org.mule.extension.socket.api.SocketsExtension.TLS_CONFIGURATION;
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
 import static org.mule.runtime.extension.api.annotation.param.ParameterGroup.ADVANCED;
 import static org.mule.runtime.extension.api.annotation.param.ParameterGroup.CONNECTION;
+
 import org.mule.extension.socket.api.SocketConnectionSettings;
 import org.mule.extension.socket.api.connection.tcp.TcpListenerConnection;
 import org.mule.extension.socket.api.connection.tcp.protocol.SafeProtocol;
@@ -20,24 +21,26 @@ import org.mule.extension.socket.api.socket.factory.TcpServerSocketFactory;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.extension.socket.api.socket.tcp.TcpServerSocketProperties;
 import org.mule.extension.socket.api.source.SocketListener;
+import org.mule.extension.socket.api.stereotype.TcpServerSocketStereotype;
 import org.mule.extension.socket.internal.SocketUtils;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionProvider;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
-import org.mule.runtime.api.tls.TlsContextFactory;
 import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.api.lifecycle.Initialisable;
 import org.mule.runtime.api.lifecycle.InitialisationException;
+import org.mule.runtime.api.tls.TlsContextFactory;
 import org.mule.runtime.core.api.config.i18n.CoreMessages;
 import org.mule.runtime.extension.api.annotation.Alias;
 import org.mule.runtime.extension.api.annotation.param.NullSafe;
+import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.ParameterGroup;
-import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
+import org.mule.runtime.extension.api.annotation.param.stereotype.AllowedStereotypes;
 
 import java.net.ServerSocket;
 
@@ -73,6 +76,7 @@ public final class TcpListenerProvider implements CachedConnectionProvider<TcpLi
    * {@link ServerSocket} configuration properties
    */
   @ParameterGroup(name = ADVANCED)
+  @AllowedStereotypes(TcpServerSocketStereotype.class)
   private TcpServerSocketProperties tcpServerSocketProperties;
 
   /**

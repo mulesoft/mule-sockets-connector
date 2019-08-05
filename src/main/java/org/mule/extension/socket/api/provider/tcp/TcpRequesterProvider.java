@@ -6,6 +6,12 @@
  */
 package org.mule.extension.socket.api.provider.tcp;
 
+import static org.mule.extension.socket.api.SocketsExtension.TLS;
+import static org.mule.extension.socket.api.SocketsExtension.TLS_CONFIGURATION;
+import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
+import static org.mule.runtime.extension.api.annotation.param.ParameterGroup.CONNECTION;
+import static org.mule.runtime.extension.api.annotation.param.display.Placement.CONNECTION_TAB;
+
 import org.mule.extension.socket.api.SocketConnectionSettings;
 import org.mule.extension.socket.api.SocketOperations;
 import org.mule.extension.socket.api.connection.tcp.TcpRequesterConnection;
@@ -34,14 +40,9 @@ import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
 
-import javax.net.ssl.SSLSocket;
 import java.net.Socket;
 
-import static org.mule.extension.socket.api.SocketsExtension.TLS;
-import static org.mule.extension.socket.api.SocketsExtension.TLS_CONFIGURATION;
-import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
-import static org.mule.runtime.extension.api.annotation.param.ParameterGroup.CONNECTION;
-import static org.mule.runtime.extension.api.annotation.param.display.Placement.CONNECTION_TAB;
+import javax.net.ssl.SSLSocket;
 
 /**
  * A {@link ConnectionProvider} which provides instances of {@link TcpRequesterConnection} to be used by the
