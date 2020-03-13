@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule  xmlns="http://www.mulesoft.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+       http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd">
+
+    <sockets:request-config name="Sockets_Request_config">
+        <sockets:tcp-requester-connection host="localhost" port="${port}" keepAlive="true" clientTimeout="12000" connectionTimeout="12000">
+            <reconnection>
+                <reconnect count="10000" />
+            </reconnection>
+            <sockets:protocol >
+                <sockets:direct-protocol />
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <flow name="socketSendAndReconnect">
+        <set-payload value="#['Hello World!\n']" />
+        <sockets:send config-ref="Sockets_Request_config">
+            <reconnect count="10000"/>
+        </sockets:send>
+    </flow>
+
+</mule>

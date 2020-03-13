@@ -19,6 +19,8 @@ import org.mule.runtime.extension.api.runtime.operation.Result;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
+import java.net.SocketException;
 
 /**
  * Basic set of operations for socket extension
@@ -58,6 +60,12 @@ public class SocketOperations {
   public void send(@Connection RequesterConnection connection,
                    @Content InputStream content)
       throws ConnectionException, IOException {
-    connection.getClient().write(content);
+    try {
+      connection.getClient().write(content);
+    } catch (ConnectException e1) {
+      throw new ConnectionException("Attempting to reconnect");
+    } catch (SocketException e2) {
+      throw new ConnectionException("Attempting to reconnect");
+    }
   }
 }
