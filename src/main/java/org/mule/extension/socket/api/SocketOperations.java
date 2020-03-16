@@ -67,8 +67,6 @@ public class SocketOperations {
       throw new ConnectionException(String.format("Attempting to reconnect %s", e1.getMessage()));
     } catch (SocketException e2) {
       throw new ConnectionException(String.format("Attempting to reconnect %s", e2.getMessage()));
-    } catch (Exception e3) {
-      throw new ConnectionException(String.format("Attempting to reconnect %s", e3.getMessage()));
     }
   }
 }

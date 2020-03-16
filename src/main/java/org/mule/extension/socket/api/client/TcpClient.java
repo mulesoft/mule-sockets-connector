@@ -41,7 +41,8 @@ public final class TcpClient implements SocketClient {
    */
   @Override
   public void write(InputStream data) throws IOException {
-    try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream())) {
+    try {
+      BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());
       protocol.write(bufferedOutputStream, data);
       bufferedOutputStream.flush();
     } finally {

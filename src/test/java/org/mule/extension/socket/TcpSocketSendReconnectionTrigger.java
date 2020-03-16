@@ -12,10 +12,8 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-import org.mule.extension.socket.api.SocketConnectionSettings;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -25,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TcpSocketSendReconnectionTrigger extends SocketExtensionTestCase {
 
   private static String MESSAGE = "Hello World!";
+  private static int MAX_CONNECTION_QUEUE = 2;
   private static int RUNS = 2;
 
   @Override
@@ -37,43 +36,38 @@ public class TcpSocketSendReconnectionTrigger extends SocketExtensionTestCase {
   public void tcpSocketSendTriggersReconnectionWhenConnectionLost() throws Exception {
     AtomicInteger counter = new AtomicInteger(0);
     Thread t = new Thread(() -> {
-      try (ServerSocket listenerSocket = new ServerSocket(dynamicPort.getNumber(), 10)) {
+      try (ServerSocket listenerSocket = new ServerSocket(dynamicPort.getNumber(), MAX_CONNECTION_QUEUE)) {
         String receivedMessage;
         BufferedReader reader;
 
         for (int i = 0; i < RUNS; i++) {
           LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class).debug("Socket listening...");
-          boolean success = false;
-          for (int j = 0; j < 10 && !success; j++) {
-            try (Socket serverSocket = listenerSocket.accept()) {
 
-              LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class)
-                  .error(String.format("Attempt to accept connection number %d/%d", j, 10));
+          try (Socket serverSocket = listenerSocket.accept()) {
+            LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class).debug("Connection accepted!");
 
-              success = true;
+            reader = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
+            receivedMessage = reader.readLine();
 
-              LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class).debug("Connection accepted!");
-              reader = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
+            LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class)
+                .debug("Listener Socket received message: " + receivedMessage);
 
-              receivedMessage = reader.readLine();
+            serverSocket.close();
 
-              serverSocket.close();
+            LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class).debug("Socket closed!");
 
-              LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class).debug("Socket closed!");
+            assertThat(receivedMessage, is(equalTo(MESSAGE)));
 
-              assertThat(receivedMessage, is(equalTo(MESSAGE)));
-              LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class)
-                  .debug("Listener Socket received message: " + receivedMessage);
+            counter.incrementAndGet();
 
-              counter.incrementAndGet();
-              LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class)
-                  .debug(String.format("Incremented counter %s", counter.get()));
+            LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class)
+                .debug(String.format("Successfully received message times: %d/%d", counter.get(), RUNS));
 
-            } catch (Exception e) {
-              LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class)
-                  .error("ERROR accepting connection: " + e.getMessage());
-            }
+          } catch (Exception e) {
+            LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class)
+                .error(e.getMessage());
           }
+
         }
       } catch (Exception e) {
         LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class).error("ERROR: " + e.getCause());
@@ -90,8 +84,7 @@ public class TcpSocketSendReconnectionTrigger extends SocketExtensionTestCase {
 
     t.join();
 
-    assertThat(counter.get(), is(equalTo(2)));
-
+    assertThat(counter.get(), is(equalTo(RUNS)));
   }
 
 }
