@@ -15,8 +15,10 @@ import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.Socket;
 
+import org.mule.runtime.api.connection.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +41,7 @@ public final class TcpClient implements SocketClient {
    */
   @Override
   public void write(InputStream data) throws IOException {
-    try {
-      BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());
+    try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream())) {
       protocol.write(bufferedOutputStream, data);
       bufferedOutputStream.flush();
     } finally {

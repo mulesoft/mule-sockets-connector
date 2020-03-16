@@ -19,6 +19,7 @@ import org.mule.runtime.extension.api.runtime.operation.Result;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.net.ConnectException;
 import java.net.SocketException;
 
@@ -63,9 +64,11 @@ public class SocketOperations {
     try {
       connection.getClient().write(content);
     } catch (ConnectException e1) {
-      throw new ConnectionException("Attempting to reconnect");
+      throw new ConnectionException(String.format("Attempting to reconnect %s", e1.getMessage()));
     } catch (SocketException e2) {
-      throw new ConnectionException("Attempting to reconnect");
+      throw new ConnectionException(String.format("Attempting to reconnect %s", e2.getMessage()));
+    } catch (Exception e3) {
+      throw new ConnectionException(String.format("Attempting to reconnect %s", e3.getMessage()));
     }
   }
 }

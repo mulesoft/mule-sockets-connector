@@ -11,7 +11,7 @@
                 <reconnect count="10000" />
             </reconnection>
             <sockets:protocol >
-                <sockets:direct-protocol />
+                <sockets:direct-protocol/>
             </sockets:protocol>
         </sockets:tcp-requester-connection>
     </sockets:request-config>
@@ -19,7 +19,7 @@
     <flow name="socketSendAndReconnect">
         <set-payload value="#['Hello World!\n']" />
         <sockets:send config-ref="Sockets_Request_config">
-            <reconnect count="10000"/>
+            <reconnect count="10"/>
         </sockets:send>
     </flow>
 
