@@ -6,8 +6,9 @@
  */
 package org.mule.extension.socket;
 
-import org.junit.Before;
+import com.sun.mail.util.WriteTimeoutSocket;
 import org.junit.Test;
+
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -16,14 +17,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TcpSocketSendReconnectionTrigger extends SocketExtensionTestCase {
 
   private static String MESSAGE = "Hello World!";
-  private static int MAX_CONNECTION_QUEUE = 2;
   private static int RUNS = 2;
 
   @Override
@@ -36,9 +38,12 @@ public class TcpSocketSendReconnectionTrigger extends SocketExtensionTestCase {
   public void tcpSocketSendTriggersReconnectionWhenConnectionLost() throws Exception {
     AtomicInteger counter = new AtomicInteger(0);
     Thread t = new Thread(() -> {
-      try (ServerSocket listenerSocket = new ServerSocket(dynamicPort.getNumber(), MAX_CONNECTION_QUEUE)) {
+      try (ServerSocket listenerSocket = new ServerSocket()) {
         String receivedMessage;
         BufferedReader reader;
+
+        listenerSocket.setReuseAddress(true);
+        listenerSocket.bind(new InetSocketAddress("localhost", dynamicPort.getNumber()));
 
         for (int i = 0; i < RUNS; i++) {
           LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class).debug("Socket listening...");
@@ -49,25 +54,19 @@ public class TcpSocketSendReconnectionTrigger extends SocketExtensionTestCase {
             reader = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
             receivedMessage = reader.readLine();
 
+            assertThat(receivedMessage, is(equalTo(MESSAGE)));
+
             LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class)
                 .debug("Listener Socket received message: " + receivedMessage);
-
-            serverSocket.close();
-
-            LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class).debug("Socket closed!");
-
-            assertThat(receivedMessage, is(equalTo(MESSAGE)));
 
             counter.incrementAndGet();
 
             LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class)
-                .debug(String.format("Successfully received message times: %d/%d", counter.get(), RUNS));
-
+                .debug(String.format("Successfully received messages times: %d/%d", counter.get(), RUNS));
           } catch (Exception e) {
             LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class)
                 .error(e.getMessage());
           }
-
         }
       } catch (Exception e) {
         LoggerFactory.getLogger(TcpSocketSendReconnectionTrigger.class).error("ERROR: " + e.getCause());

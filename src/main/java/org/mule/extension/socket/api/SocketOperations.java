@@ -7,6 +7,8 @@
 package org.mule.extension.socket.api;
 
 import static org.mule.runtime.extension.api.annotation.param.MediaType.ANY;
+
+import com.sun.mail.util.SocketConnectException;
 import org.mule.extension.socket.api.client.SocketClient;
 import org.mule.extension.socket.api.connection.RequesterConnection;
 import org.mule.extension.socket.api.exceptions.SocketsErrorTypeProvider;
@@ -16,12 +18,14 @@ import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Content;
 import org.mule.runtime.extension.api.annotation.param.MediaType;
 import org.mule.runtime.extension.api.runtime.operation.Result;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 import java.net.ConnectException;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 /**
  * Basic set of operations for socket extension
@@ -63,10 +67,10 @@ public class SocketOperations {
       throws ConnectionException, IOException {
     try {
       connection.getClient().write(content);
-    } catch (ConnectException e1) {
-      throw new ConnectionException(String.format("Attempting to reconnect %s", e1.getMessage()));
-    } catch (SocketException e2) {
-      throw new ConnectionException(String.format("Attempting to reconnect %s", e2.getMessage()));
+    } catch (ConnectException connException) {
+      throw new ConnectionException(String.format("ERROR %s. Attempting to reconnect...", connException.getMessage()));
+    } catch (SocketException socketException) {
+      throw new ConnectionException(String.format("ERROR %s. Attempting to reconnect...", socketException.getMessage()));
     }
   }
 }
