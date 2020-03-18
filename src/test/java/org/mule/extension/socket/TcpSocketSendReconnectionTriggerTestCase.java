@@ -7,6 +7,7 @@
 package org.mule.extension.socket;
 
 import io.qameta.allure.Feature;
+import io.qameta.allure.Issue;
 import io.qameta.allure.Story;
 import org.junit.Test;
 
@@ -30,9 +31,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Story(RECONNECTION)
 public class TcpSocketSendReconnectionTriggerTestCase extends SocketExtensionTestCase {
 
-  private static Logger LOGGER = LoggerFactory.getLogger(TcpSocketSendReconnectionTriggerTestCase.class);
-  private static String MESSAGE = "Hello World!";
-  private static int RUNS = 2;
+  private static final Logger LOGGER = LoggerFactory.getLogger(TcpSocketSendReconnectionTriggerTestCase.class);
+  private static final String MESSAGE = "Hello World!";
+  private static final int RUNS = 2;
 
   @Override
   public String getConfigFile() {
@@ -41,6 +42,7 @@ public class TcpSocketSendReconnectionTriggerTestCase extends SocketExtensionTes
 
 
   @Test
+  @Issue("MULE-18173")
   public void tcpSocketSendTriggersReconnectionWhenConnectionLost() throws Exception {
     AtomicInteger counter = new AtomicInteger(0);
     Thread t = new Thread(() -> {
