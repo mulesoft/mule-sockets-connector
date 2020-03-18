@@ -7,6 +7,8 @@
 package org.mule.extension.socket.api;
 
 import static org.mule.runtime.extension.api.annotation.param.MediaType.ANY;
+import static java.lang.String.format;
+
 import org.mule.extension.socket.api.client.SocketClient;
 import org.mule.extension.socket.api.connection.RequesterConnection;
 import org.mule.extension.socket.api.exceptions.SocketsErrorTypeProvider;
@@ -19,6 +21,8 @@ import org.mule.runtime.extension.api.runtime.operation.Result;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
+import java.net.SocketException;
 
 /**
  * Basic set of operations for socket extension
@@ -58,6 +62,16 @@ public class SocketOperations {
   public void send(@Connection RequesterConnection connection,
                    @Content InputStream content)
       throws ConnectionException, IOException {
-    connection.getClient().write(content);
+    try {
+      connection.getClient().write(content);
+    } catch (ConnectException connException) {
+      throw new ConnectionException(format("Socket write operation failed: %s.",
+                                           connException.getMessage()),
+                                    connException);
+    } catch (SocketException socketException) {
+      throw new ConnectionException(format("Socket write operation failed: %s.",
+                                           socketException.getMessage()),
+                                    socketException);
+    }
   }
 }
