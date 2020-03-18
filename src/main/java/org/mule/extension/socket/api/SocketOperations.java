@@ -65,11 +65,13 @@ public class SocketOperations {
     try {
       connection.getClient().write(content);
     } catch (ConnectException connException) {
-      throw new ConnectionException(format("Socket write operation failed: %s. Attempting to reconnect...",
-                                           connException.getMessage()));
+      throw new ConnectionException(format("Socket write operation failed: %s.",
+                                           connException.getMessage()),
+                                    connException);
     } catch (SocketException socketException) {
-      throw new ConnectionException(format("Socket write operation failed: %s. Attempting to reconnect...",
-                                           socketException.getMessage()));
+      throw new ConnectionException(format("Socket write operation failed: %s.",
+                                           socketException.getMessage()),
+                                    socketException);
     }
   }
 }
