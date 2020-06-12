@@ -23,13 +23,9 @@
     <flow name="tcp-listen-and-modify-pojo">
         <sockets:listener config-ref="tcp-listener"/>
         <byte-array-to-object-transformer returnClass="org.mule.extension.socket.TestPojo"/>
-        <expression-component>mel:
-            payload.setAge(7)
-        </expression-component>
-
-        <expression-component>mel:
-            payload.setName("Ronaldo")
-        </expression-component>
+        
+        <set-payload value="#[java!org::mule::extension::socket::SocketExtensionTestCase::setAge(payload, 7)]"/>
+        <set-payload value="#[java!org::mule::extension::socket::SocketExtensionTestCase::setName(payload, 'Ronaldo')]"/>
 
     </flow>
 </mule>

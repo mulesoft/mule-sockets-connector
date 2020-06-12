@@ -11,6 +11,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.junit.rules.ExpectedException.none;
+
 import org.mule.extension.socket.api.SocketsExtension;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
 import org.mule.runtime.api.exception.MuleException;
@@ -153,5 +154,13 @@ public abstract class SocketExtensionTestCase extends MuleArtifactFunctionalTest
     assertEquals(expectedData.readFloat(), dataIn.readFloat(), 0.1f);
   }
 
+  public static TestPojo setAge(TestPojo payload, int age) {
+    payload.setAge(age);
+    return payload;
+  }
 
+  public static TestPojo setName(TestPojo payload, String name) {
+    payload.setName(name);
+    return payload;
+  }
 }
