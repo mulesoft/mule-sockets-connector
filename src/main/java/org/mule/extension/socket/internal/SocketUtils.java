@@ -15,8 +15,11 @@ import org.mule.extension.socket.api.socket.tcp.TcpSocketProperties;
 import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
+import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.runtime.operation.Result;
+import org.slf4j.Logger;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
@@ -24,6 +27,7 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.util.Base64;
 
 public final class SocketUtils {
 
@@ -167,5 +171,20 @@ public final class SocketUtils {
       sendPacket.setSocketAddress(address);
       socket.send(sendPacket);
     }
+  }
+
+  /**
+   * Logs the content if it's log enabled, returns the same content.
+   */
+  public static InputStream logIfNeeded(InputStream content, Logger logger) {
+    if (logger.isDebugEnabled()) {
+      String c = IOUtils.toString(content);
+      logger.debug("Logging TCP Content (Base64 encoding):");
+      logger.debug("-----------------------------------");
+      logger.debug(Base64.getEncoder().encodeToString(c.getBytes()));
+      logger.debug("-----------------------------------");
+      return new ByteArrayInputStream(c.getBytes());
+    }
+    return content;
   }
 }
