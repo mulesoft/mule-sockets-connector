@@ -7,6 +7,7 @@
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
 import static java.lang.String.format;
+import static org.mule.extension.socket.internal.SocketUtils.logIfDebugEnabled;
 import static org.mule.runtime.core.api.util.IOUtils.toByteArray;
 
 import org.mule.extension.socket.api.exceptions.LengthExceededException;
@@ -99,12 +100,7 @@ public class LengthProtocol extends DirectProtocol {
     byte[] buffer = new byte[length];
     dis.readFully(buffer);
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Logging TCP Content:");
-      LOGGER.debug("-----------------------------------");
-      LOGGER.debug(Base64.getEncoder().encodeToString(buffer));
-      LOGGER.debug("-----------------------------------");
-    }
+    logIfDebugEnabled(buffer, LOGGER);
 
     return buffer;
   }
@@ -129,12 +125,7 @@ public class LengthProtocol extends DirectProtocol {
     dataOutputStream.writeInt(data.length);
     dataOutputStream.write(data);
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Logging TCP Content:");
-      LOGGER.debug("-----------------------------------");
-      LOGGER.debug(Base64.getEncoder().encodeToString(data));
-      LOGGER.debug("-----------------------------------");
-    }
+    logIfDebugEnabled(data, LOGGER);
 
     if (dataOutputStream.size() != data.length + SIZE_INT) {
       dataOutputStream.flush();

@@ -6,6 +6,7 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
+import static org.mule.extension.socket.internal.SocketUtils.logIfDebugEnabled;
 import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
@@ -70,12 +71,7 @@ public class DirectProtocol extends AbstractByteProtocol {
     } while (repeat);
     byteArrayOutputStream.flush();
 
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("Logging TCP Content (Base64 encoding):");
-      LOGGER.debug("-----------------------------------");
-      LOGGER.debug(Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray()));
-      LOGGER.debug("-----------------------------------");
-    }
+    logIfDebugEnabled(byteArrayOutputStream.toByteArray(), LOGGER);
 
     return byteArrayOutputStream.toByteArray();
   }

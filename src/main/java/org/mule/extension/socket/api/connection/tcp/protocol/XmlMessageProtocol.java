@@ -6,6 +6,7 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
+import static org.mule.extension.socket.internal.SocketUtils.logIfDebugEnabled;
 import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.slf4j.Logger;
@@ -102,15 +103,9 @@ public class XmlMessageProtocol extends AbstractByteProtocol {
         message.setLength(patternIndex);
       }
 
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Logging TCP Content:");
-        LOGGER.debug("-----------------------------------");
-        LOGGER.debug(message.toString());
-        LOGGER.debug("-----------------------------------");
-      }
+      logIfDebugEnabled(message.toString(), LOGGER);
 
       return message.toString().getBytes();
-
     } finally {
       // TODO - this doesn't seem very reliable, since loop above can end
       // without EOF. On the other hand, what else can we do? Entire logic
