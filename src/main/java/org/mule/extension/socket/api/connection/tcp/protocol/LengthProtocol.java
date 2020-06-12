@@ -14,6 +14,8 @@ import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -21,6 +23,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Base64;
 import java.util.Objects;
 
 /**
@@ -45,6 +48,7 @@ public class LengthProtocol extends DirectProtocol {
   @Parameter
   @Optional(defaultValue = "-1")
   private int maxMessageLength = NO_MAX_LENGTH;
+  private static final Logger LOGGER = LoggerFactory.getLogger(LengthProtocol.class);
 
   public LengthProtocol() {
     this(NO_MAX_LENGTH);
@@ -95,6 +99,13 @@ public class LengthProtocol extends DirectProtocol {
     byte[] buffer = new byte[length];
     dis.readFully(buffer);
 
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Logging TCP Content:");
+      LOGGER.debug("-----------------------------------");
+      LOGGER.debug(Base64.getEncoder().encodeToString(buffer));
+      LOGGER.debug("-----------------------------------");
+    }
+
     return buffer;
   }
 
@@ -117,6 +128,13 @@ public class LengthProtocol extends DirectProtocol {
     DataOutputStream dataOutputStream = new DataOutputStream(os);
     dataOutputStream.writeInt(data.length);
     dataOutputStream.write(data);
+
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Logging TCP Content:");
+      LOGGER.debug("-----------------------------------");
+      LOGGER.debug(Base64.getEncoder().encodeToString(data));
+      LOGGER.debug("-----------------------------------");
+    }
 
     if (dataOutputStream.size() != data.length + SIZE_INT) {
       dataOutputStream.flush();
