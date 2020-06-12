@@ -8,6 +8,7 @@ package org.mule.extension.socket.internal;
 
 import static java.lang.String.format;
 import static org.mule.runtime.api.util.Preconditions.checkArgument;
+import static java.util.Base64.getEncoder;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.exceptions.UnresolvableHostException;
@@ -27,7 +28,6 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
-import java.util.Base64;
 
 public final class SocketUtils {
 
@@ -36,6 +36,7 @@ public final class SocketUtils {
   }
 
   private static final String SOCKET_COULD_NOT_BE_CREATED = "%s Socket could not be created correctly";
+  private static final String LOG_SEPARATOR = "-----------------------------------";
   public static final String WORK = "work";
 
   /**
@@ -174,17 +175,28 @@ public final class SocketUtils {
   }
 
   /**
-   * Logs the content if it's log enabled, returns the same content.
+   * Series of static methods that log the content if it's log-debug level enabled,
+   * returning either void or the same content.
    */
-  public static InputStream logIfNeeded(InputStream content, Logger logger) {
+  public static InputStream logIfDebugEnabled(InputStream content, Logger logger) {
     if (logger.isDebugEnabled()) {
-      String c = IOUtils.toString(content);
-      logger.debug("Logging TCP Content (Base64 encoding):");
-      logger.debug("-----------------------------------");
-      logger.debug(Base64.getEncoder().encodeToString(c.getBytes()));
-      logger.debug("-----------------------------------");
-      return new ByteArrayInputStream(c.getBytes());
+      byte[] bytes = IOUtils.toByteArray(content);
+
+      logIfDebugEnabled(bytes, logger);
+
+      return new ByteArrayInputStream(bytes);
     }
     return content;
+  }
+
+  public static void logIfDebugEnabled(String content, Logger logger) {
+    logIfDebugEnabled(content.getBytes(), logger);
+  }
+
+  public static void logIfDebugEnabled(byte[] content, Logger logger) {
+    if (logger.isDebugEnabled()) {
+      logger.debug("Logging TCP Content (Base64 encoding): \n{}\n{}\n{}",
+              LOG_SEPARATOR, getEncoder().encodeToString(content), LOG_SEPARATOR);
+    }
   }
 }
