@@ -65,12 +65,11 @@ public class DirectProtocol extends AbstractByteProtocol {
     boolean repeat;
     do {
       len = copy(is, buffer, byteArrayOutputStream, remain);
+      logIfDebugEnabled(buffer, LOGGER);
       remain = remaining(limit, remain, len);
       repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
     } while (repeat);
     byteArrayOutputStream.flush();
-
-    logIfDebugEnabled(byteArrayOutputStream.toByteArray(), LOGGER);
 
     return byteArrayOutputStream.toByteArray();
   }
