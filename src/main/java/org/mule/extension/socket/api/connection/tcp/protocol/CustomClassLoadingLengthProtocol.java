@@ -18,7 +18,7 @@ import org.apache.commons.io.input.ClassLoaderObjectInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.mule.extension.socket.internal.SocketUtils.logIfNeeded;
+import static org.mule.extension.socket.internal.SocketUtils.logIfDebugEnabled;
 
 /**
  * A length protocol that uses a specific class loader to load objects from streams
@@ -35,7 +35,7 @@ public class CustomClassLoadingLengthProtocol extends LengthProtocol {
 
   @Override
   public InputStream read(InputStream is) throws IOException {
-    return new ClassLoaderObjectInputStream(this.getClassLoader(), logIfNeeded(is, LOGGER));
+    return new ClassLoaderObjectInputStream(this.getClassLoader(), logIfDebugEnabled(is, LOGGER));
   }
 
   public ClassLoader getClassLoader() {

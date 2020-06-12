@@ -7,7 +7,7 @@
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
 import static java.lang.String.format;
-import static org.mule.extension.socket.internal.SocketUtils.logIfNeeded;
+import static org.mule.extension.socket.internal.SocketUtils.logIfDebugEnabled;
 
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.api.util.LazyValue;
@@ -46,12 +46,12 @@ public class CustomProtocol implements TcpProtocol {
 
   @Override
   public InputStream read(InputStream is) throws IOException {
-    return delegate.get().read(logIfNeeded(is, LOGGER));
+    return delegate.get().read(logIfDebugEnabled(is, LOGGER));
   }
 
   @Override
   public void write(OutputStream os, InputStream data) throws IOException {
-    delegate.get().write(os, logIfNeeded(data, LOGGER));
+    delegate.get().write(os, logIfDebugEnabled(data, LOGGER));
   }
 
   private TcpProtocol createProtocol() {
