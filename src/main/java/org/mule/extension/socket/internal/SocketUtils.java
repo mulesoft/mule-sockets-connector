@@ -196,7 +196,7 @@ public final class SocketUtils {
   public static void logIfDebugEnabled(byte[] content, Logger logger) {
     if (logger.isDebugEnabled()) {
       logger.debug("Logging TCP Content (Base64 encoding): \n{}\n{}\n{}",
-              LOG_SEPARATOR, getEncoder().encodeToString(content), LOG_SEPARATOR);
+                   LOG_SEPARATOR, getEncoder().encodeToString(content), LOG_SEPARATOR);
     }
   }
 }
