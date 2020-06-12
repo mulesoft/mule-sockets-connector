@@ -14,7 +14,6 @@ import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Base64;
 import java.util.Objects;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
