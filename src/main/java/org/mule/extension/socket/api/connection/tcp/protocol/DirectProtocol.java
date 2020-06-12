@@ -13,10 +13,12 @@ import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Base64;
 import java.util.Objects;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This protocol is an application level {@link TcpProtocol} that does nothing. The socket reads until no more bytes are
@@ -33,8 +35,8 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 public class DirectProtocol extends AbstractByteProtocol {
 
   protected static final int UNLIMITED = -1;
-
   private static final int DEFAULT_BUFFER_SIZE = 8192;
+  private static final Logger LOGGER = LoggerFactory.getLogger(DirectProtocol.class);
   protected int bufferSize;
 
   public DirectProtocol() {
@@ -67,6 +69,13 @@ public class DirectProtocol extends AbstractByteProtocol {
       repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
     } while (repeat);
     byteArrayOutputStream.flush();
+
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Logging TCP Content (Base64 encoding):");
+      LOGGER.debug("-----------------------------------");
+      LOGGER.debug(Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray()));
+      LOGGER.debug("-----------------------------------");
+    }
 
     return byteArrayOutputStream.toByteArray();
   }
