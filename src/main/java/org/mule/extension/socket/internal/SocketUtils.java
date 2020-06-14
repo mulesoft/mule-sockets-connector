@@ -9,6 +9,9 @@ package org.mule.extension.socket.internal;
 import static java.lang.String.format;
 import static org.mule.runtime.api.util.Preconditions.checkArgument;
 import static java.util.Base64.getEncoder;
+
+import org.apache.commons.io.input.TeeInputStream;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.exceptions.UnresolvableHostException;
@@ -16,11 +19,9 @@ import org.mule.extension.socket.api.socket.tcp.TcpSocketProperties;
 import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
-import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.runtime.operation.Result;
 import org.slf4j.Logger;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
@@ -180,11 +181,14 @@ public final class SocketUtils {
    */
   public static InputStream logIfDebugEnabled(InputStream content, Logger logger) {
     if (logger.isDebugEnabled()) {
-      byte[] bytes = IOUtils.toByteArray(content);
+      return new TeeInputStream(content, new ByteArrayOutputStream() {
 
-      logIfDebugEnabled(bytes, logger);
-
-      return new ByteArrayInputStream(bytes);
+        @Override
+        public void close() throws IOException {
+          logIfDebugEnabled(this.toByteArray(), logger);
+          super.close();
+        }
+      }, true);
     }
     return content;
   }
