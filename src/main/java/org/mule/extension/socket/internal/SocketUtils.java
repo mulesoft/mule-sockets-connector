@@ -10,8 +10,6 @@ import static java.lang.String.format;
 import static org.mule.runtime.api.util.Preconditions.checkArgument;
 import static java.util.Base64.getEncoder;
 
-import org.apache.commons.io.input.TeeInputStream;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.exceptions.UnresolvableHostException;
@@ -22,6 +20,8 @@ import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.extension.api.runtime.operation.Result;
 import org.slf4j.Logger;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
@@ -179,15 +179,20 @@ public final class SocketUtils {
    * Series of static methods that log the content if it's log-debug level enabled,
    * returning either void or the same content.
    */
-  public static InputStream logIfDebugEnabled(InputStream content, Logger logger) {
+  public static InputStream logIfDebugEnabled(InputStream content, Logger logger) throws IOException {
     if (logger.isDebugEnabled()) {
-      return new TeeInputStream(content, new ByteArrayOutputStream() {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+      byte[] buffer = new byte[1024];
+      int len;
 
-        @Override
-        public void close() {
-          logIfDebugEnabled(this.toByteArray(), logger);
-        }
-      }, true);
+      do {
+        len = content.read(buffer);
+        logIfDebugEnabled(buffer, logger);
+        byteArrayOutputStream.write(buffer, 0, len);
+      } while (len > -1);
+      byteArrayOutputStream.flush();
+
+      return new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
     }
     return content;
   }
