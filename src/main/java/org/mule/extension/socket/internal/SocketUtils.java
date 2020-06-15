@@ -184,9 +184,8 @@ public final class SocketUtils {
       return new TeeInputStream(content, new ByteArrayOutputStream() {
 
         @Override
-        public void close() throws IOException {
+        public void close() {
           logIfDebugEnabled(this.toByteArray(), logger);
-          super.close();
         }
       }, true);
     }
