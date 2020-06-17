@@ -38,6 +38,7 @@ public final class SocketUtils {
 
   private static final String SOCKET_COULD_NOT_BE_CREATED = "%s Socket could not be created correctly";
   private static final String LOG_SEPARATOR = "-----------------------------------";
+  private static final int DEFAULT_BUFFER_SIZE = 8192;
   public static final String WORK = "work";
 
   /**
@@ -181,8 +182,8 @@ public final class SocketUtils {
    */
   public static InputStream logIfDebugEnabled(InputStream content, Logger logger) throws IOException {
     if (logger.isDebugEnabled()) {
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      byte[] buffer = new byte[1024];
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE);
+      byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
       int len;
 
       do {
