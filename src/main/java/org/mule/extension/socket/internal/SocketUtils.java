@@ -189,7 +189,7 @@ public final class SocketUtils {
         len = content.read(buffer);
         logIfDebugEnabled(buffer, logger);
         byteArrayOutputStream.write(buffer, 0, len);
-      } while (len > -1);
+      } while (content.available() > 0);
       byteArrayOutputStream.flush();
 
       return new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
