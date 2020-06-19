@@ -15,7 +15,7 @@ import java.io.InputStream;
 public class TcpLoggerForInputStreamTestCase {
 
   @Test
-  public void testLogIfDebugEnabled() throws Exception {
+  public void testLogIfDebugEnabledForInputStream() throws Exception {
     InputStream inputStream = Mockito.mock(InputStream.class);
     Logger logger = Mockito.mock(Logger.class);
 
