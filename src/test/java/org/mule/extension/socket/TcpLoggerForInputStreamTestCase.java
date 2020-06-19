@@ -29,7 +29,7 @@ public class TcpLoggerForInputStreamTestCase {
   }
 
   @Test
-  public void testLogIfDebugEnabledForString() throws Exception {
+  public void testLogIfDebugEnabledForString() {
     String string = SOME_TEXT;
     Logger logger = Mockito.mock(Logger.class);
 
@@ -41,7 +41,7 @@ public class TcpLoggerForInputStreamTestCase {
   }
 
   @Test
-  public void testLogIfDebugEnabledForByteArray() throws Exception {
+  public void testLogIfDebugEnabledForByteArray() {
     byte[] byteArray = SOME_TEXT.getBytes();
     Logger logger = Mockito.mock(Logger.class);
 
@@ -51,4 +51,6 @@ public class TcpLoggerForInputStreamTestCase {
     Mockito.verify(logger, Mockito.atLeastOnce()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
             Mockito.anyString());
   }
+
+
 }
