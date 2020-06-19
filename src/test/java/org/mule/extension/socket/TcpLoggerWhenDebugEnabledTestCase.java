@@ -37,7 +37,7 @@ public class TcpLoggerWhenDebugEnabledTestCase {
     SocketUtils.logIfDebugEnabled(inputStream, logger);
 
     Mockito.verify(logger, Mockito.never()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-            Mockito.anyString());
+                                                  Mockito.anyString());
   }
 
   @Test
@@ -48,7 +48,7 @@ public class TcpLoggerWhenDebugEnabledTestCase {
     SocketUtils.logIfDebugEnabled(SOME_TEXT, logger);
 
     Mockito.verify(logger, Mockito.atLeastOnce()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-            Mockito.anyString());
+                                                        Mockito.anyString());
   }
 
   @Test
@@ -59,7 +59,7 @@ public class TcpLoggerWhenDebugEnabledTestCase {
     SocketUtils.logIfDebugEnabled(SOME_TEXT, logger);
 
     Mockito.verify(logger, Mockito.never()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-            Mockito.anyString());
+                                                  Mockito.anyString());
   }
 
   @Test
@@ -71,7 +71,7 @@ public class TcpLoggerWhenDebugEnabledTestCase {
     SocketUtils.logIfDebugEnabled(byteArray, logger);
 
     Mockito.verify(logger, Mockito.atLeastOnce()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-            Mockito.anyString());
+                                                        Mockito.anyString());
   }
 
   @Test
@@ -83,7 +83,7 @@ public class TcpLoggerWhenDebugEnabledTestCase {
     SocketUtils.logIfDebugEnabled(byteArray, logger);
 
     Mockito.verify(logger, Mockito.never()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-            Mockito.anyString());
+                                                  Mockito.anyString());
   }
 
 }
