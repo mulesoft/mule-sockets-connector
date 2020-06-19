@@ -29,6 +29,18 @@ public class TcpLoggerForInputStreamTestCase {
   }
 
   @Test
+  public void testLogIfDebugDisabledForInputStream() throws Exception {
+    InputStream inputStream = Mockito.mock(InputStream.class);
+    Logger logger = Mockito.mock(Logger.class);
+
+    Mockito.when(logger.isDebugEnabled()).thenReturn(false);
+    SocketUtils.logIfDebugEnabled(inputStream, logger);
+
+    Mockito.verify(logger, Mockito.never()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+            Mockito.anyString());
+  }
+
+  @Test
   public void testLogIfDebugEnabledForString() {
     String string = SOME_TEXT;
     Logger logger = Mockito.mock(Logger.class);
@@ -37,6 +49,18 @@ public class TcpLoggerForInputStreamTestCase {
     SocketUtils.logIfDebugEnabled(string, logger);
 
     Mockito.verify(logger, Mockito.atLeastOnce()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+            Mockito.anyString());
+  }
+
+  @Test
+  public void testLogIfDebugDisabledForString() {
+    String string = SOME_TEXT;
+    Logger logger = Mockito.mock(Logger.class);
+
+    Mockito.when(logger.isDebugEnabled()).thenReturn(false);
+    SocketUtils.logIfDebugEnabled(string, logger);
+
+    Mockito.verify(logger, Mockito.never()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
             Mockito.anyString());
   }
 
@@ -52,5 +76,16 @@ public class TcpLoggerForInputStreamTestCase {
             Mockito.anyString());
   }
 
+  @Test
+  public void testLogIfDebugDisabledForByteArray() {
+    byte[] byteArray = SOME_TEXT.getBytes();
+    Logger logger = Mockito.mock(Logger.class);
+
+    Mockito.when(logger.isDebugEnabled()).thenReturn(false);
+    SocketUtils.logIfDebugEnabled(byteArray, logger);
+
+    Mockito.verify(logger, Mockito.never()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+            Mockito.anyString());
+  }
 
 }
