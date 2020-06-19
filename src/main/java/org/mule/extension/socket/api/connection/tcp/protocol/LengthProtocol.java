@@ -7,6 +7,7 @@
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
 import static java.lang.String.format;
+import static org.mule.extension.socket.internal.SocketUtils.logIfDebugEnabled;
 import static org.mule.runtime.core.api.util.IOUtils.toByteArray;
 
 import org.mule.extension.socket.api.exceptions.LengthExceededException;
@@ -14,6 +15,8 @@ import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -45,6 +48,7 @@ public class LengthProtocol extends DirectProtocol {
   @Parameter
   @Optional(defaultValue = "-1")
   private int maxMessageLength = NO_MAX_LENGTH;
+  private static final Logger LOGGER = LoggerFactory.getLogger(LengthProtocol.class);
 
   public LengthProtocol() {
     this(NO_MAX_LENGTH);
@@ -95,6 +99,8 @@ public class LengthProtocol extends DirectProtocol {
     byte[] buffer = new byte[length];
     dis.readFully(buffer);
 
+    logIfDebugEnabled(buffer, LOGGER);
+
     return buffer;
   }
 
@@ -117,6 +123,8 @@ public class LengthProtocol extends DirectProtocol {
     DataOutputStream dataOutputStream = new DataOutputStream(os);
     dataOutputStream.writeInt(data.length);
     dataOutputStream.write(data);
+
+    logIfDebugEnabled(data, LOGGER);
 
     if (dataOutputStream.size() != data.length + SIZE_INT) {
       dataOutputStream.flush();
