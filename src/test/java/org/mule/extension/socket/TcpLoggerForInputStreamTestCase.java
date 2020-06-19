@@ -42,11 +42,10 @@ public class TcpLoggerForInputStreamTestCase {
 
   @Test
   public void testLogIfDebugEnabledForString() {
-    String string = SOME_TEXT;
     Logger logger = Mockito.mock(Logger.class);
 
     Mockito.when(logger.isDebugEnabled()).thenReturn(true);
-    SocketUtils.logIfDebugEnabled(string, logger);
+    SocketUtils.logIfDebugEnabled(SOME_TEXT, logger);
 
     Mockito.verify(logger, Mockito.atLeastOnce()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
             Mockito.anyString());
@@ -54,11 +53,10 @@ public class TcpLoggerForInputStreamTestCase {
 
   @Test
   public void testLogIfDebugDisabledForString() {
-    String string = SOME_TEXT;
     Logger logger = Mockito.mock(Logger.class);
 
     Mockito.when(logger.isDebugEnabled()).thenReturn(false);
-    SocketUtils.logIfDebugEnabled(string, logger);
+    SocketUtils.logIfDebugEnabled(SOME_TEXT, logger);
 
     Mockito.verify(logger, Mockito.never()).debug(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
             Mockito.anyString());
