@@ -12,7 +12,7 @@ import org.mule.extension.socket.internal.SocketUtils;
 import org.slf4j.Logger;
 import java.io.InputStream;
 
-public class TcpLoggerForInputStreamTestCase {
+public class TcpLoggerWhenDebugEnabledTestCase {
 
   private final String SOME_TEXT = "Some Text";
 
