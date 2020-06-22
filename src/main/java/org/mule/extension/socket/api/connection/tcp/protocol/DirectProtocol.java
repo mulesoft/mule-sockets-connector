@@ -6,6 +6,7 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
+import static org.mule.extension.socket.internal.SocketUtils.logIfDebugEnabled;
 import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
@@ -16,7 +17,8 @@ import java.io.OutputStream;
 import java.util.Objects;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This protocol is an application level {@link TcpProtocol} that does nothing. The socket reads until no more bytes are
@@ -33,8 +35,8 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 public class DirectProtocol extends AbstractByteProtocol {
 
   protected static final int UNLIMITED = -1;
-
   private static final int DEFAULT_BUFFER_SIZE = 8192;
+  private static final Logger LOGGER = LoggerFactory.getLogger(DirectProtocol.class);
   protected int bufferSize;
 
   public DirectProtocol() {
@@ -63,6 +65,7 @@ public class DirectProtocol extends AbstractByteProtocol {
     boolean repeat;
     do {
       len = copy(is, buffer, byteArrayOutputStream, remain);
+      logIfDebugEnabled(buffer, LOGGER);
       remain = remaining(limit, remain, len);
       repeat = EOF != len && remain > 0 && isRepeat(len, is.available());
     } while (repeat);

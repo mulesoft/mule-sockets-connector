@@ -8,6 +8,8 @@ package org.mule.extension.socket.internal;
 
 import static java.lang.String.format;
 import static org.mule.runtime.api.util.Preconditions.checkArgument;
+import static java.util.Base64.getEncoder;
+
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.connection.AbstractSocketConnection;
 import org.mule.extension.socket.api.exceptions.UnresolvableHostException;
@@ -16,7 +18,10 @@ import org.mule.extension.socket.api.socket.udp.UdpSocketProperties;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.extension.api.runtime.operation.Result;
+import org.slf4j.Logger;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
@@ -32,6 +37,8 @@ public final class SocketUtils {
   }
 
   private static final String SOCKET_COULD_NOT_BE_CREATED = "%s Socket could not be created correctly";
+  private static final String LOG_SEPARATOR = "-----------------------------------";
+  private static final int DEFAULT_BUFFER_SIZE = 8192;
   public static final String WORK = "work";
 
   /**
@@ -166,6 +173,39 @@ public final class SocketUtils {
       DatagramPacket sendPacket = createPacket(buffer, chunkLen);
       sendPacket.setSocketAddress(address);
       socket.send(sendPacket);
+    }
+  }
+
+  /**
+   * Series of static methods that log the content if it's log-debug level enabled,
+   * returning either void or the same content.
+   */
+  public static InputStream logIfDebugEnabled(InputStream content, Logger logger) throws IOException {
+    if (logger.isDebugEnabled()) {
+      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE);
+      byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+      int len;
+
+      do {
+        len = content.read(buffer);
+        logIfDebugEnabled(buffer, logger);
+        byteArrayOutputStream.write(buffer, 0, len);
+      } while (content.available() > 0);
+      byteArrayOutputStream.flush();
+
+      return new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+    }
+    return content;
+  }
+
+  public static void logIfDebugEnabled(String content, Logger logger) {
+    logIfDebugEnabled(content.getBytes(), logger);
+  }
+
+  public static void logIfDebugEnabled(byte[] content, Logger logger) {
+    if (logger.isDebugEnabled()) {
+      logger.debug("Logging TCP Content (Base64 encoding): \n{}\n{}\n{}",
+                   LOG_SEPARATOR, getEncoder().encodeToString(content), LOG_SEPARATOR);
     }
   }
 }

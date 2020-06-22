@@ -6,8 +6,11 @@
  */
 package org.mule.extension.socket.api.connection.tcp.protocol;
 
+import static org.mule.extension.socket.internal.SocketUtils.logIfDebugEnabled;
 import static org.mule.runtime.core.api.util.IOUtils.copyLarge;
 import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +51,7 @@ public class XmlMessageProtocol extends AbstractByteProtocol {
 
   private static final int READ_BUFFER_SIZE = 4096;
   private static final int PUSHBACK_BUFFER_SIZE = READ_BUFFER_SIZE * 2;
+  private static final Logger LOGGER = LoggerFactory.getLogger(XmlMessageProtocol.class);
 
   private ConcurrentMap pbMap = new ConcurrentHashMap();
 
@@ -99,8 +103,9 @@ public class XmlMessageProtocol extends AbstractByteProtocol {
         message.setLength(patternIndex);
       }
 
-      return message.toString().getBytes();
+      logIfDebugEnabled(message.toString(), LOGGER);
 
+      return message.toString().getBytes();
     } finally {
       // TODO - this doesn't seem very reliable, since loop above can end
       // without EOF. On the other hand, what else can we do? Entire logic
