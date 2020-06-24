@@ -134,6 +134,6 @@ public class XmlMessageProtocol extends AbstractByteProtocol {
    * @see XmlMessageEOFProtocol
    */
   protected boolean isRepeat(int patternIndex, int len, int available) {
-    return patternIndex < 0 && len == READ_BUFFER_SIZE && available > 0;
+    return patternIndex < 0 && available > 0;
   }
 }

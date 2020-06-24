@@ -114,8 +114,7 @@ public class XmlMessageProtocolTestCase extends AbstractMuleTestCase {
 
     InputStream result = read(bais);
     assertNotNull(result);
-    // only get the first character! use XmlMessageEOFProtocol instead
-    assertEquals(msgData.substring(0, 1), IOUtils.toString(result));
+    assertEquals(msgData, IOUtils.toString(result));
   }
 
 }
