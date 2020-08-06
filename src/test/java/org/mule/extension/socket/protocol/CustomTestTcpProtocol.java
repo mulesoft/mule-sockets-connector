@@ -10,7 +10,7 @@ import static java.lang.System.arraycopy;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.mule.extension.socket.api.connection.tcp.protocol.AbstractByteProtocol;
+import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 import java.io.BufferedOutputStream;
 
-public class CustomTestTcpProtocol extends AbstractByteProtocol {
+public class CustomTestTcpProtocol implements TcpProtocol {
 
   protected static final int READ_ATTEMPTS = 50;
   protected static final int CUSTOM_BUFFER_SIZE = 30;
@@ -29,11 +29,10 @@ public class CustomTestTcpProtocol extends AbstractByteProtocol {
   protected int bufferSize;
 
   public CustomTestTcpProtocol() {
-    this(STREAM_OK, CUSTOM_BUFFER_SIZE);
+    this(CUSTOM_BUFFER_SIZE);
   }
 
-  public CustomTestTcpProtocol(boolean streamOk, int bufferSize) {
-    super(streamOk);
+  public CustomTestTcpProtocol(int bufferSize) {
     this.bufferSize = bufferSize;
   }
 
