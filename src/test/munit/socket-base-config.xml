@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+      http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+      http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd">
+
+    <munit:dynamic-port propertyName="tcp.port"/>
+
+    <sockets:request-config name="SocketsRequestConfigCustomTcp" >
+        <sockets:tcp-requester-connection host="127.0.0.1" port="${tcp.port}" failOnUnresolvedHost="true" sendTcpNoDelay="true">
+            <sockets:protocol>
+                <sockets:custom-protocol class="org.mule.extension.socket.protocol.CustomTestTcpProtocol"/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:listener-config name="SocketsListenerConfigCustomTcp">
+        <sockets:tcp-listener-connection host="127.0.0.1" port="${tcp.port}">
+            <sockets:protocol>
+                <sockets:custom-protocol class="org.mule.extension.socket.protocol.CustomTestTcpProtocol"/>
+            </sockets:protocol>
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+</mule>

@@ -23,6 +23,8 @@
         <assertJVersion>3.16.1</assertJVersion>
         <commonsIoVersion>2.7</commonsIoVersion>
         <muleSpringModuleVersion>1.3.3</muleSpringModuleVersion>
+        <munit.version>2.2.5</munit.version>
+        <munit.extensions.maven.plugin.version>1.0.0</munit.extensions.maven.plugin.version>
     </properties>
 
     <dependencies>
@@ -41,6 +43,13 @@
             <groupId>org.mule.tests.plugin</groupId>
             <artifactId>mule-tests-component-plugin</artifactId>
             <version>${mule.version}</version>
+            <classifier>mule-plugin</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.module</groupId>
+            <artifactId>mule-java-module</artifactId>
+            <version>1.2.6</version>
             <classifier>mule-plugin</classifier>
             <scope>test</scope>
         </dependency>
@@ -82,4 +91,49 @@
             <url>https://repository.mulesoft.org/nexus/content/repositories/public/</url>
         </pluginRepository>
     </pluginRepositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mulesoft.munit</groupId>
+                <artifactId>munit-extensions-maven-plugin</artifactId>
+                <version>${munit.extensions.maven.plugin.version}</version>
+                <configuration>
+                    <argLines>
+                        <argLine>
+                            -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${session.executionRootDirectory}/target/jacoco.exec
+                        </argLine>
+                    </argLines>
+                    <runtimeConfiguration>
+                        <discoverRuntimes>
+                            <product>EE</product>
+                        </discoverRuntimes>
+                    </runtimeConfiguration>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <!-- MUnit Dependencies -->
+                    <dependency>
+                        <groupId>com.mulesoft.munit</groupId>
+                        <artifactId>munit-runner</artifactId>
+                        <version>${munit.version}</version>
+                        <classifier>mule-plugin</classifier>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.mulesoft.munit</groupId>
+                        <artifactId>munit-tools</artifactId>
+                        <version>${munit.version}</version>
+                        <classifier>mule-plugin</classifier>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>
