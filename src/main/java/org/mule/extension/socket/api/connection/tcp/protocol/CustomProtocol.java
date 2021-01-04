@@ -54,7 +54,7 @@ public class CustomProtocol implements TcpProtocol {
     try {
       return (TcpProtocol) ClassUtils.instantiateClass(clazz);
     } catch (Exception e) {
-      throw new RuntimeException(format("Could not load class '%s'", clazz));
+      throw new RuntimeException(format("Could not load class '%s'", clazz), e);
     }
   }
 
