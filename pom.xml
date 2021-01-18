@@ -25,6 +25,7 @@
         <muleSpringModuleVersion>1.3.5</muleSpringModuleVersion>
         <munit.version>2.3.2</munit.version>
         <munit.extensions.maven.plugin.version>1.1.0</munit.extensions.maven.plugin.version>
+        <apacheCommonsLangVersion>3.11</apacheCommonsLangVersion>
     </properties>
 
     <dependencies>
@@ -32,6 +33,11 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commonsIoVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apacheCommonsLangVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
