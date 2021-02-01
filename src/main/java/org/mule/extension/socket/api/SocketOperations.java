@@ -44,13 +44,23 @@ public class SocketOperations {
   public Result<InputStream, ImmutableSocketAttributes> sendAndReceive(@Connection RequesterConnection connection,
                                                                        @Content InputStream content)
       throws ConnectionException, IOException {
-    SocketClient client = connection.getClient();
-    client.write(content);
+    try {
+      SocketClient client = connection.getClient();
+      client.write(content);
 
-    return Result.<InputStream, ImmutableSocketAttributes>builder()
-        .output(client.read())
-        .attributes((ImmutableSocketAttributes) client.getAttributes())
-        .build();
+      return Result.<InputStream, ImmutableSocketAttributes>builder()
+          .output(client.read())
+          .attributes((ImmutableSocketAttributes) client.getAttributes())
+          .build();
+    } catch (ConnectException connException) {
+      throw new ConnectionException(format("Socket write/read operation failed: %s.",
+                                           connException.getMessage()),
+                                    connException, null, connection);
+    } catch (SocketException socketException) {
+      throw new ConnectionException(format("Socket write/read operation failed: %s.",
+                                           socketException.getMessage()),
+                                    socketException, null, connection);
+    }
   }
 
   /**
@@ -75,3 +85,4 @@ public class SocketOperations {
     }
   }
 }
+
