@@ -21,7 +21,6 @@ import org.mule.runtime.extension.api.runtime.operation.Result;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ConnectException;
 import java.net.SocketException;
 
 /**
@@ -52,14 +51,10 @@ public class SocketOperations {
           .output(client.read())
           .attributes((ImmutableSocketAttributes) client.getAttributes())
           .build();
-    } catch (ConnectException connException) {
+    } catch (SocketException connException) {
       throw new ConnectionException(format("Socket write/read operation failed: %s.",
                                            connException.getMessage()),
                                     connException, null, connection);
-    } catch (SocketException socketException) {
-      throw new ConnectionException(format("Socket write/read operation failed: %s.",
-                                           socketException.getMessage()),
-                                    socketException, null, connection);
     }
   }
 
@@ -74,14 +69,10 @@ public class SocketOperations {
       throws ConnectionException, IOException {
     try {
       connection.getClient().write(content);
-    } catch (ConnectException connException) {
+    } catch (SocketException connException) {
       throw new ConnectionException(format("Socket write operation failed: %s.",
                                            connException.getMessage()),
-                                    connException);
-    } catch (SocketException socketException) {
-      throw new ConnectionException(format("Socket write operation failed: %s.",
-                                           socketException.getMessage()),
-                                    socketException);
+                                    connException, null, connection);
     }
   }
 }
