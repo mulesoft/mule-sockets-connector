@@ -20,7 +20,7 @@
 
     <properties>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
-        <assertJVersion>3.19.0</assertJVersion>
+        <assertJVersion>3.20.2</assertJVersion>
         <commonsIoVersion>2.8.0</commonsIoVersion>
         <muleSpringModuleVersion>1.3.5</muleSpringModuleVersion>
         <munit.version>2.3.2</munit.version>
