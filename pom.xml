@@ -19,6 +19,7 @@
     <description>A Mule extension that provides functionality to manage TCP and UDP connections</description>
 
     <properties>
+        <muleSdkApiVersion>0.3.0</muleSdkApiVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <assertJVersion>3.19.0</assertJVersion>
         <commonsIoVersion>2.8.0</commonsIoVersion>
@@ -29,6 +30,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.mule.sdk</groupId>
+            <artifactId>mule-sdk-api</artifactId>
+            <version>${muleSdkApiVersion}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
