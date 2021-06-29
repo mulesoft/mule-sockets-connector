@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+      http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+      http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+      http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd">
+
+    <import file="socket-base-config.xml"/>
+
+    <munit:config name="Custom tcp protocol"/>
+
+    <munit:test name="sendMessageUsingCustomTcpProtocol" description="Send message through tcp socket connector using a custom tcp protocol">
+        <!-- IGNORED SOCON-9 -->
+       <!-- <munit:enable-flow-sources>
+            <munit:enable-flow-source value="listenerFlow" />
+        </munit:enable-flow-sources>
+        <munit:behavior>
+            <set-variable variableName="maxMessageLength" value="30"/>
+
+            <set-variable variableName="text" value="This is a test string"/>
+            <set-variable variableName="headerText" value="This is my custom protocol."/>
+            <set-variable variableName="longerText" value="This is a very very very long test string"/>
+
+            <set-variable variableName="expectedMessage" value="#[vars.headerText ++ vars.text]"/>
+            <set-variable variableName="expectedMessageLength" value="#[sizeOf(vars.text) + sizeOf(vars.headerText)]" />
+            <set-variable variableName="chunkedMessageLength" value="#[vars.maxMessageLength + sizeOf(vars.headerText)]" />
+        </munit:behavior>
+        <munit:execution>
+            <set-payload value="#[vars.text]"/>
+            <sockets:send config-ref="SocketsRequestConfigCustomTcp"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:dequeue timeout="1000"/>
+            <munit-tools:assert-that expression="#[payload as String]" is="#[MunitTools::equalTo(vars.expectedMessage)]" />
+            <munit-tools:assert-that expression="#[sizeOf(payload)]" is="#[MunitTools::equalTo(vars.expectedMessageLength)]" />
+
+            <set-payload value="#[vars.longerText]"/>
+            <sockets:send config-ref="SocketsRequestConfigCustomTcp"/>
+            <munit-tools:dequeue timeout="1000"/>
+            <munit-tools:assert-that expression="#[payload as String]" is="#[MunitTools::startsWith(vars.headerText)]" />
+            <munit-tools:assert-that expression="#[sizeOf(payload)]" is="#[MunitTools::equalTo(vars.chunkedMessageLength)]" />
+        </munit:validation>-->
+    </munit:test>
+
+    <flow name="listenerFlow">
+        <sockets:listener config-ref="SocketsListenerConfigCustomTcp"/>
+        <munit-tools:queue />
+    </flow>
+</mule>
