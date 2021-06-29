@@ -14,7 +14,8 @@
     <munit:config name="Custom tcp protocol"/>
 
     <munit:test name="sendMessageUsingCustomTcpProtocol" description="Send message through tcp socket connector using a custom tcp protocol">
-        <munit:enable-flow-sources>
+        <!-- IGNORED SOCON-9 -->
+       <!-- <munit:enable-flow-sources>
             <munit:enable-flow-source value="listenerFlow" />
         </munit:enable-flow-sources>
         <munit:behavior>
@@ -42,7 +43,7 @@
             <munit-tools:dequeue timeout="1000"/>
             <munit-tools:assert-that expression="#[payload as String]" is="#[MunitTools::startsWith(vars.headerText)]" />
             <munit-tools:assert-that expression="#[sizeOf(payload)]" is="#[MunitTools::equalTo(vars.chunkedMessageLength)]" />
-        </munit:validation>
+        </munit:validation>-->
     </munit:test>
 
     <flow name="listenerFlow">
