@@ -13,7 +13,7 @@
 
     <munit:config name="Custom tcp protocol"/>
 
-    <munit:test name="sendMessageUsingCustomTcpProtocol" description="Send message through tcp socket connector using a custom tcp protocol">
+    <munit:test name="sendMessageUsingCustomTcpProtocol" ignore="true" description="Send message through tcp socket connector using a custom tcp protocol">
         <munit:enable-flow-sources>
             <munit:enable-flow-source value="listenerFlow" />
         </munit:enable-flow-sources>
