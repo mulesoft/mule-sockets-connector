@@ -12,6 +12,7 @@ import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
+import org.mule.sdk.api.annotation.semantics.connectivity.ExcludeFromConnectivitySchema;
 
 import java.net.ServerSocket;
 import java.util.Objects;
@@ -41,6 +42,7 @@ public class TcpServerSocketProperties extends AbstractTcpSocketProperties {
   @Optional(defaultValue = "50")
   @Placement(tab = ADVANCED_TAB)
   @Summary("The maximum queue length for incoming connections")
+  @ExcludeFromConnectivitySchema
   private int receiveBacklog = 50;
 
   /**
