@@ -11,6 +11,8 @@ import static org.mule.runtime.core.api.util.StringUtils.EMPTY;
 import static org.mule.runtime.core.api.util.StringUtils.isBlank;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
+import org.mule.sdk.api.annotation.semantics.connectivity.Host;
+import org.mule.sdk.api.annotation.semantics.connectivity.Port;
 
 import java.net.InetSocketAddress;
 import java.util.Objects;
@@ -39,6 +41,7 @@ public class SocketConnectionSettings {
    */
   @Parameter
   @Placement(order = 2)
+  @Port
   private Integer port;
 
   /**
@@ -46,6 +49,7 @@ public class SocketConnectionSettings {
    */
   @Parameter
   @Placement(order = 1)
+  @Host
   private String host;
 
   public Integer getPort() {

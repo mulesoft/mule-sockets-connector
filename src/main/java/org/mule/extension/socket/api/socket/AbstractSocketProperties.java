@@ -11,6 +11,7 @@ import org.mule.runtime.extension.api.annotation.param.RefName;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.extension.api.annotation.param.display.Summary;
+import org.mule.sdk.api.annotation.semantics.connectivity.ExcludeFromConnectivitySchema;
 
 import java.util.Objects;
 
@@ -37,6 +38,7 @@ public abstract class AbstractSocketProperties implements SocketProperties {
   @Optional
   @Placement(tab = BUFFER_CONFIGURATION)
   @Summary("The size of the buffer (in bytes) used when sending data")
+  @ExcludeFromConnectivitySchema
   protected Integer sendBufferSize;
 
   /**
@@ -46,6 +48,7 @@ public abstract class AbstractSocketProperties implements SocketProperties {
   @Optional
   @Placement(tab = BUFFER_CONFIGURATION)
   @Summary("The size of the buffer (in bytes) used when receiving data")
+  @ExcludeFromConnectivitySchema
   protected Integer receiveBufferSize;
 
   /**
@@ -58,6 +61,7 @@ public abstract class AbstractSocketProperties implements SocketProperties {
   @Optional
   @Summary("Time, in milliseconds, that the socket will wait in a blocking operation before failing")
   @Placement(tab = TIMEOUT_CONFIGURATION)
+  @ExcludeFromConnectivitySchema
   protected Integer clientTimeout;
 
   /**
@@ -67,6 +71,7 @@ public abstract class AbstractSocketProperties implements SocketProperties {
   @Parameter
   @Optional(defaultValue = "true")
   @Summary("Indicates whether if the configured socket could be reused or fail at when trying to bind it")
+  @ExcludeFromConnectivitySchema
   private boolean reuseAddress;
 
   public String getName() {
