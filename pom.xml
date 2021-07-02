@@ -19,7 +19,7 @@
     <description>A Mule extension that provides functionality to manage TCP and UDP connections</description>
 
     <properties>
-        <muleSdkApiVersion>0.3.0</muleSdkApiVersion>
+        <muleSdkApiVersion>1.0.0-20210623</muleSdkApiVersion>
         <formatterConfigPath>formatter.xml</formatterConfigPath>
         <assertJVersion>3.20.2</assertJVersion>
         <commonsIoVersion>2.10.0</commonsIoVersion>
