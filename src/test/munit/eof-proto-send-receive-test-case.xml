@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+    <munit:config name="eof-proto-send-receive-test-case.xml">
+    </munit:config>
+
+    <munit:test name="eof-send-receive-test" timeOut="2000">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcpReceiveFlow"/>
+        </munit:enable-flow-sources>
+        <munit:validation>
+            <set-payload value="sample payload test"/>
+            <sockets:send-and-receive config-ref="Sockets_Request_config"/>
+            <munit-tools:assert-that
+                    expression="#[payload.^raw as String]"
+                    is="#[MunitTools::equalTo('testValue')]"
+                    message="The payload should be ‘example’"/>
+        </munit:validation>
+    </munit:test>
+
+    <sockets:listener-config name="Sockets_Listener_config">
+        <sockets:tcp-listener-connection host="127.0.0.1" port="${sockets.listenPort}" sendTcpNoDelay="false" reuseAddress="false">
+            <sockets:protocol >
+                <sockets:eof-protocol />
+            </sockets:protocol>
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <sockets:request-config name="Sockets_Request_config">
+        <sockets:tcp-requester-connection host="127.0.0.1" port="${sockets.listenPort}" sendTcpNoDelay="false" clientTimeout="10000" connectionTimeout="3600" reuseAddress="false">
+            <pooling-profile maxActive="0" maxIdle="0" />
+            <sockets:protocol >
+                <sockets:eof-protocol />
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+
+    <flow name="tcpReceiveFlow">
+        <sockets:listener config-ref="Sockets_Listener_config"/>
+        <set-payload value='#["testValue"]'  />
+    </flow>
+</mule>
