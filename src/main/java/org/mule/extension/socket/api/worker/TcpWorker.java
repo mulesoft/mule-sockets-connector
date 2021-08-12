@@ -11,6 +11,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.connection.tcp.TcpListenerConnection;
+import org.mule.extension.socket.api.connection.tcp.protocol.EOFProtocol;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 import org.mule.extension.socket.internal.TcpInputStream;
 import org.mule.runtime.extension.api.runtime.source.Source;
@@ -148,6 +149,9 @@ public final class TcpWorker extends SocketWorker {
     try {
       protocol.write(dataOut, result);
       dataOut.flush();
+      if (protocol instanceof EOFProtocol) {
+        releaseSocket();
+      }
     } catch (IOException e) {
       LOGGER.error(format("An error occurred while sending TCP response to address '%s'",
                           socket.getRemoteSocketAddress().toString()),

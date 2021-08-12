@@ -8,6 +8,7 @@ package org.mule.extension.socket.api.client;
 
 import org.mule.extension.socket.api.ImmutableSocketAttributes;
 import org.mule.extension.socket.api.SocketAttributes;
+import org.mule.extension.socket.api.connection.tcp.protocol.EOFProtocol;
 import org.mule.extension.socket.api.socket.tcp.TcpProtocol;
 
 import java.io.BufferedInputStream;
@@ -45,6 +46,9 @@ public final class TcpClient implements SocketClient {
       bufferedOutputStream.flush();
     } finally {
       data.close();
+      if (protocol instanceof EOFProtocol) {
+        socket.shutdownOutput();
+      }
     }
   }
 
