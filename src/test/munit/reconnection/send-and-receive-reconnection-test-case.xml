@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xmlns:connection-test="http://www.mulesoft.org/schema/mule/connection-test"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+        http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+		http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+		http://www.mulesoft.org/schema/mule/connection-test http://www.mulesoft.org/schema/mule/connection-test/current/mule-connection-test.xsd">
+
+    <munit:config name="send-and-receive-reconnection-test-case.xml"/>
+
+    <flow name="mainFlow">
+        <foreach collection="#[1 to 3]">
+            <logger level="INFO" message="-- STARTS ITERATION  #[vars.counter] --" />
+
+            <sockets:send-and-receive config-ref="Sockets_Request_reconnect_config">
+                <sockets:content><![CDATA[DATA #[vars.counter]]]></sockets:content>
+            </sockets:send-and-receive>
+
+            <logger level="INFO" message="--  ITERATION  #[vars.counter] FINISHED --" />
+        </foreach>
+    </flow>
+
+    <flow name="listenerFlow">
+        <sockets:listener config-ref="Sockets_Listener_reconnect_config"/>
+
+        <choice>
+            <when expression="#[payload == 'DATA 2']">
+                <connection-test:disconnect-proxy proxyPort="${proxy.port}"/>
+
+                <munit-tools:sleep time="500"/>
+
+                <connection-test:reconnect-proxy proxyPort="${proxy.port}"/>
+
+                <munit-tools:sleep time="500"/>
+            </when>
+            <otherwise>
+                <logger level="INFO" message="-- NO INTERRUPTION --"/>
+            </otherwise>
+        </choice>
+
+        <vm:publish config-ref="VM_Config" queueName="testQueue"/>
+
+        <set-payload value="ALL GOOD #[payload]"/>
+    </flow>
+
+    <munit:before-test name="before-suite-reconnection">
+        <connection-test:define-proxy-server-port serverPort="${toxiproxy.port}"/>
+
+        <connection-test:create-proxy realPort="${real.port}" realHost="0.0.0.0" proxyPort="${proxy.port}"/>
+    </munit:before-test>
+
+    <munit:test name="sendAndReceiveReconnectionTest">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="listenerFlow" />
+        </munit:enable-flow-sources>
+
+        <munit:execution>
+            <flow-ref name="mainFlow"/>
+        </munit:execution>
+
+        <munit:validation>
+            <foreach collection="#[1 to 3]">
+                <vm:consume queueName="testQueue" config-ref="VM_Config"/>
+
+                <munit-tools:assert-equals actual="#[payload]" expected="DATA #[vars.counter]"/>
+            </foreach>
+        </munit:validation>
+    </munit:test>
+
+</mule>

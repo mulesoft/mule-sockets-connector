@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+        http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+
+    <sockets:request-config name="Sockets_Request_reconnect_config">
+        <sockets:tcp-requester-connection host="0.0.0.0" port="${proxy.port}">
+            <reconnection>
+                <reconnect frequency="3000" count="10"/>
+            </reconnection>
+            <sockets:protocol>
+                <sockets:direct-protocol rethrowExceptionOnRead="true"/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:listener-config name="Sockets_Listener_reconnect_config">
+        <sockets:tcp-listener-connection host="0.0.0.0" port="${real.port}">
+            <sockets:protocol>
+                <sockets:direct-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <vm:config name="VM_Config">
+        <vm:queues>
+            <vm:queue queueName="testQueue"/>
+        </vm:queues>
+    </vm:config>
+
+</mule>
