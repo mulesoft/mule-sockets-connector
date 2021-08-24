@@ -116,7 +116,6 @@
                             <portNames>
                                 <portName>sockets.listenPort</portName>
                                 <portName>proxy.port</portName>
-                                <portName>real.port</portName>
                                 <portName>toxiproxy.port</portName>
                             </portNames>
                         </configuration>
@@ -194,17 +193,25 @@
                         <configuration>
                             <images>
                                 <image>
+                                    <name>serverimage</name>
+                                    <alias>server</alias>
+                                    <run>
+                                        <log>
+                                            <enabled>true</enabled>
+                                        </log>
+                                    </run>
+                                </image>
+                                <image>
                                     <name>shopify/toxiproxy</name>
                                     <alias>toxiproxy</alias>
                                     <run>
-                                        <network>
-                                            <mode>host</mode>
-                                        </network>
                                         <ports>
                                             <port>${toxiproxy.port}:8474</port>
                                             <port>${proxy.port}:${proxy.port}</port>
-                                            <port>${real.port}:${real.port}</port>
                                         </ports>
+                                        <links>
+                                            <link>server</link>
+                                        </links>
                                     </run>
                                 </image>
                             </images>
