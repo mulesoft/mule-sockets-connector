@@ -2,14 +2,12 @@
 
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
       xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
       xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
       xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
       xmlns:connection-test="http://www.mulesoft.org/schema/mule/connection-test"
       xsi:schemaLocation="
         http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-        http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
         http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
 		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
 		http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
@@ -19,59 +17,61 @@
 
     <flow name="mainFlow">
         <foreach collection="#[1 to 3]">
-            <logger level="INFO" message="-- STARTS ITERATION  #[vars.counter] --" />
+            <scatter-gather>
+                <route>
+                    <logger level="INFO" message="-- STARTS ITERATION  #[vars.counter] --"/>
 
-            <sockets:send-and-receive config-ref="Sockets_Request_reconnect_config">
-                <sockets:content><![CDATA[DATA #[vars.counter]]]></sockets:content>
-            </sockets:send-and-receive>
+                    <logger message="#[import * from dw::Runtime --- if (vars.counter == 2) 'waited 900' wait 925 else 'waited nothing 1' wait 0]" level="INFO"/>
 
-            <logger level="INFO" message="--  ITERATION  #[vars.counter] FINISHED --" />
+                    <sockets:send-and-receive config-ref="Sockets_Request_reconnect_config">
+                        <sockets:content><![CDATA[#["DATA " ++ vars.counter ++ "\n"]]]></sockets:content>
+                    </sockets:send-and-receive>
+
+                    <logger level="INFO" message="-- ITERATION  #[vars.counter] FINISHED --"/>
+
+                    <munit-tools:queue/>
+                </route>
+                <route>
+                    <choice>
+                        <when expression="#[vars.counter == 2]">
+                            <logger message="#[import * from dw::Runtime --- if (vars.counter == 2) 'waited 1000' wait 1000 else 'waited nothing 2' wait 0]" level="INFO"/>
+
+                            <connection-test:disconnect-proxy proxyPort="${proxy.port}"/>
+
+                            <munit-tools:sleep time="500"/>
+
+                            <connection-test:reconnect-proxy proxyPort="${proxy.port}"/>
+
+                            <munit-tools:sleep time="500"/>
+                        </when>
+                        <otherwise>
+                            <logger message="-- NOT MY TIME --" level="INFO"/>
+                        </otherwise>
+                    </choice>
+                </route>
+            </scatter-gather>
         </foreach>
-    </flow>
-
-    <flow name="listenerFlow">
-        <sockets:listener config-ref="Sockets_Listener_reconnect_config"/>
-
-        <choice>
-            <when expression="#[payload == 'DATA 2']">
-                <connection-test:disconnect-proxy proxyPort="${proxy.port}"/>
-
-                <munit-tools:sleep time="500"/>
-
-                <connection-test:reconnect-proxy proxyPort="${proxy.port}"/>
-
-                <munit-tools:sleep time="500"/>
-            </when>
-            <otherwise>
-                <logger level="INFO" message="-- NO INTERRUPTION --"/>
-            </otherwise>
-        </choice>
-
-        <vm:publish config-ref="VM_Config" queueName="testQueue"/>
-
-        <set-payload value="ALL GOOD #[payload]"/>
     </flow>
 
     <munit:before-test name="before-suite-reconnection">
         <connection-test:define-proxy-server-port serverPort="${toxiproxy.port}"/>
 
-        <connection-test:create-proxy realPort="${real.port}" realHost="0.0.0.0" proxyPort="${proxy.port}"/>
+        <connection-test:create-proxy realPort="8085" realHost="server" proxyPort="${proxy.port}"/>
     </munit:before-test>
 
     <munit:test name="sendAndReceiveReconnectionTest">
-        <munit:enable-flow-sources>
-            <munit:enable-flow-source value="listenerFlow" />
-        </munit:enable-flow-sources>
-
         <munit:execution>
             <flow-ref name="mainFlow"/>
         </munit:execution>
 
         <munit:validation>
             <foreach collection="#[1 to 3]">
-                <vm:consume queueName="testQueue" config-ref="VM_Config"/>
+                <munit-tools:dequeue/>
 
-                <munit-tools:assert-equals actual="#[payload]" expected="DATA #[vars.counter]"/>
+                <logger level="INFO" message="DEQUEUING. CONTENT IS: "/>
+                <logger level="INFO" message="#[payload}"/>
+
+                <munit-tools:assert-equals actual="#[payload.^raw as String]" expected='#["-- ALL GOOD DATA " ++ vars.counter ++ " --"]'/>
             </foreach>
         </munit:validation>
     </munit:test>
