@@ -164,7 +164,7 @@
                             <workingDirectory>${project.basedir}/src/test/munit/reconnection/listenerServerDocker/</workingDirectory>
                             <arguments>
                                 <argument>build</argument>
-                                <argument>f</argument>
+                                <argument>-f</argument>
                                 <argument>Dockerfile</argument>
                                 <argument>-t</argument>
                                 <argument>serverimage</argument>
