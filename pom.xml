@@ -142,6 +142,11 @@
                                 <argument>rmi</argument>
                                 <argument>serverimage:latest</argument>
                             </arguments>
+                            <!-- Ensures build continue if image is not present -->
+                            <successCodes>
+                                <successCode>0</successCode>
+                                <successCode>1</successCode>
+                            </successCodes>
                         </configuration>
                     </execution>
                     <!--
