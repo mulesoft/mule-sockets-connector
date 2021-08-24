@@ -124,6 +124,53 @@
             </plugin>
 
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <!-- Remove existing image from local repo -->
+                    <execution>
+                        <id>docker-clean</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <arguments>
+                                <argument>rmi</argument>
+                                <argument>serverimage:latest</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!--
+                      Create new docker image using Dockerfile which must be present in current working directory.
+                      Tag the image using maven project version information.
+                    -->
+                    <execution>
+                        <id>docker-build</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <workingDirectory>${project.basedir}/src/test/munit/reconnection/listenerServerDocker/</workingDirectory>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>f</argument>
+                                <argument>Dockerfile</argument>
+                                <argument>-t</argument>
+                                <argument>serverimage</argument>
+                                <argument>.</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>com.mulesoft.munit</groupId>
                 <artifactId>munit-extensions-maven-plugin</artifactId>
                 <version>${munit.extensions.maven.plugin.version}</version>
