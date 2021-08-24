@@ -13,7 +13,7 @@
         <AsyncLogger name="com.mulesoft" level="WARN"/>
 
         <AsyncLogger name="org.mule.extensions.socket" level="DEBUG"/>
-        <AsyncLogger name="org.mule.api.processor.LoggerMessageProcessor" level="INFO"/>
+        <AsyncLogger name="org.mule.runtime.core.internal.processor.LoggerMessageProcessor" level="DEBUG"/>
 
         <AsyncRoot level="INFO">
             <AppenderRef ref="Console"/>
