@@ -13,7 +13,7 @@
                 <reconnect frequency="3000" count="10"/>
             </reconnection>
             <sockets:protocol>
-                <sockets:direct-protocol/>
+                <sockets:direct-protocol rethrowExceptionOnRead="true"/>
             </sockets:protocol>
         </sockets:tcp-requester-connection>
     </sockets:request-config>
