@@ -6,51 +6,55 @@
  */
 package classes;
 
-import java.io.*;
-import java.net.Socket;
-import java.net.ServerSocket;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
 public class SocketListener {
 
-    private static Socket socket;
+    protected void createSocketServer() {
+        try {
+            while(true) {
+                ServerSocket middleman = new ServerSocket();
+                middleman.setReuseAddress(true);
+                middleman.bind(new InetSocketAddress("0.0.0.0", 8085));
 
-    public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket()) {
-            serverSocket.setReuseAddress(true);
-            serverSocket.bind(new InetSocketAddress("0.0.0.0", 8085));
+                System.out.println("\n-- SERVER ACCEPTING CONNECTIONS ON 0.0.0.0:8085 --\n");
 
-            System.out.println("\n-- Server started and listening on port 8085 --\n");
+                Socket client = middleman.accept();
+                middleman.close();
 
-            String receivedMessage;
-            BufferedReader reader;
-            BufferedWriter writer;
+                PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-            while (true) {
-                socket = serverSocket.accept();
-                System.out.println("\n-- NEW CONNECTION ACCEPTED --\n");
+                String line;
+                while ((line = in.readLine()) != null) {
+                    System.out.println("\n-- CONTENT FROM REQUESTER IS : " + line + " --\n");
 
-                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                receivedMessage = reader.readLine();
+                    if (line.contains("2")) {
+                        System.out.println("\n-- STOPPING SOCKET LISTENER BY 1 SECOND --\n");
+                        TimeUnit.SECONDS.sleep(1);
+                    }
 
-                System.out.println("\n-- Message received from client is " + receivedMessage + " --\n");
+                    out.println("-- ALL GOOD " + line + " --");
+                }
 
-                writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                writer.write("-- ALL GOOD " + receivedMessage + " --");
-                writer.flush();
-
-                System.out.println("\n-- BYE BYE CONNECTION --\n");
+                out.flush();
             }
         } catch (Exception e) {
-            System.out.println("Ooooooops 1 :(" + e);
+            System.out.println("\n-- OOPS 1 :(" + e);
             e.printStackTrace();
-//        } finally {
-//            try {
-//                socket.close();
-//            } catch (Exception e) {
-//                System.out.println("Ooooooops 2 :(");
-//            }
         }
+    }
+
+    public static void main(String[] args) {
+        SocketListener test = new SocketListener();
+        test.createSocketServer();
     }
 
 }
