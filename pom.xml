@@ -28,7 +28,6 @@
         <munit.version>2.3.5</munit.version>
         <munit.extensions.maven.plugin.version>1.1.1</munit.extensions.maven.plugin.version>
         <apacheCommonsLangVersion>3.12.0</apacheCommonsLangVersion>
-        <docker.maven.plugin.version>0.36.1</docker.maven.plugin.version>
     </properties>
 
     <dependencies>
@@ -115,61 +114,8 @@
                         <configuration>
                             <portNames>
                                 <portName>sockets.listenPort</portName>
-                                <portName>proxy.port</portName>
-                                <portName>toxiproxy.port</portName>
+                                <portName>sockets.listenPortReconnection</portName>
                             </portNames>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <!-- Remove existing image from local repo -->
-                    <execution>
-                        <id>docker-clean</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>docker</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <arguments>
-                                <argument>rmi</argument>
-                                <argument>serverimage:latest</argument>
-                            </arguments>
-                            <!-- Ensures build continue if image is not present -->
-                            <successCodes>
-                                <successCode>0</successCode>
-                                <successCode>1</successCode>
-                            </successCodes>
-                        </configuration>
-                    </execution>
-                    <!--
-                      Create new docker image using Dockerfile which must be present in current working directory.
-                      Tag the image using maven project version information.
-                    -->
-                    <execution>
-                        <id>docker-build</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>docker</executable>
-                            <workingDirectory>${project.basedir}/src/test/munit/reconnection/listenerServerDocker/</workingDirectory>
-                            <arguments>
-                                <argument>build</argument>
-                                <argument>-f</argument>
-                                <argument>Dockerfile</argument>
-                                <argument>-t</argument>
-                                <argument>serverimage</argument>
-                                <argument>.</argument>
-                            </arguments>
                         </configuration>
                     </execution>
                 </executions>
@@ -225,87 +171,15 @@
                         <version>1.0.0</version>
                         <classifier>mule-plugin</classifier>
                     </dependency>
+                    <dependency>
+                        <groupId>org.mule.modules</groupId>
+                        <artifactId>mule-scripting-module</artifactId>
+                        <version>1.1.7</version>
+                        <classifier>mule-plugin</classifier>
+                    </dependency>
                 </dependencies>
             </plugin>
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>docker</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-                        <version>${docker.maven.plugin.version}</version>
-                        <configuration>
-                            <images>
-                                <image>
-                                    <name>serverimage</name>
-                                    <alias>server</alias>
-                                    <run>
-                                        <log>
-                                            <enabled>true</enabled>
-                                        </log>
-                                    </run>
-                                </image>
-                                <image>
-                                    <name>shopify/toxiproxy</name>
-                                    <alias>toxiproxy</alias>
-                                    <run>
-                                        <ports>
-                                            <port>${toxiproxy.port}:8474</port>
-                                            <port>${proxy.port}:${proxy.port}</port>
-                                        </ports>
-                                        <links>
-                                            <link>server</link>
-                                        </links>
-                                    </run>
-                                </image>
-                            </images>
-                            <verbose>true</verbose>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.slf4j</groupId>
-                                <artifactId>slf4j-api</artifactId>
-                                <version>1.7.32</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>org.slf4j</groupId>
-                                <artifactId>jcl-over-slf4j</artifactId>
-                                <version>1.7.32</version>
-                            </dependency>
-                        </dependencies>
-                        <executions>
-                            <execution>
-                                <id>start</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                    <goal>build</goal>
-                                    <goal>start</goal>
-                                </goals>
-                                <configuration>
-                                    <showLogs>true</showLogs>
-                                    <logStdout>true</logStdout>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

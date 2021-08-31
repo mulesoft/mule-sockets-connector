@@ -5,85 +5,70 @@
       xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
       xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
       xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
       xmlns:connection-test="http://www.mulesoft.org/schema/mule/connection-test"
       xsi:schemaLocation="
         http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
         http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
 		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
 		http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+		http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
 		http://www.mulesoft.org/schema/mule/connection-test http://www.mulesoft.org/schema/mule/connection-test/current/mule-connection-test.xsd">
 
-    <munit:config name="send-and-receive-reconnection-test-case.xml"/>
+    <munit:config name="send-and-receive-reconnection-test-case.xml" minMuleVersion="4.3.0"/>
 
-    <flow name="mainFlow">
-        <foreach collection="#[1 to 3]">
-            <scatter-gather>
-                <route>
-                    <logger level="INFO" message="-- STARTS ITERATION  #[vars.counter] ROUTE 1 --"/>
-
-                    <sockets:send-and-receive config-ref="Sockets_Request_reconnect_config">
-                        <sockets:content><![CDATA[#[vars.counter ++ "\n"]]]></sockets:content>
-                    </sockets:send-and-receive>
-
-                    <set-variable value="#[payload]" variableName="dataToQueue"/>
-                    <logger level="INFO" message="RESPONSE FROM SOCKET LISTENER IS:"/>
-                    <logger level="INFO" message="#[payload]"/>
-
-                    <munit-tools:queue queueName="socketData">
-                        <munit-tools:value ><![CDATA[#[vars.dataToQueue]]]></munit-tools:value>
-                    </munit-tools:queue>
-
-                    <logger level="INFO" message="-- ITERATION  #[vars.counter] FINISHED ROUTE 1 --"/>
-                </route>
-
-                <route>
-                    <logger level="INFO" message="-- STARTS ITERATION  #[vars.counter] ROUTE 2 --"/>
-
-                    <choice>
-                        <when expression="#[vars.counter == 2]">
-                            <logger message="#[import * from dw::Runtime --- '' wait 700]"/>
-
-                            <connection-test:disconnect-proxy proxyPort="${proxy.port}"/>
-
-                            <logger message="#[import * from dw::Runtime --- '' wait 500]"/>
-
-                            <connection-test:reconnect-proxy proxyPort="${proxy.port}"/>
-
-                            <logger message="#[import * from dw::Runtime --- '' wait 500]"/>
-                        </when>
-                        <otherwise>
-                            <logger message="-- NO DISCONNECTION/RECONNECTION --" level="INFO"/>
-                        </otherwise>
-                    </choice>
-
-                    <logger level="INFO" message="-- ITERATION  #[vars.counter] FINISHED ROUTE 2 --"/>
-                </route>
-            </scatter-gather>
-        </foreach>
+    <flow name="sourceFlow">
+        <sockets:listener config-ref="Sockets_Listener_config_reconnection"/>
+        <logger level="INFO" message="#[payload]"/>
     </flow>
 
-    <munit:before-test name="before-suite-reconnection">
-        <connection-test:define-proxy-server-port serverPort="${toxiproxy.port}"/>
-
-        <connection-test:create-proxy realPort="8085" realHost="server" proxyPort="${proxy.port}"/>
-    </munit:before-test>
-
     <munit:test name="sendAndReceiveReconnectionTest">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="sourceFlow"/>
+        </munit:enable-flow-sources>
+
         <munit:execution>
-            <flow-ref name="mainFlow"/>
+            <sockets:send-and-receive config-ref="Sockets_Request_config_reconnection">
+                <sockets:content ><![CDATA[#["hi there"]]]></sockets:content>
+            </sockets:send-and-receive>
+            <munit-tools:queue queueName="socketData">
+                        <munit-tools:value ><![CDATA[#[1]]]></munit-tools:value>
+            </munit-tools:queue>
+
+            <scripting:execute engine="nashorn" >
+                <scripting:code>
+                    flow = registry.lookupByName(&quot;sourceFlow&quot;).get();
+                    flow.stop();
+                </scripting:code>
+            </scripting:execute>
+
+            <logger message="flow stopped"/>
+            <logger message="#[import * from dw::Runtime --- '' wait 2000]"/>
+
+            <scripting:execute engine="nashorn" >
+                <scripting:code>
+                    flow = registry.lookupByName(&quot;sourceFlow&quot;).get();
+                    flow.start();
+                </scripting:code>
+            </scripting:execute>
+
+            <logger message="#[import * from dw::Runtime --- '' wait 2000]"/>
+            <logger message="flow started"/>
+
+            <sockets:send-and-receive config-ref="Sockets_Request_config_reconnection">
+                <sockets:content ><![CDATA[#["hi there"]]]></sockets:content>
+            </sockets:send-and-receive>
+            <munit-tools:queue queueName="socketData">
+                        <munit-tools:value ><![CDATA[#[2]]]></munit-tools:value>
+            </munit-tools:queue>
         </munit:execution>
 
         <munit:validation>
-            <foreach collection="#[1 to 3]">
-                <munit-tools:dequeue queueName="socketData"/>
-
-                <set-variable value="#[payload]" variableName="dataDequeue"/>
-                <logger level="INFO" message="DATA FROM QUEUE IS:"/>
-                <logger level="INFO" message="#[payload]"/>
-
-                <munit-tools:assert-equals actual="#[vars.dataDequeue.^raw as String]" expected='#["-- ALL GOOD " ++ vars.counter ++ " --"]'/>
-            </foreach>
+            <munit-tools:dequeue queueName="socketData"/>
+            <munit-tools:assert-equals actual="#[payload]" expected='#[1]'/>
+            <munit-tools:dequeue queueName="socketData"/>
+            <munit-tools:assert-equals actual="#[payload]" expected='#[2]'/>
         </munit:validation>
-    </munit:test>
-
+</munit:test>
+    
 </mule>
