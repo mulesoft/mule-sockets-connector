@@ -21,7 +21,6 @@ import org.mule.runtime.extension.api.runtime.operation.Result;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ConnectException;
 import java.net.SocketException;
 
 /**
@@ -44,13 +43,19 @@ public class SocketOperations {
   public Result<InputStream, ImmutableSocketAttributes> sendAndReceive(@Connection RequesterConnection connection,
                                                                        @Content InputStream content)
       throws ConnectionException, IOException {
-    SocketClient client = connection.getClient();
-    client.write(content);
+    try {
+      SocketClient client = connection.getClient();
+      client.write(content);
 
-    return Result.<InputStream, ImmutableSocketAttributes>builder()
-        .output(client.read())
-        .attributes((ImmutableSocketAttributes) client.getAttributes())
-        .build();
+      return Result.<InputStream, ImmutableSocketAttributes>builder()
+          .output(client.read())
+          .attributes((ImmutableSocketAttributes) client.getAttributes())
+          .build();
+    } catch (SocketException connException) {
+      throw new ConnectionException(format("Socket write/read operation failed: %s.",
+                                           connException.getMessage()),
+                                    connException, null, connection);
+    }
   }
 
   /**
@@ -64,14 +69,10 @@ public class SocketOperations {
       throws ConnectionException, IOException {
     try {
       connection.getClient().write(content);
-    } catch (ConnectException connException) {
+    } catch (SocketException connException) {
       throw new ConnectionException(format("Socket write operation failed: %s.",
                                            connException.getMessage()),
-                                    connException);
-    } catch (SocketException socketException) {
-      throw new ConnectionException(format("Socket write operation failed: %s.",
-                                           socketException.getMessage()),
-                                    socketException);
+                                    connException, null, connection);
     }
   }
 }

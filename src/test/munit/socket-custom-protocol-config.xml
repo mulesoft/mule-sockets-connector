@@ -46,8 +46,8 @@
         </munit:validation>-->
     </munit:test>
 
-    <flow name="listenerFlow">
-        <sockets:listener config-ref="SocketsListenerConfigCustomTcp"/>
-        <munit-tools:queue />
-    </flow>
+<!--    <flow name="listenerFlow">-->
+<!--        <sockets:listener config-ref="SocketsListenerConfigCustomTcp"/>-->
+<!--        <munit-tools:queue />-->
+<!--    </flow>-->
 </mule>
