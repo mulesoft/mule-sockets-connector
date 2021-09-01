@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd">
+
+
+    <sockets:listener-config name="Sockets_Listener_config_reconnection">
+		<sockets:tcp-listener-connection host="127.0.0.1" port="${sockets.listenPortReconnection}" >
+			<sockets:protocol >
+				<sockets:direct-protocol />
+			</sockets:protocol>
+		</sockets:tcp-listener-connection>
+	</sockets:listener-config>
+	<sockets:request-config name="Sockets_Request_config_reconnection">
+		<sockets:tcp-requester-connection host="127.0.0.1" port="${sockets.listenPortReconnection}" >
+            <reconnection>
+                <reconnect frequency="3000" count="10"/>
+            </reconnection>        
+			<sockets:protocol >
+				<sockets:direct-protocol />
+			</sockets:protocol>
+		</sockets:tcp-requester-connection>
+	</sockets:request-config>
+</mule>
