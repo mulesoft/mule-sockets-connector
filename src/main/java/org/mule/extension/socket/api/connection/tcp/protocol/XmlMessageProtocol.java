@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentMap;
  * when using this class.
  * </p>
  * <p>
- * Data are read until a new document is found or there are no more data (momentarily). For slower networks,
+ * Data is read until a new document is found or there is no more data (momentarily). For slower networks,
  * {@link XmlMessageEOFProtocol} may be more reliable.
  * </p>
  * <p>
