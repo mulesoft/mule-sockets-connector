@@ -35,8 +35,8 @@ import java.util.concurrent.ConcurrentMap;
  * {@link XmlMessageEOFProtocol} may be more reliable.
  * </p>
  * <p>
- * Also, the default character encoding for the platform is used to decode the message bytes when looking for the XML declaration.
- * Some caution with message character encodings is warranted.
+ * Also, because the default character encoding for Anypoint Platform is used to decode the message bytes when looking for the
+ * XML declaration, some caution with message character encodings is warranted.
  * </p>
  * <p>
  * Finally, this class uses a PushbackInputStream to enable parsing of individual messages. The stream stores any pushed-back
