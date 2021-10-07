@@ -28,8 +28,7 @@ import java.util.Objects;
 
 /**
  * This protocol is an application level {@link TcpProtocol} that can be used to transfer large amounts of data without risking
- * some data to be loss. The protocol is defined by sending / reading an integer (the packet length) and then the data to be
- * transferred.
+ * some data to be loss. The protocol is defined by sending or reading an integer (the packet length) and then the data to transfer.
  * <p>
  * <p>
  * Note that use of this protocol must be symmetric - both the sending and receiving connectors must use the same protocol.
