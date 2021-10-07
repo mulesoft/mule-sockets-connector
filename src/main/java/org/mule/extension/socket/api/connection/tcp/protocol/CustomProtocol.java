@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.util.Objects;
 
 /**
+ * Define your own custom protocol by writing a class that extends {@link TcpProtocol}.
  * @since 1.0
  */
 @TypeDsl(allowTopLevelDefinition = true)

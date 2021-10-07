@@ -20,8 +20,9 @@ import java.io.OutputStream;
 import java.util.Objects;
 
 /**
- * This protocol is an application level {@link TcpProtocol} and precedes every message with a cookie. It should probably not be
- * used in production. Should probably change to {@link LengthProtocol}. Both sender and receiver must use the same protocol.
+ * This test protocol is an application level {@link TcpProtocol} and precedes every message with a cookie.
+ * The protocol should not be used in production environments.
+ * Both sender and receiver must use the same protocol.
  *
  * @since 1.0
  */
