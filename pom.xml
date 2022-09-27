@@ -24,7 +24,7 @@
         <assertJVersion>3.23.1</assertJVersion>
         <commonsIoVersion>2.11.0</commonsIoVersion>
         <maven.helper.plugin.version>3.3.0</maven.helper.plugin.version>
-        <muleSpringModuleVersion>1.3.6</muleSpringModuleVersion>
+        <muleSpringModuleVersion>1.3.7</muleSpringModuleVersion>
         <munit.version>2.3.13</munit.version>
         <munit.extensions.maven.plugin.version>1.1.3</munit.extensions.maven.plugin.version>
         <apacheCommonsLangVersion>3.12.0</apacheCommonsLangVersion>
