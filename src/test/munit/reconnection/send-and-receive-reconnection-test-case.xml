@@ -6,14 +6,12 @@
       xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
       xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
       xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
-      xmlns:connection-test="http://www.mulesoft.org/schema/mule/connection-test"
       xsi:schemaLocation="
         http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
         http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
 		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
 		http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
-		http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
-		http://www.mulesoft.org/schema/mule/connection-test http://www.mulesoft.org/schema/mule/connection-test/current/mule-connection-test.xsd">
+		http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
     <munit:config name="send-and-receive-reconnection-test-case.xml" minMuleVersion="4.3.0"/>
 
