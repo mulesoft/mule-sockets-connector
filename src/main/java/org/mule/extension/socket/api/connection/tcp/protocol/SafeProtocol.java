@@ -12,6 +12,7 @@ import org.mule.runtime.extension.api.annotation.dsl.xml.TypeDsl;
 import org.mule.runtime.extension.api.annotation.param.DefaultEncoding;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
+import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class SafeProtocol extends AbstractByteProtocol {
    */
   @Parameter
   @Optional(defaultValue = "-1")
+  @DisplayName("Max message length")
   private int maxMessageLeght = NO_MAX_LENGTH;
   /**
    * Indicates the encoding used for serializing the cookie
