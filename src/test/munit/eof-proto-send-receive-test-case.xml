@@ -13,7 +13,7 @@ http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/mu
 http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 
-    <munit:config name="eof-proto-send-receive-test-case.xml"/>
+    <munit:config name="eof-proto-send-receive-test-case.xml" minMuleVersion="4.3.0"/>
 
     <munit:test name="eof-send-receive-test" timeOut="8000">
         <munit:enable-flow-sources>

@@ -13,7 +13,7 @@
 		http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
 		http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
-    <munit:config name="send-and-receive-reconnection-test-case.xml" minMuleVersion="4.2.0"/>
+    <munit:config name="send-and-receive-reconnection-test-case.xml" minMuleVersion="4.3.0"/>
 
     <flow name="sourceFlow">
         <sockets:listener config-ref="Sockets_Listener_config_reconnection"/>
