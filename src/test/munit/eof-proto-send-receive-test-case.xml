@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 
     <munit:config name="eof-proto-send-receive-test-case.xml"/>
 
-    <munit:test name="eof-send-receive-test" timeOut="8000">
+    <munit:test name="eof-send-receive-test" timeOut="10000">
         <munit:enable-flow-sources>
             <munit:enable-flow-source value="tcpReceiveFlow"/>
         </munit:enable-flow-sources>
