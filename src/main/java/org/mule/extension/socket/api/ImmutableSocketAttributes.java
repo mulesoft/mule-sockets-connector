@@ -6,7 +6,6 @@
  */
 package org.mule.extension.socket.api;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 
@@ -21,7 +20,6 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,7 +123,8 @@ public class ImmutableSocketAttributes implements SocketAttributes, Serializable
 
   @Override
   public String toString() {
-    return ReflectionToStringBuilder.toString(this, SHORT_PREFIX_STYLE);
+    return "ImmutableSocketAttributes[port=" + this.port + ",hostAddress=" + this.hostAddress + ",hostName=" + this.hostName
+        + "]";
   }
 
   /**

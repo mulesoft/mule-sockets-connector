@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+
+http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+
+    <munit:config name="tcp-protocol-test-suite.xml" minMuleVersion="4.3.0"/>
+
+    <munit:dynamic-port propertyName="port"/>
+
+    <sockets:request-config name="tcp-streaming-requester">
+        <sockets:tcp-requester-connection host="localhost" port="${sockets.listenPortStreaming}">
+            <sockets:protocol>
+                <sockets:streaming-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:request-config name="tcp-custom-test-requester">
+        <sockets:tcp-requester-connection host="localhost" port="${sockets.listenPortCustom2}">
+            <sockets:protocol>
+                <sockets:streaming-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:request-config name="tcp-reconnect-requester">
+        <sockets:tcp-requester-connection host="localhost" port="${sockets.listenPortReconnect}" keepAlive="true"
+                                          clientTimeout="12000" connectionTimeout="12000">
+            <reconnection>
+                <reconnect count="10"/>
+            </reconnection>
+            <sockets:protocol>
+                <sockets:direct-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:request-config name="tcp-custom-requester">
+        <sockets:tcp-requester-connection host="localhost" port="${sockets.listenPortLength}" failOnUnresolvedHost="true"
+                                          sendTcpNoDelay="true">
+            <pooling-profile maxActive="1"/>
+            <sockets:protocol>
+                <sockets:custom-protocol class="org.mule.extension.socket.protocol.MockTcpProtocol"/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:request-config name="tcp-length-requester">
+        <sockets:tcp-requester-connection host="localhost" port="${sockets.listenPortLength}" >
+            <sockets:protocol>
+                <sockets:length-protocol maxMessageLength="15"/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:listener-config name="tcp-length-listener">
+
+        <sockets:tcp-listener-connection host="localhost" port="${sockets.listenPortLength}">
+            <sockets:protocol>
+                <sockets:length-protocol maxMessageLength="15" />
+            </sockets:protocol>
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <sockets:listener-config name="tcp-custom-listener">
+        <sockets:tcp-listener-connection host="localhost" port="${sockets.listenPortCustom2}">
+            <sockets:protocol>
+                <sockets:custom-protocol class="org.mule.extension.socket.protocol.MockTcpProtocol"/>
+            </sockets:protocol>
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <sockets:listener-config name="tcp-streaming-listener">
+        <sockets:tcp-listener-connection host="localhost" port="${sockets.listenPortStreaming}">
+            <sockets:protocol>
+                <sockets:streaming-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <sockets:listener-config name="tcp-reconnect-listener">
+        <sockets:tcp-listener-connection host="localhost" port="${sockets.listenPortReconnect}">
+            <sockets:protocol>
+                <sockets:direct-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <flow name="tcp-reconnect-listen">
+        <sockets:listener config-ref="tcp-reconnect-listener"/>
+        <logger message="#[payload]" level="INFO"/>
+        <munit-tools:store key='message'/>
+    </flow>
+
+    <flow name="tcp-streaming-listen">
+        <sockets:listener config-ref="tcp-streaming-listener"/>
+        <logger message="#[payload]" level="INFO"/>
+        <munit-tools:store key='message'/>
+    </flow>
+
+    <flow name="tcp-custom-listen">
+        <sockets:listener config-ref="tcp-custom-listener"/>
+        <logger message="#[payload]" level="INFO"/>
+        <munit-tools:store key='message'/>
+    </flow>
+
+    <flow name="tcp-length-listen">
+        <sockets:listener config-ref="tcp-length-listener"/>
+        <logger message="#[payload]" level="INFO"/>
+        <munit-tools:store key='message'/>
+    </flow>
+
+    <munit:test name="tcp-streaming-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-streaming-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <sockets:send config-ref="tcp-streaming-requester">
+                <sockets:content><![CDATA['Hello world!']]></sockets:content>
+            </sockets:send>
+        </munit:execution>
+        <munit:validation>
+            <until-successful maxRetries="60" millisBetweenRetries="2000">
+                <munit-tools:retrieve key='message'/>
+                <logger message="#[payload]" level="INFO"/>
+                <munit-tools:assert-that
+                        expression="#[payload.^raw as String]"
+                        is="#[MunitTools::containsString('Hello world!')]"
+                        message="Message not received"/>
+            </until-successful>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="tcp-reconnect-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-reconnect-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value='Hello world!'/>
+            <sockets:send config-ref="tcp-reconnect-requester">
+                <reconnect count="10"/>
+            </sockets:send>
+            <sockets:send config-ref="tcp-reconnect-requester">
+                <reconnect count="10"/>
+            </sockets:send>
+            <set-payload value=''/>
+        </munit:execution>
+        <munit:validation>
+            <until-successful maxRetries="60" millisBetweenRetries="2000">
+                <munit-tools:retrieve key='message'/>
+                <logger message="#[payload]" level="INFO"/>
+                <munit-tools:assert-that
+                        expression="#[payload.^raw as String]"
+                        is="#[MunitTools::containsString('Hello world!')]"
+                        message="Message not received"/>
+            </until-successful>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="tcp-length-longer-than-15-test" expectedErrorType="SOCKETS:LENGTH_EXCEEDED">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-length-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <sockets:send config-ref="tcp-length-requester">
+                <sockets:content><![CDATA['Hello world!Hello world!Hello world!Hello world!']]></sockets:content>
+            </sockets:send>
+        </munit:execution>
+        <munit:validation>
+            <until-successful maxRetries="60" millisBetweenRetries="2000">
+                <munit-tools:retrieve key='message'/>
+                <logger message="#[payload]" level="INFO"/>
+                <munit-tools:assert-that
+                        expression="#[payload.^raw as String]"
+                        is="#[MunitTools::containsString('Hello world!')]"
+                        message="Message not received"/>
+            </until-successful>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="tcp-length-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-length-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <sockets:send config-ref="tcp-length-requester">
+                <sockets:content><![CDATA['Hello world!']]></sockets:content>
+            </sockets:send>
+        </munit:execution>
+        <munit:validation>
+            <until-successful maxRetries="60" millisBetweenRetries="2000">
+                <munit-tools:retrieve key='message'/>
+                <logger message="#[payload]" level="INFO"/>
+                <munit-tools:assert-that
+                        expression="#[payload.^raw as String]"
+                        is="#[MunitTools::containsString('Hello world!')]"
+                        message="Message not received"/>
+            </until-successful>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="tcp-custom-protocol-requester-test" expectedErrorType="MULE:UNKNOWN">
+        <munit:execution>
+            <set-payload value='Hello world!'/>
+            <sockets:send config-ref="tcp-custom-requester"/>
+        </munit:execution>
+        <munit:validation>
+            <logger message="Cannot happen!" level="INFO"/>
+        </munit:validation>
+    </munit:test>
+</mule>

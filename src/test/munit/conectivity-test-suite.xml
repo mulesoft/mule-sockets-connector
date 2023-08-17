@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:mtf="http://www.mulesoft.org/schema/mule/mtf"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.mulesoft.org/schema/mule/mtf http://www.mulesoft.org/schema/mule/mtf/current/mule-mtf.xsd">
+
+    <munit:config name="conectivity-test-suite.xml" minMuleVersion="4.3.0"/>
+
+    <sockets:listener-config name="Sockets_Tcp_Listener_config">
+        <sockets:tcp-listener-connection host="127.0.0.1" port="${sockets.listenPortEof}"/>
+    </sockets:listener-config>
+
+    <sockets:listener-config name="Sockets_Udp_Listener_config">
+        <sockets:udp-listener-connection host="127.0.0.1" port="${sockets.listenPortConnTest}"/>
+    </sockets:listener-config>
+
+    <sockets:request-config name="Sockets_Udp_Request_config">
+        <sockets:udp-requester-connection host="127.0.0.1" port="${sockets.listenPortConnTest}"/>
+    </sockets:request-config>
+
+    <munit:test name="valid-connectivity-test-tcp-listener">
+        <munit:execution>
+            <mtf:test-connectivity config-ref="Sockets_Tcp_Listener_config"/>
+        </munit:execution>
+    </munit:test>
+
+    <munit:test name="valid-connectivity-test-udp-listener">
+        <munit:execution>
+            <mtf:test-connectivity config-ref="Sockets_Udp_Listener_config"/>
+        </munit:execution>
+    </munit:test>
+
+    <munit:test name="valid-connectivity-test-udp-requester">
+        <munit:execution>
+            <mtf:test-connectivity config-ref="Sockets_Udp_Request_config"/>
+        </munit:execution>
+    </munit:test>
+</mule>
