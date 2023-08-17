@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+
+    <munit:config name="tcp-ssl-test-suite.xml" minMuleVersion="4.3.0"/>
+
+    <munit:dynamic-port propertyName="port"/>
+    <munit:dynamic-port propertyName="port2"/>
+
+    <tls:context name="globalTlsContext">
+        <tls:trust-store path="tls/ssltest-cacerts.jks" password="changeit"/>
+        <tls:key-store path="tls/ssltest-keystore.jks" keyPassword="changeit" password="changeit"/>
+    </tls:context>
+
+    <tls:context name="listenerTlsContext">
+        <tls:key-store path="tls/ssltest-keystore.jks" keyPassword="changeit" password="changeit"/>
+    </tls:context>
+
+    <tls:context name="requestTlsContext">
+        <tls:trust-store path="tls/ssltest-cacerts.jks" password="changeit"/>
+    </tls:context>
+
+    <sockets:request-config name="ssl-request-global-tls">
+        <sockets:tcp-requester-connection host="localhost" port="${port}"
+                                          failOnUnresolvedHost="true"
+                                          sendTcpNoDelay="true"
+                                          tlsContext="globalTlsContext">
+            <pooling-profile maxActive="1"/>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:listener-config name="ssl-listener-global-tls">
+        <sockets:tcp-listener-connection host="localhost"
+                                         port="${port}"
+                                         tlsContext="globalTlsContext">
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <sockets:request-config name="ssl-request">
+        <sockets:tcp-requester-connection host="localhost" port="${port2}"
+                                          failOnUnresolvedHost="true"
+                                          sendTcpNoDelay="true"
+                                          tlsContext="requestTlsContext">
+            <pooling-profile maxActive="1"/>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+
+    <sockets:listener-config name="ssl-listener">
+        <sockets:tcp-listener-connection host="localhost"
+                                         port="${port2}"
+                                         tlsContext="listenerTlsContext">
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <flow name="tcp-global-ssl-listen">
+        <sockets:listener config-ref="ssl-listener-global-tls"/>
+        <logger message="#[payload]" level="INFO"/>
+    </flow>
+
+    <flow name="tcp-ssl-listen">
+        <sockets:listener config-ref="ssl-listener"/>
+        <logger message="#[payload]" level="INFO"/>
+    </flow>
+
+    <munit:test name="tcp-ssl-global-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-global-ssl-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value='Hello world!'/>
+            <sockets:send-and-receive config-ref="ssl-request-global-tls"/>
+        </munit:execution>
+        <munit:validation>
+            <logger message="#[payload]" level="INFO"/>
+            <munit-tools:assert-that
+                    expression="#[payload.^raw as String]"
+                    is="#[MunitTools::equalTo('Hello world!')]"
+                    message="Message not received"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="tcp-ssl-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-ssl-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value='Hello world!'/>
+            <sockets:send-and-receive config-ref="ssl-request"/>
+        </munit:execution>
+        <munit:validation>
+            <logger message="#[payload]" level="INFO"/>
+            <munit-tools:assert-that
+                    expression="#[payload.^raw as String]"
+                    is="#[MunitTools::equalTo('Hello world!')]"
+                    message="Message not received"/>
+        </munit:validation>
+    </munit:test>
+
+</mule>

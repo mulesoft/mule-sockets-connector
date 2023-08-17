@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+
+    <munit:config name="udp-test-suite.xml" minMuleVersion="4.3.0"/>
+
+    <sockets:request-config name="udp-requester">
+        <sockets:udp-requester-connection host="localhost" port="${sockets.listenPortUdp}" />
+    </sockets:request-config>
+
+    <sockets:request-config name="udp-requester-with-timeout">
+        <sockets:udp-requester-connection host="localhost" port="${sockets.listenPortUdp}" clientTimeout="1" />
+    </sockets:request-config>
+
+
+    <sockets:listener-config name="udp-listener">
+        <sockets:udp-listener-connection host="localhost" port="${sockets.listenPortUdp}"/>
+    </sockets:listener-config>
+
+    <flow name="udp-send-with-timeout">
+        <sockets:send-and-receive config-ref="udp-requester-with-timeout"/>
+    </flow>
+
+    <flow name="udp-listen">
+        <sockets:listener config-ref="udp-listener"/>
+        <set-payload value="Consumed"/>
+    </flow>
+
+    <munit:test name="udp-timeout-test" expectedErrorType="SOCKETS:CONNECTION_TIMEOUT">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="udp-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value="sample payload test"/>
+            <sockets:send-and-receive config-ref="udp-requester-with-timeout"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that
+                    expression="#[payload.^raw as String]"
+                    is="#[MunitTools::equalTo('testValue')]"
+                    message="The payload should be ‘example’"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="udp-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="udp-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value="not expected"/>
+            <sockets:send-and-receive config-ref="udp-requester"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that
+                    expression="#[payload.^raw as String]"
+                    is="#[MunitTools::equalTo('Consumed')]"
+                    message="Message not received"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="udp-write-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="udp-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value="Consumed"/>
+            <sockets:send config-ref="udp-requester"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that
+                    expression="#[payload.^raw as String]"
+                    is="#[MunitTools::equalTo('Consumed')]"
+                    message="Message not received"/>
+        </munit:validation>
+    </munit:test>
+</mule>
