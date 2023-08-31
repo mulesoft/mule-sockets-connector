@@ -65,12 +65,10 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
 
     <flow name="tcp-global-ssl-listen">
         <sockets:listener config-ref="ssl-listener-global-tls"/>
-        <logger message="#[payload]" level="INFO"/>
     </flow>
 
     <flow name="tcp-ssl-listen">
         <sockets:listener config-ref="ssl-listener"/>
-        <logger message="#[payload]" level="INFO"/>
     </flow>
 
     <munit:test name="tcp-ssl-global-test">
@@ -82,7 +80,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
             <sockets:send-and-receive config-ref="ssl-request-global-tls"/>
         </munit:execution>
         <munit:validation>
-            <logger message="#[payload]" level="INFO"/>
             <munit-tools:assert-that
                     expression="#[payload.^raw as String]"
                     is="#[MunitTools::equalTo('Hello world!')]"
@@ -99,7 +96,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
             <sockets:send-and-receive config-ref="ssl-request"/>
         </munit:execution>
         <munit:validation>
-            <logger message="#[payload]" level="INFO"/>
             <munit-tools:assert-that
                     expression="#[payload.^raw as String]"
                     is="#[MunitTools::equalTo('Hello world!')]"

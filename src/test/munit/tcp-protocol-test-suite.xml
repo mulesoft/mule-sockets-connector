@@ -96,25 +96,21 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
 
     <flow name="tcp-reconnect-listen">
         <sockets:listener config-ref="tcp-reconnect-listener"/>
-        <logger message="#[payload]" level="INFO"/>
         <munit-tools:store key='message'/>
     </flow>
 
     <flow name="tcp-streaming-listen">
         <sockets:listener config-ref="tcp-streaming-listener"/>
-        <logger message="#[payload]" level="INFO"/>
         <munit-tools:store key='message'/>
     </flow>
 
     <flow name="tcp-custom-listen">
         <sockets:listener config-ref="tcp-custom-listener"/>
-        <logger message="#[payload]" level="INFO"/>
         <munit-tools:store key='message'/>
     </flow>
 
     <flow name="tcp-length-listen">
         <sockets:listener config-ref="tcp-length-listener"/>
-        <logger message="#[payload]" level="INFO"/>
         <munit-tools:store key='message'/>
     </flow>
 
@@ -130,7 +126,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
         <munit:validation>
             <until-successful maxRetries="60" millisBetweenRetries="2000">
                 <munit-tools:retrieve key='message'/>
-                <logger message="#[payload]" level="INFO"/>
                 <munit-tools:assert-that
                         expression="#[payload.^raw as String]"
                         is="#[MunitTools::containsString('Hello world!')]"
@@ -156,7 +151,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
         <munit:validation>
             <until-successful maxRetries="60" millisBetweenRetries="2000">
                 <munit-tools:retrieve key='message'/>
-                <logger message="#[payload]" level="INFO"/>
                 <munit-tools:assert-that
                         expression="#[payload.^raw as String]"
                         is="#[MunitTools::containsString('Hello world!')]"
@@ -177,7 +171,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
         <munit:validation>
             <until-successful maxRetries="60" millisBetweenRetries="2000">
                 <munit-tools:retrieve key='message'/>
-                <logger message="#[payload]" level="INFO"/>
                 <munit-tools:assert-that
                         expression="#[payload.^raw as String]"
                         is="#[MunitTools::containsString('Hello world!')]"
@@ -198,7 +191,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
         <munit:validation>
             <until-successful maxRetries="60" millisBetweenRetries="2000">
                 <munit-tools:retrieve key='message'/>
-                <logger message="#[payload]" level="INFO"/>
                 <munit-tools:assert-that
                         expression="#[payload.^raw as String]"
                         is="#[MunitTools::containsString('Hello world!')]"
