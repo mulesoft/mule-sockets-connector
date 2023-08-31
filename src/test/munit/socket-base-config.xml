@@ -9,7 +9,7 @@
       http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
       http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
 
-    <munit:config name="tcp-protocol-test-suite.xml" minMuleVersion="4.3.0"/>
+    <munit:config name="socket-base-config.xml" minMuleVersion="4.3.0"/>
 
 
     <sockets:request-config name="tcp-custom-protocol-requester" >
@@ -30,7 +30,6 @@
 
     <flow name="tcp-custom-protocol-listen">
         <sockets:listener config-ref="tcp-custom-protocol-listener"/>
-        <logger message="#[payload]" level="INFO"/>
         <munit-tools:store key='message'/>
     </flow>
 
@@ -46,7 +45,6 @@
         <munit:validation>
             <until-successful maxRetries="60" millisBetweenRetries="2000">
                 <munit-tools:retrieve key='message'/>
-                <logger message="#[payload]" level="INFO"/>
                 <munit-tools:assert-that
                         expression="#[payload.^raw as String]"
                         is="#[MunitTools::containsString('Hello world!')]"

@@ -110,7 +110,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
 
     <flow name="tcp-safe-listen">
         <sockets:listener config-ref="tcp-listener-safe-protocol"/>
-        <logger level="INFO" message="YYYYYYY"/>
         <munit-tools:store key='message' >
             <munit-tools:value>'OK'</munit-tools:value>
         </munit-tools:store>
@@ -165,7 +164,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
                 <sockets:send config-ref="tcp-requester-conn-timeout"/>
             </munit:execution>
             <munit:validation>
-                <logger message="#[payload]" level="INFO"/>
                 <munit-tools:assert-that
                         expression="#[payload.^raw as String]"
                         is="#[MunitTools::containsString('Hello world!')]"
@@ -186,7 +184,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
         <munit:validation>
             <until-successful maxRetries="60" millisBetweenRetries="5000">
                 <munit-tools:retrieve key='message'/>
-                <logger message="#[payload]" level="INFO"/>
                 <munit-tools:assert-that
                         expression="#[payload.^raw as String]"
                         is="#[MunitTools::containsString('Hello world!')]"
@@ -207,7 +204,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
         <munit:validation>
             <until-successful maxRetries="60" millisBetweenRetries="5000">
                 <munit-tools:retrieve key='message'/>
-                <logger message="#[payload]" level="INFO"/>
                 <munit-tools:assert-that
                         expression="#[payload.^raw as String]"
                         is="#[MunitTools::containsString('Hello world!')]"
