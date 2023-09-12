@@ -27,6 +27,7 @@
         <munit.version>2.3.15</munit.version>
         <munit.extensions.maven.plugin.version>1.1.3</munit.extensions.maven.plugin.version>
         <apacheCommonsLangVersion>3.12.0</apacheCommonsLangVersion>
+        <mtf-tools.version>1.1.2</mtf-tools.version>
     </properties>
 
     <dependencies>
@@ -119,7 +120,20 @@
                         <configuration>
                             <portNames>
                                 <portName>sockets.listenPort</portName>
+                                <portName>sockets.listenPortUdp</portName>
+                                <portName>sockets.listenPort2</portName>
+                                <portName>sockets.listenPort3</portName>
+                                <portName>sockets.listenPort4</portName>
+                                <portName>sockets.listenPort5</portName>
+                                <portName>sockets.listenPortEof</portName>
+                                <portName>sockets.listenPortCustom</portName>
+                                <portName>sockets.listenPortCustom2</portName>
+                                <portName>sockets.listenPortLength</portName>
+                                <portName>sockets.listenPortStreaming</portName>
+                                <portName>sockets.listenPortReconnect</portName>
+                                <portName>sockets.listenPortConnTest</portName>
                                 <portName>sockets.listenPortReconnection</portName>
+                                <portName>sockets.listenPortReconnection2</portName>
                             </portNames>
                         </configuration>
                     </execution>
@@ -162,6 +176,12 @@
                         <groupId>com.mulesoft.munit</groupId>
                         <artifactId>munit-tools</artifactId>
                         <version>${munit.version}</version>
+                        <classifier>mule-plugin</classifier>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.mulesoft.munit</groupId>
+                        <artifactId>mtf-tools</artifactId>
+                        <version>${mtf-tools.version}</version>
                         <classifier>mule-plugin</classifier>
                     </dependency>
                     <dependency>
