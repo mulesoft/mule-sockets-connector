@@ -17,6 +17,7 @@
 
     <flow name="sourceFlow">
         <sockets:listener config-ref="Sockets_Listener_config_reconnection"/>
+        <logger level="DEBUG" message="Message received!"/>
     </flow>
 
     <munit:test name="sendAndReceiveReconnectionTest">
