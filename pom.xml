@@ -24,10 +24,12 @@
         <commonsIoVersion>2.11.0</commonsIoVersion>
         <maven.helper.plugin.version>3.3.0</maven.helper.plugin.version>
         <muleSpringModuleVersion>1.3.7</muleSpringModuleVersion>
-        <munit.version>2.3.15</munit.version>
-        <munit.extensions.maven.plugin.version>1.1.3</munit.extensions.maven.plugin.version>
+        <munit.version>3.1.0-SNAPSHOT</munit.version>
+        <mtf-tools.version>1.2.0-SNAPSHOT</mtf-tools.version>
+        <munit.extensions.maven.plugin.version>1.2.0-SNAPSHOT</munit.extensions.maven.plugin.version>
         <apacheCommonsLangVersion>3.12.0</apacheCommonsLangVersion>
-        <mtf-tools.version>1.1.2</mtf-tools.version>
+        <jacoco.version>0.8.10</jacoco.version>
+        <groovy.version>3.0.19</groovy.version>
     </properties>
 
     <dependencies>
@@ -58,6 +60,18 @@
             <artifactId>mule-spring-test-plugin</artifactId>
             <version>${muleSpringModuleVersion}</version>
             <classifier>mule-plugin</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>${groovy.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-jsr223</artifactId>
+            <version>${groovy.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -145,6 +159,16 @@
                 <artifactId>munit-extensions-maven-plugin</artifactId>
                 <version>${munit.extensions.maven.plugin.version}</version>
                 <configuration>
+                    <sharedLibraries>
+                        <sharedLibrary>
+                            <groupId>org.codehaus.groovy</groupId>
+                            <artifactId>groovy-jsr223</artifactId>
+                        </sharedLibrary>
+                        <sharedLibrary>
+                            <groupId>org.codehaus.groovy</groupId>
+                            <artifactId>groovy</artifactId>
+                        </sharedLibrary>
+                    </sharedLibraries>
                     <argLines>
                         <argLine>
                             -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${session.executionRootDirectory}/target/jacoco.exec

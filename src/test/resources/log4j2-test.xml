@@ -8,10 +8,10 @@
 
     <Loggers>
         <!-- Http Logger shows wire traffic on DEBUG. -->
-        <AsyncLogger name="org.mule.service.http.impl.service.HttpMessageLogger" level="DEBUG"/>
+<!--        <AsyncLogger name="org.mule.service.http.impl.service.HttpMessageLogger" level="DEBUG"/>-->
         <AsyncLogger name="org.mule.service.http" level="WARN"/>
         <AsyncLogger name="org.mule.extension.http" level="WARN"/>
-        <AsyncLogger name="org.mule.extension.socket" level="DEBUG"/>
+        <AsyncLogger name="org.mule.extension.socket" level="INFO"/>
 
         <!-- Reduce startup noise -->
         <AsyncLogger name="com.mulesoft.mule.runtime.plugin" level="WARN"/>
@@ -21,7 +21,7 @@
         <AsyncLogger name="org.mule.munit.plugins.coverage.server" level="WARN"/>
 
         <!-- Mule logger -->
-        <AsyncLogger name="org.mule.runtime.core.internal.processor.LoggerMessageProcessor" level="DEBUG"/>
+<!--        <AsyncLogger name="org.mule.runtime.core.internal.processor.LoggerMessageProcessor" level="DEBUG"/>-->
 
         <AsyncRoot level="INFO">
             <AppenderRef ref="Console"/>
