@@ -21,7 +21,7 @@
         <AsyncLogger name="org.mule.munit.plugins.coverage.server" level="WARN"/>
 
         <!-- Mule logger -->
-<!--        <AsyncLogger name="org.mule.runtime.core.internal.processor.LoggerMessageProcessor" level="DEBUG"/>-->
+        <AsyncLogger name="org.mule.runtime.core.internal.processor.LoggerMessageProcessor" level="DEBUG"/>
 
         <AsyncRoot level="INFO">
             <AppenderRef ref="Console"/>
