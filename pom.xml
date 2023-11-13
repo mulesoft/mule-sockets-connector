@@ -13,12 +13,7 @@
     <groupId>org.mule.connectors</groupId>
     <artifactId>mule-sockets-connector</artifactId>
     <packaging>mule-extension</packaging>
-<<<<<<< HEAD
     <version>1.2.4-SNAPSHOT</version>
-=======
-    <version>2.0.0-SNAPSHOT</version>
->>>>>>> 0891325 (W-13885663 | Java 17 support added (#184))
-
     <name>Sockets Connector</name>
     <description>A Mule extension that provides functionality to manage TCP and UDP connections</description>
 
