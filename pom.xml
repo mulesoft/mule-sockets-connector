@@ -208,24 +208,6 @@
                         <version>${mtf-tools.version}</version>
                         <classifier>mule-plugin</classifier>
                     </dependency>
-                    <dependency>
-                        <groupId>org.mule.connectors</groupId>
-                        <artifactId>mule-vm-connector</artifactId>
-                        <version>2.0.0</version>
-                        <classifier>mule-plugin</classifier>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.mule.modules</groupId>
-                        <artifactId>mule-connection-test-module</artifactId>
-                        <version>1.0.0</version>
-                        <classifier>mule-plugin</classifier>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.mule.modules</groupId>
-                        <artifactId>mule-scripting-module</artifactId>
-                        <version>2.0.3</version>
-                        <classifier>mule-plugin</classifier>
-                    </dependency>
                 </dependencies>
             </plugin>
         </plugins>
