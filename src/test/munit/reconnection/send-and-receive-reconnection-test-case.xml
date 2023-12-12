@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+		http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+		http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+    <munit:config name="send-and-receive-reconnection-test-case.xml" minMuleVersion="4.3.0"/>
+
+    <flow name="sourceFlow">
+        <sockets:listener config-ref="Sockets_Listener_config_reconnection"/>
+        <logger level="DEBUG" message="Message received!"/>
+    </flow>
+
+    <munit:test name="sendAndReceiveReconnectionTest">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="sourceFlow"/>
+        </munit:enable-flow-sources>
+
+        <munit:execution>
+            <sockets:send-and-receive config-ref="Sockets_Request_config_reconnection">
+                <sockets:content ><![CDATA[#["hi there"]]]></sockets:content>
+            </sockets:send-and-receive>
+            <munit-tools:queue queueName="socketData">
+                        <munit-tools:value ><![CDATA[#[1]]]></munit-tools:value>
+            </munit-tools:queue>
+
+            <scripting:execute engine="groovy" >
+                <scripting:code>
+                    flow = registry.lookupByName(&quot;sourceFlow&quot;).get();
+                    flow.stop();
+                </scripting:code>
+            </scripting:execute>
+
+            <logger message="flow stopped"/>
+            <logger message="#[import * from dw::Runtime --- '' wait 2000]"/>
+
+            <scripting:execute engine="groovy" >
+                <scripting:code>
+                    flow = registry.lookupByName(&quot;sourceFlow&quot;).get();
+                    flow.start();
+                </scripting:code>
+            </scripting:execute>
+
+            <logger message="#[import * from dw::Runtime --- '' wait 2000]"/>
+            <logger message="flow started"/>
+
+            <sockets:send-and-receive config-ref="Sockets_Request_config_reconnection">
+                <sockets:content ><![CDATA[#["hi there"]]]></sockets:content>
+            </sockets:send-and-receive>
+            <munit-tools:queue queueName="socketData">
+                        <munit-tools:value ><![CDATA[#[2]]]></munit-tools:value>
+            </munit-tools:queue>
+        </munit:execution>
+
+        <munit:validation>
+            <munit-tools:dequeue queueName="socketData"/>
+            <munit-tools:assert-equals actual="#[payload]" expected='#[1]'/>
+            <munit-tools:dequeue queueName="socketData"/>
+            <munit-tools:assert-equals actual="#[payload]" expected='#[2]'/>
+        </munit:validation>
+</munit:test>
+    
+</mule>
