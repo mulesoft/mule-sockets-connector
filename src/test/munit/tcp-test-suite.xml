@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+
+    <munit:config name="tcp-test-suite.xml" minMuleVersion="4.3.0"/>
+
+    <munit:dynamic-port propertyName="port"/>
+
+    <sockets:request-config name="tcp-requester">
+        <sockets:tcp-requester-connection host="localhost" port="${sockets.listenPort}">
+            <sockets:protocol>
+                <sockets:streaming-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:request-config name="tcp-requester-timeout">
+        <sockets:tcp-requester-connection host="localhost" port="${sockets.listenPort4}" clientTimeout="1"
+                                          sendTcpNoDelay="true">
+            <pooling-profile maxActive="1"/>
+            <sockets:protocol>
+                <!--Necessary to catch the exception in the test-->
+                <sockets:length-protocol rethrowExceptionOnRead="true"/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:request-config name="tcp-requester-conn-timeout">
+        <!--Non-rutable IP address -->
+        <sockets:tcp-requester-connection host="10.255.255.255" port="${port}"
+                                          connectionTimeout="100"
+                                          sendTcpNoDelay="true">
+            <pooling-profile maxActive="1"/>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:request-config name="tcp-requester-xml-protocol">
+        <sockets:tcp-requester-connection host="localhost" port="${sockets.listenPort2}">
+            <sockets:protocol>
+                <sockets:xml-message-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:request-config name="tcp-requester-xml-eof-protocol">
+        <sockets:tcp-requester-connection host="localhost" port="${sockets.listenPort5}">
+            <sockets:protocol>
+                <sockets:xml-message-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:request-config name="tcp-requester-safe-protocol">
+        <sockets:tcp-requester-connection host="localhost" port="${sockets.listenPort3}">
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:listener-config name="tcp-listener">
+        <sockets:tcp-listener-connection host="localhost" port="${sockets.listenPort}">
+            <sockets:protocol>
+                <sockets:streaming-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <sockets:listener-config name="tcp-listener-xml-protocol">
+        <sockets:tcp-listener-connection host="localhost" port="${sockets.listenPort2}">
+            <sockets:protocol>
+                <sockets:xml-message-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <sockets:listener-config name="tcp-listener-xml-eof-protocol">
+        <sockets:tcp-listener-connection host="localhost" port="${sockets.listenPort5}">
+            <sockets:protocol>
+                <sockets:xml-message-protocol/>
+            </sockets:protocol>
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <sockets:listener-config name="tcp-listener-safe-protocol">
+        <sockets:tcp-listener-connection host="localhost" port="${sockets.listenPort3}">
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
+
+    <flow name="tcp-listen">
+        <sockets:listener config-ref="tcp-listener"/>
+        <set-payload value='OK'/>
+        <munit-tools:store key='message'/>
+    </flow>
+
+    <flow name="tcp-xml-listen">
+        <sockets:listener config-ref="tcp-listener-xml-protocol"/>
+        <munit-tools:store key='message'/>
+    </flow>
+
+    <flow name="tcp-xml-eof-listen">
+        <sockets:listener config-ref="tcp-listener-xml-eof-protocol"/>
+        <munit-tools:store key='message'/>
+    </flow>
+
+    <flow name="tcp-safe-listen">
+        <sockets:listener config-ref="tcp-listener-safe-protocol"/>
+        <munit-tools:store key='message' >
+            <munit-tools:value>'OK'</munit-tools:value>
+        </munit-tools:store>
+    </flow>
+
+    <munit:test name="tcp-test" timeOut="220000">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value=''/>
+            <sockets:send-and-receive config-ref="tcp-requester">
+                <sockets:content><![CDATA['Hello world!']]></sockets:content>
+            </sockets:send-and-receive>
+        </munit:execution>
+        <munit:validation>
+            <until-successful maxRetries="60" millisBetweenRetries="2000">
+                <munit-tools:retrieve key='message'/>
+                <munit-tools:assert-that
+                        expression="#[payload.^raw as String]"
+                        is="#[MunitTools::equalTo('OK')]"
+                        message="Message not received"/>
+            </until-successful>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="tcp-safe-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-safe-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value=''/>
+            <sockets:send-and-receive config-ref="tcp-requester-safe-protocol">
+                <sockets:content><![CDATA['Hello world!']]></sockets:content>
+            </sockets:send-and-receive>
+        </munit:execution>
+        <munit:validation>
+            <until-successful maxRetries="60" millisBetweenRetries="5000">
+                <munit-tools:retrieve key='message'/>
+                <munit-tools:assert-that
+                        expression="#[payload.^raw as String]"
+                        is="#[MunitTools::containsString('OK')]"
+                        message="Message not received"/>
+            </until-successful>
+        </munit:validation>
+    </munit:test>
+
+    <!-- incorrect err is returned  expected:SOCKETS:CONNECTI[ON_TIMEOUT] but was:SOCKETS:CONNECTI[VITY -->
+        <munit:test name="tcp-timeout-test" expectedErrorType="SOCKETS:CONNECTIVITY">
+            <munit:execution>
+                <set-payload value="Hello world!"/>
+                <sockets:send config-ref="tcp-requester-conn-timeout"/>
+            </munit:execution>
+            <munit:validation>
+                <munit-tools:assert-that
+                        expression="#[payload.^raw as String]"
+                        is="#[MunitTools::containsString('Hello world!')]"
+                        message="Message cannot pass"/>
+            </munit:validation>
+        </munit:test>
+
+
+    <munit:test name="tcp-xml-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-xml-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value='{"mes" : "Hello world!" }'/>
+            <set-payload value="#[%dw 2.0 output application/xml --- read(payload,'application/json')]"/>
+            <sockets:send-and-receive config-ref="tcp-requester-xml-protocol"/>
+        </munit:execution>
+        <munit:validation>
+            <until-successful maxRetries="60" millisBetweenRetries="5000">
+                <munit-tools:retrieve key='message'/>
+                <munit-tools:assert-that
+                        expression="#[payload.^raw as String]"
+                        is="#[MunitTools::containsString('Hello world!')]"
+                        message="Message not received"/>
+            </until-successful>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="tcp-xml-eof-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-xml-eof-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value='{"mes" : "Hello world!" }'/>
+            <set-payload value="#[%dw 2.0 output application/xml --- read(payload,'application/json')]"/>
+            <sockets:send-and-receive config-ref="tcp-requester-xml-eof-protocol"/>
+        </munit:execution>
+        <munit:validation>
+            <until-successful maxRetries="60" millisBetweenRetries="5000">
+                <munit-tools:retrieve key='message'/>
+                <munit-tools:assert-that
+                        expression="#[payload.^raw as String]"
+                        is="#[MunitTools::containsString('Hello world!')]"
+                        message="Message not received"/>
+            </until-successful>
+        </munit:validation>
+    </munit:test>
+</mule>

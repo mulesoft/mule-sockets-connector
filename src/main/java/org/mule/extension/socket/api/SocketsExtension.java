@@ -30,6 +30,11 @@ import org.mule.runtime.extension.api.annotation.Export;
 import org.mule.runtime.extension.api.annotation.Extension;
 import org.mule.runtime.extension.api.annotation.SubTypeMapping;
 import org.mule.runtime.extension.api.annotation.error.ErrorTypes;
+import org.mule.sdk.api.annotation.JavaVersionSupport;
+
+import static org.mule.sdk.api.meta.JavaVersion.JAVA_8;
+import static org.mule.sdk.api.meta.JavaVersion.JAVA_11;
+import static org.mule.sdk.api.meta.JavaVersion.JAVA_17;
 
 /**
  * An extension for sending and receiving connections through both TCP and UDP protocols.
@@ -44,6 +49,7 @@ import org.mule.runtime.extension.api.annotation.error.ErrorTypes;
 @Export(classes = {TcpClientSocketProperties.class, TcpServerSocketProperties.class, UdpSocketProperties.class,
     ReadingTimeoutException.class, LengthExceededException.class, LengthProtocol.class, AbstractByteProtocol.class})
 @ErrorTypes(SocketError.class)
+@JavaVersionSupport({JAVA_8, JAVA_11, JAVA_17})
 public class SocketsExtension {
 
   public static final String TLS_CONFIGURATION = "TLS Configuration";
