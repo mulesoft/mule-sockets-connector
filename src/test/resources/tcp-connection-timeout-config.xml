@@ -8,9 +8,9 @@
        http://www.mulesoft.org/schema/mule/test http://www.mulesoft.org/schema/mule/test/current/mule-test.xsd">
 
     <sockets:request-config name="tcp-requester">
-        <!--Non-rutable IP address -->
+        <!--Non-routable IP address -->
         <sockets:tcp-requester-connection host="10.255.255.255" port="${port}"
-                                          connectionTimeout="100"
+                                          connectionTimeout="1"
                                           sendTcpNoDelay="true">
             <pooling-profile maxActive="1"/>
         </sockets:tcp-requester-connection>

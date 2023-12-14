@@ -3,25 +3,53 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
       xmlns:sockets="http://www.mulesoft.org/schema/mule/sockets"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
       http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
-      http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd">
+      http://www.mulesoft.org/schema/mule/sockets http://www.mulesoft.org/schema/mule/sockets/current/mule-sockets.xsd
+      http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
 
-    <munit:dynamic-port propertyName="tcp.port"/>
+    <munit:config name="socket-base-config.xml" minMuleVersion="4.3.0"/>
 
-    <sockets:request-config name="SocketsRequestConfigCustomTcp" >
-        <sockets:tcp-requester-connection host="127.0.0.1" port="${tcp.port}" failOnUnresolvedHost="true" sendTcpNoDelay="true">
+
+    <sockets:request-config name="tcp-custom-protocol-requester" >
+        <sockets:tcp-requester-connection host="127.0.0.1" port="${sockets.listenPortCustom2}" failOnUnresolvedHost="true" sendTcpNoDelay="true">
             <sockets:protocol>
                 <sockets:custom-protocol class="org.mule.extension.socket.protocol.CustomTestTcpProtocol"/>
             </sockets:protocol>
         </sockets:tcp-requester-connection>
     </sockets:request-config>
 
-    <sockets:listener-config name="SocketsListenerConfigCustomTcp">
-        <sockets:tcp-listener-connection host="127.0.0.1" port="${tcp.port}">
+    <sockets:listener-config name="tcp-custom-protocol-listener">
+        <sockets:tcp-listener-connection host="127.0.0.1" port="${sockets.listenPortCustom2}">
             <sockets:protocol>
                 <sockets:custom-protocol class="org.mule.extension.socket.protocol.CustomTestTcpProtocol"/>
             </sockets:protocol>
         </sockets:tcp-listener-connection>
     </sockets:listener-config>
+
+    <flow name="tcp-custom-protocol-listen">
+        <sockets:listener config-ref="tcp-custom-protocol-listener"/>
+        <munit-tools:store key='message'/>
+    </flow>
+
+    <munit:test name="tcp-custom-protocol-test">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-custom-protocol-listen"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <sockets:send config-ref="tcp-custom-protocol-requester">
+                <sockets:content><![CDATA['Hello world!']]></sockets:content>
+            </sockets:send>
+        </munit:execution>
+        <munit:validation>
+            <until-successful maxRetries="60" millisBetweenRetries="2000">
+                <munit-tools:retrieve key='message'/>
+                <munit-tools:assert-that
+                        expression="#[payload.^raw as String]"
+                        is="#[MunitTools::containsString('Hello world!')]"
+                        message="Message not received"/>
+            </until-successful>
+        </munit:validation>
+    </munit:test>
 </mule>

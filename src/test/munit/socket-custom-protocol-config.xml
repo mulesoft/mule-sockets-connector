@@ -11,7 +11,7 @@
 
     <import file="socket-base-config.xml"/>
 
-    <munit:config name="Custom tcp protocol"/>
+    <munit:config name="Custom tcp protocol" ignore="true"/>
 
     <munit:test name="sendMessageUsingCustomTcpProtocol" description="Send message through tcp socket connector using a custom tcp protocol">
         <!-- IGNORED SOCON-9 -->
