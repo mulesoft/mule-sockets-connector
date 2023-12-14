@@ -30,6 +30,7 @@
         <apacheCommonsLangVersion>3.12.0</apacheCommonsLangVersion>
         <jacoco.version>0.8.10</jacoco.version>
         <groovy.version>3.0.19</groovy.version>
+        <mule.scripting.module.version>2.1.0</mule.scripting.module.version>
     </properties>
 
     <dependencies>
@@ -213,7 +214,7 @@
                     <dependency>
                         <groupId>org.mule.modules</groupId>
                         <artifactId>mule-scripting-module</artifactId>
-                        <version>2.1.0-SNAPSHOT</version>
+                        <version>${mule.scripting.module.version}</version>
                         <classifier>mule-plugin</classifier>
                     </dependency>
                 </dependencies>
