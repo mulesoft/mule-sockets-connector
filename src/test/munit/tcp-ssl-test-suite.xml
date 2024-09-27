@@ -13,21 +13,22 @@ http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/
 http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
 
     <munit:config name="tcp-ssl-test-suite.xml" minMuleVersion="4.3.0"/>
+    <configuration-properties file="configs.properties" />
 
     <munit:dynamic-port propertyName="port"/>
     <munit:dynamic-port propertyName="port2"/>
 
     <tls:context name="globalTlsContext">
-        <tls:trust-store path="tls/ssltest-cacerts.jks" password="changeit"/>
-        <tls:key-store path="tls/ssltest-keystore.jks" keyPassword="changeit" password="changeit"/>
+        <tls:trust-store path="${cacerts}" password="changeit"/>
+        <tls:key-store path="${keystore}" keyPassword="changeit" password="changeit"/>
     </tls:context>
 
     <tls:context name="listenerTlsContext">
-        <tls:key-store path="tls/ssltest-keystore.jks" keyPassword="changeit" password="changeit"/>
+        <tls:key-store path="${keystore}" keyPassword="changeit" password="changeit"/>
     </tls:context>
 
     <tls:context name="requestTlsContext">
-        <tls:trust-store path="tls/ssltest-cacerts.jks" password="changeit"/>
+        <tls:trust-store path="${cacerts}" password="changeit"/>
     </tls:context>
 
     <sockets:request-config name="ssl-request-global-tls">

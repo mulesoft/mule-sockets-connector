@@ -29,8 +29,10 @@
         <munit.extensions.maven.plugin.version>1.2.0-rc2</munit.extensions.maven.plugin.version>
         <apacheCommonsLangVersion>3.12.0</apacheCommonsLangVersion>
         <jacoco.version>0.8.10</jacoco.version>
-        <groovy.version>3.0.19</groovy.version>
         <mule.scripting.module.version>2.1.0</mule.scripting.module.version>
+        <jython.version>2.7.3</jython.version>
+        <!-- Used in MTF tests -->
+        <keystore.extension>${keystore.extension}</keystore.extension>
     </properties>
 
     <dependencies>
@@ -63,16 +65,11 @@
             <classifier>mule-plugin</classifier>
             <scope>test</scope>
         </dependency>
+        <!--Jython-->
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-            <version>${groovy.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-jsr223</artifactId>
-            <version>${groovy.version}</version>
+            <groupId>org.python</groupId>
+            <artifactId>jython-standalone</artifactId>
+            <version>${jython.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -162,12 +159,8 @@
                 <configuration>
                     <sharedLibraries>
                         <sharedLibrary>
-                            <groupId>org.codehaus.groovy</groupId>
-                            <artifactId>groovy-jsr223</artifactId>
-                        </sharedLibrary>
-                        <sharedLibrary>
-                            <groupId>org.codehaus.groovy</groupId>
-                            <artifactId>groovy</artifactId>
+                            <groupId>org.python</groupId>
+                            <artifactId>jython-standalone</artifactId>
                         </sharedLibrary>
                     </sharedLibraries>
                     <argLines>
@@ -189,6 +182,15 @@
                             <goal>test</goal>
                         </goals>
                         <phase>integration-test</phase>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-mule/munit</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/test/munit</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </execution>
                 </executions>
                 <dependencies>
@@ -222,4 +224,30 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>default-config</id>
+            <activation>
+                <property>
+                    <name>!mule.security.model</name> <!-- if mule.security.model does not exist -->
+                </property>
+            </activation>
+            <properties>
+                <keystore.extension>jks</keystore.extension>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>fips-config</id>
+            <activation>
+                <property>
+                    <name>mule.security.model</name>
+                    <value>fips140-2</value> <!-- if mule.security.model == fips140-2 -->
+                </property>
+            </activation>
+            <properties>
+                <keystore.extension>bcfks</keystore.extension>
+            </properties>
+        </profile>
+    </profiles>
 </project>
