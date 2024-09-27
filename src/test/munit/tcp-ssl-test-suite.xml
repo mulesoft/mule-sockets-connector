@@ -18,20 +18,20 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
     <munit:dynamic-port propertyName="port"/>
     <munit:dynamic-port propertyName="port2"/>
 
-    <tls:context name="globalTlsContext">
+    <tls:context name="globalTlsContext" enabledProtocols="TLSv1.3" enabledCipherSuites="TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256">
         <tls:trust-store path="${cacerts}" password="changeit"/>
         <tls:key-store path="${keystore}" keyPassword="changeit" password="changeit"/>
     </tls:context>
 
-    <tls:context name="listenerTlsContext">
+    <tls:context name="listenerTlsContext" enabledProtocols="TLSv1.3" enabledCipherSuites="TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256">
         <tls:key-store path="${keystore}" keyPassword="changeit" password="changeit"/>
     </tls:context>
 
-    <tls:context name="requestTlsContext">
+    <tls:context name="requestTlsContext" enabledProtocols="TLSv1.3">
         <tls:trust-store path="${cacerts}" password="changeit"/>
     </tls:context>
 
-    <sockets:request-config name="ssl-request-global-tls">
+    <sockets:request-config name="ssl-request-global-tls" enabledCipherSuites="TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256">
         <sockets:tcp-requester-connection host="localhost" port="${port}"
                                           failOnUnresolvedHost="true"
                                           sendTcpNoDelay="true"
