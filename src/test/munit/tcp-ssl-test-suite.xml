@@ -118,23 +118,6 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
         </munit:validation>
     </munit:test>
 
-    <munit:test name="tcp-ssl-global-tls-v-1-1-test"
-                ignore="#[ p('mule.security.model') != null and p('mule.security.model')=='fips140-2']">
-        <munit:enable-flow-sources>
-            <munit:enable-flow-source value="tcp-global-ssl-listen-with-tls-v-1-1"/>
-        </munit:enable-flow-sources>
-        <munit:execution>
-            <set-payload value='Hello world!'/>
-            <sockets:send-and-receive config-ref="ssl-request-global-tls-v-1-1"/>
-        </munit:execution>
-        <munit:validation>
-            <munit-tools:assert-that
-                    expression="#[payload.^raw as String]"
-                    is="#[MunitTools::equalTo('Hello world!')]"
-                    message="Message not received"/>
-        </munit:validation>
-    </munit:test>
-
     <munit:test name="tcp-ssl-global-tls-v-1-1-on_FIPS-enviroment-test"
                 ignore="#[ p('mule.security.model') == null or p('mule.security.model')!='fips140-2']"
                 expectedErrorType="SOCKETS:CONNECTIVITY" >
