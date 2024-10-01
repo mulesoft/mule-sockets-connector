@@ -17,6 +17,13 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
 
     <munit:dynamic-port propertyName="port"/>
     <munit:dynamic-port propertyName="port2"/>
+    <munit:dynamic-port propertyName="port3"/>
+    <munit:dynamic-port propertyName="port4"/>
+
+    <tls:context name="global_TLS_V1_1_Context" enabledProtocols="TLSv1.1">
+        <tls:trust-store path="${cacerts}" password="changeit"/>
+        <tls:key-store path="${keystore}" keyPassword="changeit" password="changeit"/>
+    </tls:context>
 
     <tls:context name="globalTlsContext" enabledProtocols="TLSv1.2">
         <tls:trust-store path="${cacerts}" password="changeit"/>
@@ -39,6 +46,22 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
             <pooling-profile maxActive="1"/>
         </sockets:tcp-requester-connection>
     </sockets:request-config>
+
+    <sockets:request-config name="ssl-request-global-tls-v-1-1" >
+        <sockets:tcp-requester-connection host="localhost" port="${port4}"
+                                          failOnUnresolvedHost="true"
+                                          sendTcpNoDelay="true"
+                                          tlsContext="global_TLS_V1_1_Context">
+            <pooling-profile maxActive="1"/>
+        </sockets:tcp-requester-connection>
+    </sockets:request-config>
+
+    <sockets:listener-config name="ssl-listener-global-tls-v-1-1">
+        <sockets:tcp-listener-connection host="localhost"
+                                         port="${port3}"
+                                         tlsContext="global_TLS_V1_1_Context">
+        </sockets:tcp-listener-connection>
+    </sockets:listener-config>
 
     <sockets:listener-config name="ssl-listener-global-tls">
         <sockets:tcp-listener-connection host="localhost"
@@ -63,6 +86,11 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
                                          tlsContext="listenerTlsContext">
         </sockets:tcp-listener-connection>
     </sockets:listener-config>
+
+    <flow name="tcp-global-ssl-listen-with-tls-v-1-1">
+        <sockets:listener config-ref="ssl-listener-global-tls-v-1-1"/>
+        <logger level="DEBUG" message="Message received!"/>
+    </flow>
 
     <flow name="tcp-global-ssl-listen">
         <sockets:listener config-ref="ssl-listener-global-tls"/>
@@ -89,6 +117,36 @@ http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/
                     message="Message not received"/>
         </munit:validation>
     </munit:test>
+
+    <munit:test name="tcp-ssl-global-tls-v-1-1-test"
+                ignore="#[ p('mule.security.model') != null and p('mule.security.model')=='fips140-2']">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-global-ssl-listen-with-tls-v-1-1"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value='Hello world!'/>
+            <sockets:send-and-receive config-ref="ssl-request-global-tls-v-1-1"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that
+                    expression="#[payload.^raw as String]"
+                    is="#[MunitTools::equalTo('Hello world!')]"
+                    message="Message not received"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="tcp-ssl-global-tls-v-1-1-on_FIPS-enviroment-test"
+                ignore="#[ p('mule.security.model') == null or p('mule.security.model')!='fips140-2']"
+                expectedErrorType="SOCKETS:CONNECTIVITY" >
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="tcp-global-ssl-listen-with-tls-v-1-1"/>
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <set-payload value='Hello world!'/>
+            <sockets:send-and-receive config-ref="ssl-request-global-tls-v-1-1"/>
+        </munit:execution>
+    </munit:test>
+
 
     <munit:test name="tcp-ssl-test">
         <munit:enable-flow-sources>
