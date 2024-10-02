@@ -33,20 +33,20 @@
                         <munit-tools:value ><![CDATA[#[1]]]></munit-tools:value>
             </munit-tools:queue>
 
-            <scripting:execute engine="groovy" >
+            <scripting:execute engine="python" >
                 <scripting:code>
-                    flow = registry.lookupByName(&quot;sourceFlow&quot;).get();
-                    flow.stop();
+flow = registry.lookupByName("sourceFlow").get()
+flow.stop()
                 </scripting:code>
             </scripting:execute>
 
             <logger message="flow stopped"/>
             <logger message="#[import * from dw::Runtime --- '' wait 2000]"/>
 
-            <scripting:execute engine="groovy" >
+            <scripting:execute engine="python" >
                 <scripting:code>
-                    flow = registry.lookupByName(&quot;sourceFlow&quot;).get();
-                    flow.start();
+flow = registry.lookupByName("sourceFlow").get()
+flow.start()
                 </scripting:code>
             </scripting:execute>
 
